@@ -18,6 +18,7 @@
     <orderEntry type="jdk" jdkName="1.8" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="laba4-ejb" />
+    <orderEntry type="library" name="Maven: org.xerial:sqlite-jdbc:3.16.1" level="project" />
     <orderEntry type="module" module-name="laba4-web" />
   </component>
 </module>

@@ -5,14 +5,23 @@
 		  http://java.sun.com/xml/ns/j2ee/ejb-jar_2_1.xsd"
          version="2.1">
   <enterprise-beans>
-
-      <session>
-          <ejb-name>StructureEJB</ejb-name>
-          <home>ru.elleriumsoft.TestBean.StructureHome</home>
-          <remote>ru.elleriumsoft.TestBean.Structure</remote>
-          <ejb-class>ru.elleriumsoft.TestBean.StructureBean</ejb-class>
-          <session-type>Stateless</session-type>
-          <transaction-type>Container</transaction-type>
-      </session>
+      <entity>
+          <ejb-name>StructureProcessingFromDbEJB</ejb-name>
+          <home>ru.elleriumsoft.structure.StructureProcessingFromDbHome</home>
+          <remote>ru.elleriumsoft.structure.StructureProcessingFromDb</remote>
+          <ejb-class>ru.elleriumsoft.structure.StructureProcessingFromDbBean</ejb-class>
+          <persistence-type>Bean</persistence-type>
+          <prim-key-class>java.lang.String</prim-key-class>
+          <reentrant>true</reentrant>
+      </entity>
   </enterprise-beans>
+    <assembly-descriptor>
+        <container-transaction>
+            <method>
+                <ejb-name>StructureProcessingFromDbEJB</ejb-name>
+                <method-name>*</method-name>
+            </method>
+            <trans-attribute>Required</trans-attribute>
+        </container-transaction>
+    </assembly-descriptor>
 </ejb-jar>

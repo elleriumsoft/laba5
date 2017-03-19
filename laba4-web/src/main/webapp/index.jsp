@@ -1,5 +1,3 @@
-<%@ page import="ru.elleriumsoft.TestBean.Structure" %>
-<%@ page import="ru.elleriumsoft.TestBean.StructureHome" %>
 <%@ page import="javax.naming.InitialContext" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
@@ -8,25 +6,11 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
+        <title>Лабораторная работа №4</title>
     </head>
     <body>
-        <h1>Hello World!</h1>
-        <%!
-            Structure bean;
-            public void jspInit() {
-                try {
-                    InitialContext ctx = new InitialContext();
-                    bean = ((StructureHome)
-                            ctx.lookup(
-                                    "java:global/laba4-ear-1.0/laba4-ejb-1.0/StructureEJB!ru.elleriumsoft.TestBean.StructureHome")
-                    ).create();
-                } catch (Exception e) {
-                    System.err.println(e);
-                }
-
-            }
-        %>
-        <%=bean.say("Ура")%>
+    <H1>Проект с J2EE для работы с иерархической базой данных</H1>
+    <H2><a href="Structure.jsp">Структура мэрии</a></H2>
+    <H2><a href="/laba3/EmployeeFindForm.jsp">Поиск сотрудника мэрии</a></H2>
     </body>
 </html>
