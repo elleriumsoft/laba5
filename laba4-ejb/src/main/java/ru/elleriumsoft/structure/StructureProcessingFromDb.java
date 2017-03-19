@@ -8,7 +8,8 @@ import java.rmi.RemoteException;
  */
 public interface StructureProcessingFromDb extends EJBObject
 {
-    public String getId() throws RemoteException;
-    public void setId(String id) throws RemoteException;
-    public String getNameDepartment() throws RemoteException;
+    String getId() throws RemoteException;
+    void setId(String id) throws RemoteException;
+    String getNameDepartment() throws RemoteException;
+    String getParent_id() throws RemoteException;
 }
