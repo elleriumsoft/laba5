@@ -5,6 +5,14 @@
 		  http://java.sun.com/xml/ns/j2ee/ejb-jar_2_1.xsd"
          version="2.1">
   <enterprise-beans>
+      <session>
+          <ejb-name>PrintSturctureBeanEJB</ejb-name>
+          <home>ru.elleriumsoft.printstructure.PrintStructureBeanHome</home>
+          <remote>ru.elleriumsoft.printstructure.PrintStructureBean</remote>
+          <ejb-class>ru.elleriumsoft.printstructure.PrintStructureBeanBean</ejb-class>
+          <session-type>Stateless</session-type>
+          <transaction-type>Container</transaction-type>
+      </session>
       <entity>
           <ejb-name>StructureProcessingFromDbEJB</ejb-name>
           <home>ru.elleriumsoft.structure.StructureProcessingFromDbHome</home>
@@ -19,6 +27,10 @@
         <container-transaction>
             <method>
                 <ejb-name>StructureProcessingFromDbEJB</ejb-name>
+                <method-name>*</method-name>
+            </method>
+            <method>
+                <ejb-name>PrintSturctureBeanEJB</ejb-name>
                 <method-name>*</method-name>
             </method>
             <trans-attribute>Required</trans-attribute>

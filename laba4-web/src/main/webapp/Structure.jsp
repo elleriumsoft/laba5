@@ -1,11 +1,7 @@
-<%@ page import="ru.elleriumsoft.printstructure.PrintStructureForJsp" %>
-<%@ page import="ru.elleriumsoft.printstructure.StructureElement" %>
-<%@ page import="ru.elleriumsoft.structure.StructureProcessingFromDb" %>
-<%@ page import="ru.elleriumsoft.structure.StructureProcessingFromDbHome" %>
+<%@ page import="ru.elleriumsoft.printstructure.PrintStructureBean" %>
+<%@ page import="ru.elleriumsoft.printstructure.PrintStructureBeanHome" %>
 <%@ page import="javax.naming.InitialContext" %>
 <%@ page import="javax.rmi.PortableRemoteObject" %>
-<%@ page import="java.util.ArrayList" %>
-<%@ page import="java.util.Vector" %>
 <%--
   Created by IntelliJ IDEA.
   User: Dmitriy
@@ -20,13 +16,14 @@
 </head>
 <body>
 <%!
-    private StructureProcessingFromDbHome structure = null;
+    private PrintStructureBean printStructureBean = null;
     public void jspInit()
     {
         try {
             InitialContext ic = new InitialContext();
-            Object remoteObject = ic.lookup("java:global/laba4-ear-1.0/laba4-ejb-1.0/StructureProcessingFromDbEJB");//"laba4-ejb/ru.elleriumsoft.structure.StructureProcessingFromDbHome");
-            structure = (StructureProcessingFromDbHome) PortableRemoteObject.narrow(remoteObject, StructureProcessingFromDbHome.class);
+            Object remoteObject = ic.lookup("java:global/laba4-ear-1.0/laba4-ejb-1.0/PrintSturctureBeanEJB");//"laba4-ejb/ru.elleriumsoft.structure.StructureProcessingFromDbHome");
+            PrintStructureBeanHome printStructureBeanHome = (PrintStructureBeanHome) PortableRemoteObject.narrow(remoteObject, PrintStructureBeanHome.class);
+            printStructureBean = printStructureBeanHome.create();
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -48,7 +45,7 @@ else {
 <br>
 <input type="submit" id="Button1" onclick="window.location.href='/index.jsp';return false;" name="" value="Вернуться в меню" style="position:absolute;left:310px;top:18px;width:184px;height:25px;">
 
-    <%= new PrintStructureForJsp().printStructure((Vector) structure.findAll(), "") %>
+    <%= printStructureBean.printStructure("")%>
 
 </body>
 </html>
