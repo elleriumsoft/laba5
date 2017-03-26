@@ -10,6 +10,13 @@ public class StructureElement
     private int parent_id;
     private int nestingLevel;
 
+    public StructureElement(int id, String nameDepartment, int parent_id)
+    {
+        this.id = id;
+        this.nameDepartment = nameDepartment;
+        this.parent_id = parent_id;
+    }
+
     public int getId()
     {
         return id;

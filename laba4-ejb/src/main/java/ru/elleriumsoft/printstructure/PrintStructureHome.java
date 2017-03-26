@@ -7,7 +7,7 @@ import java.rmi.RemoteException;
 /**
  * Created by Dmitriy on 23.03.2017.
  */
-public interface PrintStructureBeanHome extends EJBHome
+public interface PrintStructureHome extends EJBHome
 {
-    PrintStructureBean create() throws RemoteException, CreateException;
+    PrintStructure create() throws RemoteException, CreateException;
 }

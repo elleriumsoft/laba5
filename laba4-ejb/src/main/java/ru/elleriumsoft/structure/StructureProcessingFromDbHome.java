@@ -1,5 +1,6 @@
 package ru.elleriumsoft.structure;
 
+import javax.ejb.CreateException;
 import javax.ejb.EJBHome;
 import javax.ejb.FinderException;
 import java.rmi.RemoteException;
@@ -11,6 +12,7 @@ import java.util.Collection;
  */
 public interface StructureProcessingFromDbHome extends EJBHome
 {
-    StructureProcessingFromDb findByPrimaryKey(String key) throws RemoteException, SQLException, FinderException;
+    StructureProcessingFromDb findByPrimaryKey(Integer key) throws RemoteException, SQLException, FinderException;
     Collection findAll() throws FinderException, RemoteException;
+    StructureProcessingFromDb create(Integer id, String name, Integer parent_id) throws RemoteException, CreateException;
 }

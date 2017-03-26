@@ -6,11 +6,27 @@
          version="2.1">
   <enterprise-beans>
       <session>
-          <ejb-name>PrintSturctureBeanEJB</ejb-name>
-          <home>ru.elleriumsoft.printstructure.PrintStructureBeanHome</home>
-          <remote>ru.elleriumsoft.printstructure.PrintStructureBean</remote>
-          <ejb-class>ru.elleriumsoft.printstructure.PrintStructureBeanBean</ejb-class>
+          <ejb-name>PrintSturctureEJB</ejb-name>
+          <home>ru.elleriumsoft.printstructure.PrintStructureHome</home>
+          <remote>ru.elleriumsoft.printstructure.PrintStructure</remote>
+          <ejb-class>ru.elleriumsoft.printstructure.PrintStructureBean</ejb-class>
           <session-type>Stateless</session-type>
+          <transaction-type>Container</transaction-type>
+      </session>
+      <session>
+          <ejb-name>CommandsForStructureEJB</ejb-name>
+          <home>ru.elleriumsoft.structurecommands.CommandsForStructureHome</home>
+          <remote>ru.elleriumsoft.structurecommands.CommandsForStructure</remote>
+          <ejb-class>ru.elleriumsoft.structurecommands.CommandsForStructureBean</ejb-class>
+          <session-type>Stateless</session-type>
+          <transaction-type>Container</transaction-type>
+      </session>
+      <session>
+          <ejb-name>ActionForStructureEJB</ejb-name>
+          <home>ru.elleriumsoft.actionforstucture.ActionForStructureHome</home>
+          <remote>ru.elleriumsoft.actionforstucture.ActionForStructure</remote>
+          <ejb-class>ru.elleriumsoft.actionforstucture.ActionForStructureBean</ejb-class>
+          <session-type>Stateful</session-type>
           <transaction-type>Container</transaction-type>
       </session>
       <entity>
@@ -19,7 +35,7 @@
           <remote>ru.elleriumsoft.structure.StructureProcessingFromDb</remote>
           <ejb-class>ru.elleriumsoft.structure.StructureProcessingFromDbBean</ejb-class>
           <persistence-type>Bean</persistence-type>
-          <prim-key-class>java.lang.String</prim-key-class>
+          <prim-key-class>java.lang.Integer</prim-key-class>
           <reentrant>true</reentrant>
       </entity>
   </enterprise-beans>
@@ -30,7 +46,7 @@
                 <method-name>*</method-name>
             </method>
             <method>
-                <ejb-name>PrintSturctureBeanEJB</ejb-name>
+                <ejb-name>PrintSturctureEJB</ejb-name>
                 <method-name>*</method-name>
             </method>
             <trans-attribute>Required</trans-attribute>
