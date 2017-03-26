@@ -36,20 +36,7 @@
           <ejb-class>ru.elleriumsoft.structure.StructureProcessingFromDbBean</ejb-class>
           <persistence-type>Bean</persistence-type>
           <prim-key-class>java.lang.Integer</prim-key-class>
-          <reentrant>true</reentrant>
+          <reentrant>false</reentrant>
       </entity>
   </enterprise-beans>
-    <assembly-descriptor>
-        <container-transaction>
-            <method>
-                <ejb-name>StructureProcessingFromDbEJB</ejb-name>
-                <method-name>*</method-name>
-            </method>
-            <method>
-                <ejb-name>PrintSturctureEJB</ejb-name>
-                <method-name>*</method-name>
-            </method>
-            <trans-attribute>Required</trans-attribute>
-        </container-transaction>
-    </assembly-descriptor>
 </ejb-jar>

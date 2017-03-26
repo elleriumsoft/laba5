@@ -1,5 +1,6 @@
 package ru.elleriumsoft.structure;
 
+import org.apache.log4j.Logger;
 import ru.elleriumsoft.jdbc.ConnectToDb;
 
 import javax.ejb.*;
@@ -20,6 +21,7 @@ public class StructureProcessingFromDbBean implements EntityBean
     private String nameDepartment;
     private Integer parent_id;
     private int nestingLevel;
+    private final static Logger logger = Logger.getLogger(StructureProcessingFromDbBean.class);
 
     private EntityContext entityContext;
 
@@ -151,23 +153,24 @@ public class StructureProcessingFromDbBean implements EntityBean
 
     public void ejbStore() throws EJBException
     {
-        Connection connection = null;
-        PreparedStatement statement = null;
-        try {
-            connection = new ConnectToDb().getConnection();
-            statement = connection.prepareStatement(
-                    "UPDATE structure SET dept = ?, parent_id = ? WHERE id = ?");
-            statement.setString(1, getNameDepartment());
-            statement.setInt(2, getParent_id());
-            statement.setInt(3, id);
-            if (statement.executeUpdate() < 1) {
-                throw new NoSuchEntityException("...");
-            }
-        } catch (SQLException e) {
-            throw new EJBException("Ошибка UPDATE");
-        } finally {
-            new ConnectToDb().closeConnection(connection);
-        }
+        logger.info("Store");
+//        Connection connection = null;
+//        PreparedStatement statement = null;
+//        try {
+//            connection = new ConnectToDb().getConnection();
+//            statement = connection.prepareStatement(
+//                    "UPDATE structure SET dept = ?, parent_id = ? WHERE id = ?");
+//            statement.setString(1, getNameDepartment());
+//            statement.setInt(2, getParent_id());
+//            statement.setInt(3, id);
+//            if (statement.executeUpdate() < 1) {
+//                throw new NoSuchEntityException("...");
+//            }
+//        } catch (SQLException e) {
+//            throw new EJBException("Ошибка UPDATE");
+//        } finally {
+//            new ConnectToDb().closeConnection(connection);
+//        }
     }
 
     public Collection ejbFindAll() throws FinderException, EJBException

@@ -57,7 +57,8 @@
     <%= commandsForStructure.build(actionForStructure, request.getParameter("command"), request.getParameter("element"))%>
     <% session.setAttribute("action", actionForStructure); %>
 
-<br>
+    <br>
+
     <%= printStructure.printStructure(request.getParameter("printcommand"))%>
 
 </body>

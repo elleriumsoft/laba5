@@ -19,7 +19,7 @@ import java.util.Vector;
 public class PrintStructureBean implements SessionBean
 {
     private ArrayList<StructureElement> structureFromDb;
-    private ArrayList<StructureElement> structure;
+    private ArrayList<StructureElement> structureForPrint;
     private int maxId = 0;
 
     public int getMaxId()
@@ -55,7 +55,7 @@ public class PrintStructureBean implements SessionBean
                 e.printStackTrace();
             }
         }
-        structure = new ArrayList<>();
+        structureForPrint = new ArrayList<>();
         int level = 0;
         int parentId = 0;
         initElement(level, parentId);
@@ -77,7 +77,7 @@ public class PrintStructureBean implements SessionBean
             {
                 StructureElement elementForAdd = new StructureElement(el.getId(), el.getNameDepartment(), el.getParent_id());
                 elementForAdd.setLevel(level);
-                structure.add(elementForAdd);
+                structureForPrint.add(elementForAdd);
                 initElement(level+1, el.getId());
             }
         }
@@ -100,7 +100,7 @@ public class PrintStructureBean implements SessionBean
             {
                 command = "";
             }
-            for (StructureElement el : structure)
+            for (StructureElement el : structureForPrint)
             {
                 //if (isElementOpen(el.getParent_id()) || el.getLevel() == 0)
                 {
@@ -157,7 +157,7 @@ public class PrintStructureBean implements SessionBean
         StructureProcessingFromDbHome structureProcessingFromDbHome = null;
         try {
             InitialContext ic = new InitialContext();
-            Object remoteObject = ic.lookup("java:global/laba4-ear-1.0/laba4-ejb-1.0/StructureProcessingFromDbEJB");//"laba4-ejb/ru.elleriumsoft.structure.StructureProcessingFromDbHome");
+            Object remoteObject = ic.lookup("java:global/laba4-ear-1.0/laba4-ejb-1.0/StructureProcessingFromDbEJB");//"laba4-ejb/ru.elleriumsoft.structureForPrint.StructureProcessingFromDbHome");
             structureProcessingFromDbHome = (StructureProcessingFromDbHome) PortableRemoteObject.narrow(remoteObject, StructureProcessingFromDbHome.class);
             return (Vector) structureProcessingFromDbHome.findAll();
         } catch (Exception e) {
