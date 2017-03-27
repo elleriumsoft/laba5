@@ -19,8 +19,6 @@ public class ActionForStructureBean implements SessionBean
 
     public void action(String param, int maxId)
     {
-        System.out.println("action=" + action);
-        System.out.println("param=" + param);
         if (param == null){ return;}
 
         if (action.equals("add"))
@@ -39,11 +37,11 @@ public class ActionForStructureBean implements SessionBean
     {
         try
         {
-            System.out.println("id=" + idForAction);
             StructureProcessingFromDb structureProcessingFromDb = getHome().findByPrimaryKey(idForAction);
             if (structureProcessingFromDb != null)
             {
-                structureProcessingFromDb.setNameDepartmentWithUpdade(param);
+                structureProcessingFromDb.setNeedUpdate();
+                structureProcessingFromDb.setNameDepartment(param);
             }
         } catch (RemoteException e)
         {

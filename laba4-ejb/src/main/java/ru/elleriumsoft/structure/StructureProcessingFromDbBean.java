@@ -46,9 +46,8 @@ public class StructureProcessingFromDbBean implements EntityBean
         this.nameDepartment = nameDepartment;
     }
 
-    public void setNameDepartmentWithUpdade(String param)
+    public void setNeedUpdate()
     {
-        setNameDepartment(param);
         needUpdate = true;
     }
 

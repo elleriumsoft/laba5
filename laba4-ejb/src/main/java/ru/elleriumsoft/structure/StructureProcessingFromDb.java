@@ -14,6 +14,5 @@ public interface StructureProcessingFromDb extends EJBObject
     Integer getParent_id() throws RemoteException;
     void setNameDepartment(String nameDepartment) throws RemoteException;
     void setParent_id(Integer parent_id) throws RemoteException;
-
-    void setNameDepartmentWithUpdade(String param) throws RemoteException;
+    void setNeedUpdate() throws RemoteException;
 }
