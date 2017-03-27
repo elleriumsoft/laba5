@@ -59,6 +59,8 @@
 
     <br>
 
+    <% if (printStructure.checkNeedChangeState(request.getParameter("open"))) { response.sendRedirect("/Structure.jsp"); } %>
+
     <%= printStructure.printStructure(request.getParameter("printcommand"))%>
 
 </body>

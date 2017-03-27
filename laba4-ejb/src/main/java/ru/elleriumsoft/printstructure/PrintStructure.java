@@ -22,4 +22,6 @@ public interface PrintStructure extends EJBObject
     Integer getMaxId() throws RemoteException;
 
     ArrayList<StructureElement> getStructureFromDb() throws RemoteException;
+
+    boolean checkNeedChangeState(String id) throws RemoteException;
 }

@@ -203,6 +203,27 @@ public class StructureProcessingFromDbBean implements EntityBean
         }
     }
 
+    public Collection ejbFindParentKeys(Integer key) throws FinderException, EJBException
+    {
+        Connection connection = null;
+        try {
+            connection = new ConnectToDb().getConnection();
+            PreparedStatement statement = connection.prepareStatement("select id from structure where parent_id = ?");
+            statement.setInt(1, key);
+            ResultSet result = statement.executeQuery();
+            List<Integer> array = new ArrayList<>();
+            while (result.next()) {
+                Integer id = result.getInt(1);
+                array.add(id);
+            }
+            return array;
+        } catch (SQLException ex) {
+            throw new EJBException("Cannot find all record");
+        } finally {
+            new ConnectToDb().closeConnection(connection);
+        }
+    }
+
     public Integer ejbCreate(Integer id, String name, Integer parent_id) throws CreateException
     {
         try {

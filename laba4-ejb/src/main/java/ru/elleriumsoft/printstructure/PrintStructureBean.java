@@ -1,5 +1,6 @@
 package ru.elleriumsoft.printstructure;
 
+import org.apache.log4j.Logger;
 import ru.elleriumsoft.structure.StructureProcessingFromDb;
 import ru.elleriumsoft.structure.StructureProcessingFromDbHome;
 
@@ -20,7 +21,10 @@ public class PrintStructureBean implements SessionBean
 {
     private ArrayList<StructureElement> structureFromDb;
     private ArrayList<StructureElement> structureForPrint;
+    private ArrayList<StateOfElements> statesOfElements;
     private int maxId = 0;
+
+    private static final Logger logger = Logger.getLogger(PrintStructureBean.class.getName());
 
     public int getMaxId()
     {
@@ -102,17 +106,14 @@ public class PrintStructureBean implements SessionBean
             }
             for (StructureElement el : structureForPrint)
             {
-                //if (isElementOpen(el.getParent_id()) || el.getLevel() == 0)
+                pw.append(addSpaces(el.getLevel()));
+                pw.append(addImageForActionList(el.getId()));
+                pw.append("&nbsp<span><a href=\"/PrintElementJsp.jsp?id=" + String.valueOf(el.getId()) + "\">" + el.getNameDepartment() + "</a>&nbsp");//pw.append("&nbsp<span><a href=\"/laba3/Servlets.PrintElement?id=" + String.valueOf(el.getId()) + "\">" + el.getNameDepartment() + "</a>&nbsp");
+                if (!command.equals("") && !(command.equals("delete") && el.getId() == 1))
                 {
-                    pw.append(addSpaces(el.getLevel()));
-                    //    pw.append(addImageForActionList(isElementOpen(el.getId()), el.getId()));
-                    pw.append("&nbsp<span><a href=\"/PrintElementJsp.jsp?id=" + String.valueOf(el.getId()) + "\">" + el.getNameDepartment() + "</a>&nbsp");//pw.append("&nbsp<span><a href=\"/laba3/Servlets.PrintElement?id=" + String.valueOf(el.getId()) + "\">" + el.getNameDepartment() + "</a>&nbsp");
-                    if (!command.equals("") && !(command.equals("delete") && el.getId() == 1))
-                    {
-                        pw.append("<a href=\"/Structure.jsp?command=" + command + "&element=" + el.getId() + "\"style=\"color:#FF0000\">[" + getStringCommand(command) + "]</a>");
-                    }
-                    pw.append("</span><br><br>");
+                    pw.append("<a href=\"/Structure.jsp?command=" + command + "&element=" + el.getId() + "\"style=\"color:#FF0000\">[" + getStringCommand(command) + "]</a>");
                 }
+                pw.append("</span><br><br>");
             }
         }
         catch (NullPointerException e)
@@ -120,6 +121,105 @@ public class PrintStructureBean implements SessionBean
             System.out.println(e.getMessage());
         }
         return pw.toString();
+    }
+
+    public boolean checkNeedChangeState(String id)
+    {
+        if (id == null) { return false;}
+        int idElement = Integer.valueOf(id);
+        StateOfElements state = getStateOfElement(idElement);
+        if (state.getState() == StateOfElements.NO_CHILD) { return false; }
+        if (state.getState() == StateOfElements.CLOSE)
+        {
+            openList(state, idElement);
+            return true;
+        }
+        if (state.getState() == StateOfElements.OPEN)
+        {
+            closeList(idElement, idElement);
+            return true;
+        }
+
+        return false;
+    }
+
+    private void closeList(int idElement, int firstElement)
+    {
+        for (StructureElement element : structureFromDb)
+        {
+            if (element.getParent_id() == idElement)
+            {
+                closeList(element.getId(), firstElement);
+            }
+        }
+        if (idElement != firstElement)
+        {
+            statesOfElements.remove(getStateOfElement(idElement));
+        }
+        else
+        {
+            getStateOfElement(idElement).setState(StateOfElements.CLOSE);
+        }
+    }
+
+    private void openList(StateOfElements state, int idElement)
+    {
+        Vector<StructureProcessingFromDb> children = getChildForElementFromDb(idElement);
+        if (children != null && children.size() > 0)
+        {
+            logger.info("size=" + children.size());
+            for (StructureProcessingFromDb structureProcessingFromDb : children)
+            {
+                try
+                {
+                    statesOfElements.add(new StateOfElements(structureProcessingFromDb.getId(), StateOfElements.CLOSE));
+                } catch (RemoteException e)
+                {
+                    e.printStackTrace();
+                }
+            }
+            state.setState(StateOfElements.OPEN);
+        }
+        else
+        {
+            logger.info("not found");
+            state.setState(StateOfElements.NO_CHILD);
+        }
+    }
+
+    private StateOfElements getStateOfElement(int id)
+    {
+        for (StateOfElements stateOfElement : statesOfElements)
+        {
+            if (stateOfElement.getId() == id)
+            {
+                return stateOfElement;
+            }
+        }
+        return null;
+    }
+
+    private String addImageForActionList(int idElement)
+    {
+        StateOfElements state = getStateOfElement(idElement);
+        if (state != null)
+        {
+            if (state.getState() != StateOfElements.NO_CHILD)
+            {
+                if (state.getState() == StateOfElements.OPEN)
+                {
+                    return "<a href=\"Structure.jsp?open=" + String.valueOf(idElement) + "\"><img src=\"images/minus.png\" width=\"14\" height=\"14\" align = \"bottom\" alt=\"Свернуть список\"</a>";
+                } else
+                {
+                    return "<a href=\"Structure.jsp?open=" + String.valueOf(idElement) + "\"><img src=\"images/plus.png\" width=\"14\" height=\"14\" align = \"bottom\" alt=\"Раскрыть список\"</a>";
+                }
+            }
+            else
+            {
+                return "<img src=\"images/blank.png\" width=\"14\" height=\"14\" align = \"bottom\" alt=\"Элемент\"";
+            }
+        }
+        return "";
     }
 
     private String addSpaces(int level)
@@ -159,7 +259,27 @@ public class PrintStructureBean implements SessionBean
             InitialContext ic = new InitialContext();
             Object remoteObject = ic.lookup("java:global/laba4-ear-1.0/laba4-ejb-1.0/StructureProcessingFromDbEJB");//"laba4-ejb/ru.elleriumsoft.structureForPrint.StructureProcessingFromDbHome");
             structureProcessingFromDbHome = (StructureProcessingFromDbHome) PortableRemoteObject.narrow(remoteObject, StructureProcessingFromDbHome.class);
-            return (Vector) structureProcessingFromDbHome.findAll();
+            Vector<StructureProcessingFromDb> dataFromDb = new Vector<>();
+            for (StateOfElements stateOfElements : statesOfElements)
+            {
+                 dataFromDb.add(structureProcessingFromDbHome.findByPrimaryKey(stateOfElements.getId()));
+            }
+            return  dataFromDb;//return (Vector) structureProcessingFromDbHome.findAll();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return null;
+    }
+
+    public Vector getChildForElementFromDb(int id)
+    {
+        StructureProcessingFromDbHome structureProcessingFromDbHome = null;
+        try {
+            InitialContext ic = new InitialContext();
+            Object remoteObject = ic.lookup("java:global/laba4-ear-1.0/laba4-ejb-1.0/StructureProcessingFromDbEJB");//"laba4-ejb/ru.elleriumsoft.structureForPrint.StructureProcessingFromDbHome");
+            structureProcessingFromDbHome = (StructureProcessingFromDbHome) PortableRemoteObject.narrow(remoteObject, StructureProcessingFromDbHome.class);
+            Vector<StructureProcessingFromDb> dataFromDb = new Vector<>();
+            return (Vector) structureProcessingFromDbHome.findParentKeys(id);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -172,6 +292,8 @@ public class PrintStructureBean implements SessionBean
 
     public void ejbCreate() throws CreateException
     {
+        statesOfElements = new ArrayList<>();
+        statesOfElements.add(new StateOfElements(1, StateOfElements.CLOSE));
     }
 
     public void setSessionContext(SessionContext sessionContext) throws EJBException
