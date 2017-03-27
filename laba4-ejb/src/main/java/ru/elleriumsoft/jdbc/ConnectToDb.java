@@ -13,7 +13,6 @@ public class ConnectToDb
     {
         try
         {
-            //InitialContext ic = new InitialContext();
             //DataSource dataSource = (DataSource) ic.lookup("java:jboss/laba3");
             try
             {
@@ -22,6 +21,7 @@ public class ConnectToDb
             {
                 e.printStackTrace();
             }
+
             return DriverManager.getConnection("jdbc:sqlite:c:/laba4/lababase.s3db");
         }
         catch (SQLException e)

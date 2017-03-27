@@ -43,7 +43,7 @@ public class ActionForStructureBean implements SessionBean
             StructureProcessingFromDb structureProcessingFromDb = getHome().findByPrimaryKey(idForAction);
             if (structureProcessingFromDb != null)
             {
-                structureProcessingFromDb.setNameDepartment(param);
+                structureProcessingFromDb.setNameDepartmentWithUpdade(param);
             }
         } catch (RemoteException e)
         {
