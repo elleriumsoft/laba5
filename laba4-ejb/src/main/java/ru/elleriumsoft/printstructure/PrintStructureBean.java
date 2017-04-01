@@ -14,6 +14,9 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Vector;
 
+import static ru.elleriumsoft.jdbc.ConnectToDb.JNDI_ROOT;
+import static ru.elleriumsoft.jdbc.ConnectToDb.PATH_APP;
+
 /**
  * Created by Dmitriy on 23.03.2017.
  */
@@ -111,7 +114,7 @@ public class PrintStructureBean implements SessionBean
                 pw.append("&nbsp<span><a href=\"/PrintElementJsp.jsp?id=" + String.valueOf(el.getId()) + "\">" + el.getNameDepartment() + "</a>&nbsp");//pw.append("&nbsp<span><a href=\"/laba3/Servlets.PrintElement?id=" + String.valueOf(el.getId()) + "\">" + el.getNameDepartment() + "</a>&nbsp");
                 if (!command.equals("") && !(command.equals("delete") && el.getId() == 1))
                 {
-                    pw.append("<a href=\"/Structure.jsp?command=" + command + "&element=" + el.getId() + "\"style=\"color:#FF0000\">[" + getStringCommand(command) + "]</a>");
+                    pw.append("<a href=\"" + PATH_APP + "Structure.jsp?command=" + command + "&element=" + el.getId() + "\"style=\"color:#FF0000\">[" + getStringCommand(command) + "]</a>");
                 }
                 pw.append("</span><br><br>");
             }
@@ -208,10 +211,10 @@ public class PrintStructureBean implements SessionBean
             {
                 if (state.getState() == StateOfElements.OPEN)
                 {
-                    return "<a href=\"Structure.jsp?open=" + String.valueOf(idElement) + "\"><img src=\"images/minus.png\" width=\"14\" height=\"14\" align = \"bottom\" alt=\"Свернуть список\"</a>";
+                    return "<a href=\"" + PATH_APP + "Structure.jsp?open=" + String.valueOf(idElement) + "\"><img src=\"images/minus.png\" width=\"14\" height=\"14\" align = \"bottom\" alt=\"Свернуть список\"</a>";
                 } else
                 {
-                    return "<a href=\"Structure.jsp?open=" + String.valueOf(idElement) + "\"><img src=\"images/plus.png\" width=\"14\" height=\"14\" align = \"bottom\" alt=\"Раскрыть список\"</a>";
+                    return "<a href=\"" + PATH_APP + "Structure.jsp?open=" + String.valueOf(idElement) + "\"><img src=\"images/plus.png\" width=\"14\" height=\"14\" align = \"bottom\" alt=\"Раскрыть список\"</a>";
                 }
             }
             else
@@ -257,7 +260,7 @@ public class PrintStructureBean implements SessionBean
         StructureProcessingFromDbHome structureProcessingFromDbHome = null;
         try {
             InitialContext ic = new InitialContext();
-            Object remoteObject = ic.lookup("java:global/laba4-ear-1.0/laba4-ejb-1.0/StructureProcessingFromDbEJB");//"laba4-ejb/ru.elleriumsoft.structureForPrint.StructureProcessingFromDbHome");
+            Object remoteObject = ic.lookup(JNDI_ROOT + "StructureProcessingFromDbEJB");//"laba4-ejb/ru.elleriumsoft.structureForPrint.StructureProcessingFromDbHome");
             structureProcessingFromDbHome = (StructureProcessingFromDbHome) PortableRemoteObject.narrow(remoteObject, StructureProcessingFromDbHome.class);
             Vector<StructureProcessingFromDb> dataFromDb = new Vector<>();
             for (StateOfElements stateOfElements : statesOfElements)
@@ -276,7 +279,7 @@ public class PrintStructureBean implements SessionBean
         StructureProcessingFromDbHome structureProcessingFromDbHome = null;
         try {
             InitialContext ic = new InitialContext();
-            Object remoteObject = ic.lookup("java:global/laba4-ear-1.0/laba4-ejb-1.0/StructureProcessingFromDbEJB");//"laba4-ejb/ru.elleriumsoft.structureForPrint.StructureProcessingFromDbHome");
+            Object remoteObject = ic.lookup(JNDI_ROOT + "StructureProcessingFromDbEJB");//"laba4-ejb/ru.elleriumsoft.structureForPrint.StructureProcessingFromDbHome");
             structureProcessingFromDbHome = (StructureProcessingFromDbHome) PortableRemoteObject.narrow(remoteObject, StructureProcessingFromDbHome.class);
             Vector<StructureProcessingFromDb> dataFromDb = new Vector<>();
             return (Vector) structureProcessingFromDbHome.findParentKeys(id);

@@ -12,6 +12,9 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Vector;
 
+import static ru.elleriumsoft.jdbc.ConnectToDb.JNDI_ROOT;
+import static ru.elleriumsoft.jdbc.ConnectToDb.PATH_APP;
+
 /**
  * Created by Dmitriy on 26.03.2017.
  */
@@ -43,7 +46,7 @@ public class DeleteCommand extends Commands
 
         deleteElement(element);
 
-        return answer + "<br>" + "    <input type=\"submit\" id=\"Button1\" onclick=\"window.location.href='/Structure.jsp';return false;\" name=\"\" value=\"ОК\" style=\"position:absolute;left:310px;top:18px;width:184px;height:25px;\">" ;
+        return answer + "<br>" + "    <input type=\"submit\" id=\"Button1\" onclick=\"window.location.href='" + PATH_APP + "Structure.jsp';return false;\" name=\"\" value=\"ОК\" style=\"position:absolute;left:310px;top:18px;width:184px;height:25px;\">" ;
     }
 
     private void deleteElement(Integer id)
@@ -76,7 +79,7 @@ public class DeleteCommand extends Commands
         StructureProcessingFromDb structureProcessingFromDb = null;
         try {
             InitialContext ic = new InitialContext();
-            Object remoteObject = ic.lookup("java:global/laba4-ear-1.0/laba4-ejb-1.0/StructureProcessingFromDbEJB");
+            Object remoteObject = ic.lookup(JNDI_ROOT + "StructureProcessingFromDbEJB");
             StructureProcessingFromDbHome structureProcessingFromDbHome = (StructureProcessingFromDbHome) PortableRemoteObject.narrow(remoteObject, StructureProcessingFromDbHome.class);
             vector = (Vector) structureProcessingFromDbHome.findAll();
         } catch (Exception e) {

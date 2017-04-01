@@ -9,6 +9,8 @@ import javax.rmi.PortableRemoteObject;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
 
+import static ru.elleriumsoft.jdbc.ConnectToDb.JNDI_ROOT;
+
 /**
  * Created by Dmitriy on 26.03.2017.
  */
@@ -119,7 +121,7 @@ public class ActionForStructureBean implements SessionBean
         StructureProcessingFromDbHome structureProcessingFromDbHome = null;
         try {
             InitialContext ic = new InitialContext();
-            Object remoteObject = ic.lookup("java:global/laba4-ear-1.0/laba4-ejb-1.0/StructureProcessingFromDbEJB");
+            Object remoteObject = ic.lookup(JNDI_ROOT + "StructureProcessingFromDbEJB");
             structureProcessingFromDbHome = (StructureProcessingFromDbHome) PortableRemoteObject.narrow(remoteObject, StructureProcessingFromDbHome.class);
         } catch (Exception e) {
             System.out.println(e.getMessage());

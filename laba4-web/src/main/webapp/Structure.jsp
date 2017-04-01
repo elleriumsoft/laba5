@@ -6,6 +6,8 @@
 <%@ page import="javax.rmi.PortableRemoteObject" %>
 <%@ page import="ru.elleriumsoft.actionforstucture.ActionForStructureHome" %>
 <%@ page import="ru.elleriumsoft.actionforstucture.ActionForStructure" %>
+<%@ page import="static ru.elleriumsoft.jdbc.ConnectToDb.PATH_APP" %>
+<%@ page import="static ru.elleriumsoft.jdbc.ConnectToDb.JNDI_ROOT" %>
 <%--
   Created by IntelliJ IDEA.
   User: Dmitriy
@@ -27,10 +29,10 @@
     {
         try {
             InitialContext ic = new InitialContext();
-            Object remoteObject = ic.lookup("java:global/laba4-ear-1.0/laba4-ejb-1.0/PrintSturctureEJB");//"laba4-ejb/ru.elleriumsoft.structure.StructureProcessingFromDbHome");
+            Object remoteObject = ic.lookup(JNDI_ROOT + "PrintSturctureEJB");//"laba4-ejb/ru.elleriumsoft.structure.StructureProcessingFromDbHome");
             PrintStructureHome printStructureHome = (PrintStructureHome) PortableRemoteObject.narrow(remoteObject, PrintStructureHome.class);
             printStructure = printStructureHome.create();
-            remoteObject = ic.lookup("java:global/laba4-ear-1.0/laba4-ejb-1.0/CommandsForStructureEJB");//"laba4-ejb/ru.elleriumsoft.structure.StructureProcessingFromDbHome");
+            remoteObject = ic.lookup(JNDI_ROOT + "CommandsForStructureEJB");//"laba4-ejb/ru.elleriumsoft.structure.StructureProcessingFromDbHome");
             CommandsForStructureHome commandsForStructureHome = (CommandsForStructureHome) PortableRemoteObject.narrow(remoteObject, CommandsForStructureHome.class);
             commandsForStructure = commandsForStructureHome.create();
         } catch (Exception e) {
@@ -44,7 +46,7 @@
     if (actionForStructure == null)
     {
         InitialContext ic = new InitialContext();
-        Object remoteObject = ic.lookup("java:global/laba4-ear-1.0/laba4-ejb-1.0/ActionForStructureEJB");
+        Object remoteObject = ic.lookup(JNDI_ROOT + "ActionForStructureEJB");
         ActionForStructureHome actionForStructureHome = (ActionForStructureHome) PortableRemoteObject.narrow(remoteObject, ActionForStructureHome.class);
         actionForStructure = actionForStructureHome.create();
         session.setAttribute("action", actionForStructure);
@@ -59,7 +61,7 @@
 
     <br>
 
-    <% if (printStructure.checkNeedChangeState(request.getParameter("open"))) { response.sendRedirect("/Structure.jsp"); } %>
+    <% if (printStructure.checkNeedChangeState(request.getParameter("open"))) { response.sendRedirect(PATH_APP + "Structure.jsp"); } %>
 
     <%= printStructure.printStructure(request.getParameter("printcommand"))%>
 

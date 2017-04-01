@@ -13,6 +13,8 @@ import javax.ejb.SessionContext;
 import java.util.HashMap;
 import java.util.Map;
 
+import static ru.elleriumsoft.jdbc.ConnectToDb.PATH_APP;
+
 /**
  * Created by Dmitriy on 26.03.2017.
  */
@@ -26,10 +28,10 @@ public class CommandsForStructureBean implements SessionBean
     {
         if (element == null || command == null)
         {
-            return "    <input type= \"submit\" id= \"Button1 \" onclick= \"window.location.href='/Structure.jsp?printcommand=add';return false; \" name= \" \" value= \"Добавить \" style= \"position:absolute;left:9px;top:51px;width:104px;height:25px;color:#FF0000; \">\n" +
-                   "    <input type= \"submit\" id= \"Button2 \" onclick= \"window.location.href='/Structure.jsp?printcommand=edit';return false; \" name= \" \" value= \"Редактировать \" style= \"position:absolute;left:121px;top:51px;width:104px;height:25px;color:#FF0000; \">\n" +
-                   "    <input type= \"submit\" id= \"Button3 \" onclick= \"window.location.href='/Structure.jsp?printcommand=delete';return false; \" name= \" \" value= \"Удалить \" style= \"position:absolute;left:235px;top:51px;width:104px;height:25px;color:#FF0000; \">" +
-                   "    <input type=\"submit\" id=\"Button1\" onclick=\"window.location.href='/index.jsp';return false;\" name=\"\" value=\"Вернуться в меню\" style=\"position:absolute;left:310px;top:18px;width:184px;height:25px;\">" ;
+            return "    <input type= \"submit\" id= \"Button1 \" onclick= \"window.location.href='" + PATH_APP + "Structure.jsp?printcommand=add';return false; \" name= \" \" value= \"Добавить \" style= \"position:absolute;left:9px;top:51px;width:104px;height:25px;color:#FF0000; \">\n" +
+                   "    <input type= \"submit\" id= \"Button2 \" onclick= \"window.location.href='" + PATH_APP + "Structure.jsp?printcommand=edit';return false; \" name= \" \" value= \"Редактировать \" style= \"position:absolute;left:121px;top:51px;width:104px;height:25px;color:#FF0000; \">\n" +
+                   "    <input type= \"submit\" id= \"Button3 \" onclick= \"window.location.href='" + PATH_APP + "Structure.jsp?printcommand=delete';return false; \" name= \" \" value= \"Удалить \" style= \"position:absolute;left:235px;top:51px;width:104px;height:25px;color:#FF0000; \">" +
+                   "    <input type=\"submit\" id=\"Button1\" onclick=\"window.location.href='" + PATH_APP + "index.jsp';return false;\" name=\"\" value=\"Вернуться в меню\" style=\"position:absolute;left:310px;top:18px;width:184px;height:25px;\">" ;
         }
 
         Map<String, Commands> commands = new HashMap<String, Commands>()
