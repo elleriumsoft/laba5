@@ -3,15 +3,26 @@
 
 <log4j:configuration debug="false" xmlns:log4j="http://jakarta.apache.org/log4j/">
 
+    <appender name="FileAppender" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="File" value="laba4.log"/>
+        <param name="Append" value="true"/>
+        <param name="DatePattern" value="'.'yyyy-MM-dd'.log'"/>
+        <param name="Encoding" value="UTF-8"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{HH:mm} [%23.23c{1}] %m%n"/>
+        </layout>
+    </appender>
+
     <appender name="ConsoleAppender" class="org.apache.log4j.ConsoleAppender">
         <param name="Encoding" value="Cp866"/>
         <layout class="org.apache.log4j.PatternLayout">
-            <param name="ConversionPattern" value="%d{HH:mm} [%15.15c{1}] %m%n" />
+            <param name="ConversionPattern" value="%d{HH:mm} [%23.23c{1}] %m%n" />
         </layout>
     </appender>
 
     <root>
         <priority value="INFO"/>
+        <appender-ref ref="FileAppender"/>
         <appender-ref ref="ConsoleAppender"/>
     </root>
 

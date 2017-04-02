@@ -1,5 +1,6 @@
 package ru.elleriumsoft.structurecommands.commands;
 
+import org.apache.log4j.Logger;
 import ru.elleriumsoft.actionforstucture.ActionForStructure;
 import ru.elleriumsoft.structure.StructureProcessingFromDb;
 import ru.elleriumsoft.structure.StructureProcessingFromDbHome;
@@ -15,6 +16,8 @@ import static ru.elleriumsoft.jdbc.ConnectToDb.JNDI_ROOT;
 public abstract class Commands
 {
     ActionForStructure actionForStructure;
+
+    private static final Logger logger = Logger.getLogger(Commands.class.getName());
 
     public Commands(ActionForStructure actionForStructure)
     {
@@ -33,7 +36,7 @@ public abstract class Commands
             structureProcessingFromDbHome = (StructureProcessingFromDbHome) PortableRemoteObject.narrow(remoteObject, StructureProcessingFromDbHome.class);
             structureProcessingFromDb = structureProcessingFromDbHome.findByPrimaryKey(id);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            logger.info(e.getMessage());
         }
         return structureProcessingFromDb;
     }

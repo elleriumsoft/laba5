@@ -22,6 +22,7 @@ public class StructureProcessingFromDbBean implements EntityBean
     private Integer parent_id;
     private int nestingLevel;
     private boolean needUpdate;
+
     private final static Logger logger = Logger.getLogger(StructureProcessingFromDbBean.class);
 
     private EntityContext entityContext;
@@ -258,5 +259,23 @@ public class StructureProcessingFromDbBean implements EntityBean
     public void ejbPostCreate(Integer id, String name, Integer parent_id) throws CreateException
     {
 
+    }
+
+    public Integer ejbFindByMaxId() throws FinderException, EJBException
+    {
+        int maxId = 0;
+        try(Connection connection = new ConnectToDb().getConnection();)
+        {
+            PreparedStatement statement = connection.prepareStatement("select id from structure where id = (select max(id) from structure)");
+            ResultSet resultSet = statement.executeQuery();
+            if (!resultSet.next()) {
+                throw new FinderException("Объект не найден");
+            }
+            maxId =  resultSet.getInt(1);
+        } catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+        return maxId;
     }
 }

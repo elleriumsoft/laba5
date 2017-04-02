@@ -1,13 +1,19 @@
-<%@ page import="ru.elleriumsoft.printstructure.PrintStructure" %>
-<%@ page import="ru.elleriumsoft.printstructure.PrintStructureHome" %>
+<%@ page import="ru.elleriumsoft.actionforstucture.ActionForStructure" %>
+<%@ page import="ru.elleriumsoft.actionforstucture.ActionForStructureHome" %>
+<%@ page import="ru.elleriumsoft.printstructure.handlingofstates.HandlingOfStates" %>
+<%@ page import="ru.elleriumsoft.printstructure.handlingofstates.HandlingOfStatesHome" %>
+<%@ page import="ru.elleriumsoft.printstructure.printonscreen.PrintStructure" %>
+<%@ page import="ru.elleriumsoft.printstructure.printonscreen.PrintStructureHome" %>
 <%@ page import="ru.elleriumsoft.structurecommands.CommandsForStructure" %>
 <%@ page import="ru.elleriumsoft.structurecommands.CommandsForStructureHome" %>
-<%@ page import="javax.naming.InitialContext" %>
-<%@ page import="javax.rmi.PortableRemoteObject" %>
-<%@ page import="ru.elleriumsoft.actionforstucture.ActionForStructureHome" %>
-<%@ page import="ru.elleriumsoft.actionforstucture.ActionForStructure" %>
 <%@ page import="static ru.elleriumsoft.jdbc.ConnectToDb.PATH_APP" %>
 <%@ page import="static ru.elleriumsoft.jdbc.ConnectToDb.JNDI_ROOT" %>
+<%@ page import="javax.naming.InitialContext" %>
+<%@ page import="javax.rmi.PortableRemoteObject" %>
+<%@ page import="ru.elleriumsoft.printstructure.objectstructure.ObjectOfStructure" %>
+<%@ page import="ru.elleriumsoft.printstructure.objectstructure.ObjectOfStructureHome" %>
+<%@ page import="org.apache.log4j.Logger" %>
+<%@ page import="ru.elleriumsoft.structurecommands.commands.Commands" %>
 <%--
   Created by IntelliJ IDEA.
   User: Dmitriy
@@ -22,21 +28,28 @@
 </head>
 <body>
 <%!
+    private static final Logger logger = Logger.getLogger("jsp");
     private PrintStructure printStructure = null;
     private CommandsForStructure commandsForStructure = null;
     private ActionForStructure actionForStructure = null;
+    private ObjectOfStructure objectOfStructure = null;
+    private HandlingOfStates handlingOfStates = null;
     public void jspInit()
     {
+        logger.info("Start Structure.jsp");
         try {
             InitialContext ic = new InitialContext();
-            Object remoteObject = ic.lookup(JNDI_ROOT + "PrintSturctureEJB");//"laba4-ejb/ru.elleriumsoft.structure.StructureProcessingFromDbHome");
+            Object remoteObject = ic.lookup(JNDI_ROOT + "PrintSturctureEJB");
             PrintStructureHome printStructureHome = (PrintStructureHome) PortableRemoteObject.narrow(remoteObject, PrintStructureHome.class);
             printStructure = printStructureHome.create();
-            remoteObject = ic.lookup(JNDI_ROOT + "CommandsForStructureEJB");//"laba4-ejb/ru.elleriumsoft.structure.StructureProcessingFromDbHome");
+            remoteObject = ic.lookup(JNDI_ROOT + "CommandsForStructureEJB");
             CommandsForStructureHome commandsForStructureHome = (CommandsForStructureHome) PortableRemoteObject.narrow(remoteObject, CommandsForStructureHome.class);
             commandsForStructure = commandsForStructureHome.create();
+            remoteObject = ic.lookup(JNDI_ROOT + "HandlingOfStatesEJB");//"laba4-ejb/ru.elleriumsoft.structure.StructureProcessingFromDbHome");
+            HandlingOfStatesHome handlingOfStatesHome = (HandlingOfStatesHome) PortableRemoteObject.narrow(remoteObject, HandlingOfStatesHome.class);
+            handlingOfStates = handlingOfStatesHome.create();
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            logger.info(e.getMessage());
         }
     }
 %>
@@ -51,19 +64,31 @@
         actionForStructure = actionForStructureHome.create();
         session.setAttribute("action", actionForStructure);
     }
+    objectOfStructure = (ObjectOfStructure) session.getAttribute("structure");
+    if (objectOfStructure == null)
+    {
+        InitialContext ic = new InitialContext();
+        Object remoteObject = ic.lookup(JNDI_ROOT + "ObjectOfStructureEJB");
+        ObjectOfStructureHome objectOfStructureHome = (ObjectOfStructureHome) PortableRemoteObject.narrow(remoteObject, ObjectOfStructureHome.class);
+        objectOfStructure = objectOfStructureHome.create();
+        session.setAttribute("structure", objectOfStructure);
+    }
 %>
 <h1 style="color:#191970"><b>Структура мэрии</b></h1>
 
-    <% actionForStructure.action(request.getParameter("newname"), printStructure.getMaxId()); %>
+    <% objectOfStructure.initStructureFromDb(); %>
+
+    <% if (request.getParameter("newname") != null) {actionForStructure.action(request.getParameter("newname"), objectOfStructure.getMaxId(), objectOfStructure);} %>
 
     <%= commandsForStructure.build(actionForStructure, request.getParameter("command"), request.getParameter("element"))%>
     <% session.setAttribute("action", actionForStructure); %>
 
     <br>
 
-    <% if (printStructure.checkNeedChangeState(request.getParameter("open"))) { response.sendRedirect(PATH_APP + "Structure.jsp"); } %>
+    <% if (handlingOfStates.checkNeedChangeState(request.getParameter("open"), objectOfStructure)) { response.sendRedirect(PATH_APP + "Structure.jsp"); } %>
 
-    <%= printStructure.printStructure(request.getParameter("printcommand"))%>
+    <%= printStructure.printStructure(request.getParameter("printcommand"), objectOfStructure)%>
+    <% session.setAttribute("structure", objectOfStructure); %>
 
 </body>
 </html>

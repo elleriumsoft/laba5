@@ -7,7 +7,7 @@ del %SERVERPATH%\apps\* /s /q
 rd %SERVERPATH%\apps\%APPNAME% /s /q
 rd %SERVERPATH%\work\Catalina\localhost\app /s /q
 call xcopy laba4-ear\target\%APPNAME%.ear %SERVERPATH%\apps\ /y /c /r
-call xcopy lababase.s3db %SERVERPATH%\bin\ /y /c /r
+call xcopy lababase.s3db %SERVERPATH%\bin\ /d
 
 cd /d %SERVERPATH%\bin\
 call startup.bat

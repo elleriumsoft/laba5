@@ -1,14 +1,12 @@
 package ru.elleriumsoft.printstructure;
 
+import java.io.Serializable;
+
 /**
  * Created by Dmitriy on 27.03.2017.
  */
-public class StateOfElements
+public class StateOfElements implements Serializable
 {
-    protected final static int CLOSE = 1;
-    protected final static int OPEN = 2;
-    protected final static int NO_CHILD = 3;
-
     private int id;
     private int state;
 

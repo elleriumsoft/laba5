@@ -1,20 +1,23 @@
 package ru.elleriumsoft.printstructure;
 
+import java.io.Serializable;
+
 /**
  * Created by Dmitriy on 19.03.2017.
  */
-public class StructureElement
+public class StructureElement implements Serializable
 {
     private int id;
     private String nameDepartment;
     private int parent_id;
-    private int nestingLevel;
+    private int Level;
 
-    public StructureElement(int id, String nameDepartment, int parent_id)
+    public StructureElement(int id, String nameDepartment, int parent_id, int level)
     {
         this.id = id;
         this.nameDepartment = nameDepartment;
         this.parent_id = parent_id;
+        Level = level;
     }
 
     public int getId()
@@ -49,11 +52,11 @@ public class StructureElement
 
     public int getLevel()
     {
-        return nestingLevel;
+        return Level;
     }
 
-    public void setLevel(int nestingLevel)
+    public void setLevel(int level)
     {
-        this.nestingLevel = nestingLevel;
+        Level = level;
     }
 }

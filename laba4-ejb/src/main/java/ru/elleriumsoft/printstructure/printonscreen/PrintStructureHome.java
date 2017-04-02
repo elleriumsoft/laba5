@@ -1,4 +1,4 @@
-package ru.elleriumsoft.printstructure;
+package ru.elleriumsoft.printstructure.printonscreen;
 
 import javax.ejb.CreateException;
 import javax.ejb.EJBHome;

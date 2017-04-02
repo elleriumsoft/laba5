@@ -1,9 +1,8 @@
 package ru.elleriumsoft.jdbc;
 
 import org.apache.log4j.Logger;
-import ru.elleriumsoft.printstructure.PrintStructureBean;
+import ru.elleriumsoft.printstructure.printonscreen.PrintStructureBean;
 
-import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -22,11 +21,8 @@ public class ConnectToDb
     {
         try
         {
-            //DataSource dataSource = (DataSource) ic.lookup("java:jboss/laba3");
             try
             {
-                File file = new File("");
-                logger.info("путь=" + file.getAbsolutePath());
                 Class.forName("org.sqlite.JDBC");
             } catch (ClassNotFoundException e)
             {
