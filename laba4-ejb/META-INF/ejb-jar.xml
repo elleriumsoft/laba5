@@ -7,49 +7,49 @@
   <enterprise-beans>
       <session>
           <ejb-name>PrintSturctureEJB</ejb-name>
-          <home>ru.elleriumsoft.printstructure.printonscreen.PrintStructureHome</home>
-          <remote>ru.elleriumsoft.printstructure.printonscreen.PrintStructure</remote>
-          <ejb-class>ru.elleriumsoft.printstructure.printonscreen.PrintStructureBean</ejb-class>
+          <home>ru.elleriumsoft.structure.print.printonscreen.PrintStructureHome</home>
+          <remote>ru.elleriumsoft.structure.print.printonscreen.PrintStructure</remote>
+          <ejb-class>ru.elleriumsoft.structure.print.printonscreen.PrintStructureBean</ejb-class>
           <session-type>Stateless</session-type>
           <transaction-type>Container</transaction-type>
       </session>
       <session>
           <ejb-name>CommandsForStructureEJB</ejb-name>
-          <home>ru.elleriumsoft.structurecommands.CommandsForStructureHome</home>
-          <remote>ru.elleriumsoft.structurecommands.CommandsForStructure</remote>
-          <ejb-class>ru.elleriumsoft.structurecommands.CommandsForStructureBean</ejb-class>
+          <home>ru.elleriumsoft.structure.structurecommands.CommandsForStructureHome</home>
+          <remote>ru.elleriumsoft.structure.structurecommands.CommandsForStructure</remote>
+          <ejb-class>ru.elleriumsoft.structure.structurecommands.CommandsForStructureBean</ejb-class>
           <session-type>Stateless</session-type>
           <transaction-type>Container</transaction-type>
       </session>
       <session>
           <ejb-name>ActionForStructureEJB</ejb-name>
-          <home>ru.elleriumsoft.actionforstucture.ActionForStructureHome</home>
-          <remote>ru.elleriumsoft.actionforstucture.ActionForStructure</remote>
-          <ejb-class>ru.elleriumsoft.actionforstucture.ActionForStructureBean</ejb-class>
+          <home>ru.elleriumsoft.structure.modifications.ActionForStructureHome</home>
+          <remote>ru.elleriumsoft.structure.modifications.ActionForStructure</remote>
+          <ejb-class>ru.elleriumsoft.structure.modifications.ActionForStructureBean</ejb-class>
           <session-type>Stateful</session-type>
           <transaction-type>Container</transaction-type>
       </session>
       <session>
           <ejb-name>HandlingOfStatesEJB</ejb-name>
-          <home>ru.elleriumsoft.printstructure.handlingofstates.HandlingOfStatesHome</home>
-          <remote>ru.elleriumsoft.printstructure.handlingofstates.HandlingOfStates</remote>
-          <ejb-class>ru.elleriumsoft.printstructure.handlingofstates.HandlingOfStatesBean</ejb-class>
+          <home>ru.elleriumsoft.structure.print.handlingofstates.HandlingOfStatesHome</home>
+          <remote>ru.elleriumsoft.structure.print.handlingofstates.HandlingOfStates</remote>
+          <ejb-class>ru.elleriumsoft.structure.print.handlingofstates.HandlingOfStatesBean</ejb-class>
           <session-type>Stateless</session-type>
           <transaction-type>Container</transaction-type>
       </session>
       <session>
           <ejb-name>ObjectOfStructureEJB</ejb-name>
-          <home>ru.elleriumsoft.printstructure.objectstructure.ObjectOfStructureHome</home>
-          <remote>ru.elleriumsoft.printstructure.objectstructure.ObjectOfStructure</remote>
-          <ejb-class>ru.elleriumsoft.printstructure.objectstructure.ObjectOfStructureBean</ejb-class>
+          <home>ru.elleriumsoft.structure.objectstructure.ObjectOfStructureHome</home>
+          <remote>ru.elleriumsoft.structure.objectstructure.ObjectOfStructure</remote>
+          <ejb-class>ru.elleriumsoft.structure.objectstructure.ObjectOfStructureBean</ejb-class>
           <session-type>Stateful</session-type>
           <transaction-type>Container</transaction-type>
       </session>
       <entity>
           <ejb-name>StructureProcessingFromDbEJB</ejb-name>
-          <home>ru.elleriumsoft.structure.StructureProcessingFromDbHome</home>
-          <remote>ru.elleriumsoft.structure.StructureProcessingFromDb</remote>
-          <ejb-class>ru.elleriumsoft.structure.StructureProcessingFromDbBean</ejb-class>
+          <home>ru.elleriumsoft.structure.entity.StructureProcessingFromDbHome</home>
+          <remote>ru.elleriumsoft.structure.entity.StructureProcessingFromDb</remote>
+          <ejb-class>ru.elleriumsoft.structure.entity.StructureProcessingFromDbBean</ejb-class>
           <persistence-type>Bean</persistence-type>
           <prim-key-class>java.lang.Integer</prim-key-class>
           <reentrant>false</reentrant>
