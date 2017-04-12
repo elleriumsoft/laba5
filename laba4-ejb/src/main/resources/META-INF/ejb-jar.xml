@@ -54,5 +54,14 @@
           <prim-key-class>java.lang.Integer</prim-key-class>
           <reentrant>false</reentrant>
       </entity>
+      <entity>
+          <ejb-name>EntityDeptEJB</ejb-name>
+          <home>ru.elleriumsoft.department.entity.EntityDeptHome</home>
+          <remote>ru.elleriumsoft.department.entity.EntityDept</remote>
+          <ejb-class>ru.elleriumsoft.department.entity.EntityDeptBean</ejb-class>
+          <persistence-type>Bean</persistence-type>
+          <prim-key-class>java.lang.Integer</prim-key-class>
+          <reentrant>true</reentrant>
+      </entity>
   </enterprise-beans>
 </ejb-jar>
