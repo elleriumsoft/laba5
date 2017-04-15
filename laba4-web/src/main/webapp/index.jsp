@@ -13,6 +13,5 @@
     <body>
     <H1>Проект с J2EE для работы с иерархической базой данных</H1>
     <H2><a href="<%=PATH_STRUCTURE%>structure/Structure.jsp">Структура мэрии</a></H2>
-    <H2><a href="department/Department.jsp">Тест депт</a></H2>
     </body>
 </html>

@@ -1,10 +1,10 @@
 package ru.elleriumsoft.structure.print.printonscreen;
 
 import org.apache.log4j.Logger;
+import ru.elleriumsoft.structure.objectstructure.ObjectOfStructure;
 import ru.elleriumsoft.structure.print.StateOfElements;
 import ru.elleriumsoft.structure.print.StructureElement;
 import ru.elleriumsoft.structure.print.VariantsOfState;
-import ru.elleriumsoft.structure.objectstructure.ObjectOfStructure;
 
 import javax.ejb.CreateException;
 import javax.ejb.EJBException;
@@ -43,7 +43,7 @@ public class PrintStructureBean implements SessionBean
                     StructureElement el = objectOfStructure.getStructureElement(i);
                     pw.append(addSpaces(el.getLevel()));
                     pw.append(addImageForActionList(el.getId(), objectOfStructure));
-                    pw.append("&nbsp<span><a href=\"/PrintElementJsp.jsp?id=" + String.valueOf(el.getId()) + "\">" + el.getNameDepartment() + "</a>&nbsp");//pw.append("&nbsp<span><a href=\"/laba3/Servlets.PrintElement?id=" + String.valueOf(el.getId()) + "\">" + el.getNameDepartment() + "</a>&nbsp");
+                    pw.append("&nbsp<span><a href=\"" + "/app/department/" + "Department.jsp?id=" + String.valueOf(el.getId()) + "\">" + el.getNameDepartment() + "</a>&nbsp");//pw.append("&nbsp<span><a href=\"/laba3/Servlets.PrintElement?id=" + String.valueOf(el.getId()) + "\">" + el.getNameDepartment() + "</a>&nbsp");
                     if (!command.equals("") && !(command.equals("delete") && el.getId() == 1))
                     {
                         pw.append("<a href=\"" + PATH_STRUCTURE + "Structure.jsp?command=" + command + "&element=" + el.getId() + "\"style=\"color:#FF0000\">[" + getStringCommand(command) + "]</a>");

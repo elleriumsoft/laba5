@@ -45,6 +45,14 @@
           <session-type>Stateful</session-type>
           <transaction-type>Container</transaction-type>
       </session>
+      <session>
+          <ejb-name>ObjectDeptEJB</ejb-name>
+          <home>ru.elleriumsoft.department.object.ObjectDeptHome</home>
+          <remote>ru.elleriumsoft.department.object.ObjectDept</remote>
+          <ejb-class>ru.elleriumsoft.department.object.ObjectDeptBean</ejb-class>
+          <session-type>Stateful</session-type>
+          <transaction-type>Container</transaction-type>
+      </session>
       <entity>
           <ejb-name>StructureProcessingFromDbEJB</ejb-name>
           <home>ru.elleriumsoft.structure.entity.StructureProcessingFromDbHome</home>
