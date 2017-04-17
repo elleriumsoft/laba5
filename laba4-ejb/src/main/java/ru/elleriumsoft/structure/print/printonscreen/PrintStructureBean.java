@@ -43,7 +43,7 @@ public class PrintStructureBean implements SessionBean
                     StructureElement el = objectOfStructure.getStructureElement(i);
                     pw.append(addSpaces(el.getLevel()));
                     pw.append(addImageForActionList(el.getId(), objectOfStructure));
-                    pw.append("&nbsp<span><a href=\"" + "/app/department/" + "Department.jsp?id=" + String.valueOf(el.getId()) + "\">" + el.getNameDepartment() + "</a>&nbsp");//pw.append("&nbsp<span><a href=\"/laba3/Servlets.PrintElement?id=" + String.valueOf(el.getId()) + "\">" + el.getNameDepartment() + "</a>&nbsp");
+                    pw.append("&nbsp<span><a href=\"" + "/app/department/" + "Department.jsp?id=" + String.valueOf(el.getId()) + "&name=" + el.getNameDepartment() + "\">" + el.getNameDepartment() + "</a>&nbsp");//pw.append("&nbsp<span><a href=\"/laba3/Servlets.PrintElement?id=" + String.valueOf(el.getId()) + "\">" + el.getNameDepartment() + "</a>&nbsp");
                     if (!command.equals("") && !(command.equals("delete") && el.getId() == 1))
                     {
                         pw.append("<a href=\"" + PATH_STRUCTURE + "Structure.jsp?command=" + command + "&element=" + el.getId() + "\"style=\"color:#FF0000\">[" + getStringCommand(command) + "]</a>");

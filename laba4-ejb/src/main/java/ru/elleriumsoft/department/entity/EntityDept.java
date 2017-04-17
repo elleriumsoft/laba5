@@ -8,6 +8,7 @@ import java.rmi.RemoteException;
  */
 public interface EntityDept extends EJBObject
 {
+    Integer getId() throws RemoteException;
     String getNameEmployee() throws RemoteException;
     String getEmploymentDate() throws RemoteException;
     String getNameProfession() throws RemoteException;

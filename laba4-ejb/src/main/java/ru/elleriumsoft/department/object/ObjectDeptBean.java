@@ -22,6 +22,7 @@ public class ObjectDeptBean implements SessionBean
 {
     private ArrayList<Department> employeeOfDepartment;
     private Integer idDepartment;
+    private String nameDepartment;
 
     private static final Logger logger = Logger.getLogger(ObjectDeptBean.class.getName());
 
@@ -33,7 +34,7 @@ public class ObjectDeptBean implements SessionBean
         {
             try
             {
-                employeeOfDepartment.add(new Department(convertingNameForOutput(element.getNameEmployee()), element.getNameProfession(), convertingDateForOutput(element.getEmploymentDate())));
+                employeeOfDepartment.add(new Department(element.getId(), convertingNameForOutput(element.getNameEmployee()), element.getNameProfession(), element.getEmploymentDate()));
             } catch (RemoteException e)
             {
                 logger.info(e.getMessage());
@@ -42,9 +43,24 @@ public class ObjectDeptBean implements SessionBean
         }
     }
 
+    public String getNameDepartment()
+    {
+        return nameDepartment;
+    }
+
+    public void setNameDepartment(String nameDepartment)
+    {
+        this.nameDepartment = nameDepartment;
+    }
+
     public Integer getIdDepartment()
     {
         return idDepartment;
+    }
+
+    public Integer getId(Integer idEmployee)
+    {
+        return employeeOfDepartment.get(idEmployee).getId();
     }
 
     public Integer getSizeObject()
@@ -63,6 +79,11 @@ public class ObjectDeptBean implements SessionBean
     }
 
     public String getEmploymentDate(Integer idEmployee)
+    {
+        return convertingDateForOutput(employeeOfDepartment.get(idEmployee).getEmploymentDate());
+    }
+
+    public String getDateForEdit(Integer idEmployee)
     {
         return employeeOfDepartment.get(idEmployee).getEmploymentDate();
     }
