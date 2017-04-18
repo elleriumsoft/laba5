@@ -61,6 +61,14 @@
           <session-type>Stateful</session-type>
           <transaction-type>Container</transaction-type>
       </session>
+      <session>
+          <ejb-name>ChangeItemDepartmentEJB</ejb-name>
+          <home>ru.elleriumsoft.department.action.ChangeItemDepartmentHome</home>
+          <remote>ru.elleriumsoft.department.action.ChangeItemDepartment</remote>
+          <ejb-class>ru.elleriumsoft.department.action.ChangeItemDepartmentBean</ejb-class>
+          <session-type>Stateless</session-type>
+          <transaction-type>Container</transaction-type>
+      </session>
       <entity>
           <ejb-name>StructureProcessingFromDbEJB</ejb-name>
           <home>ru.elleriumsoft.structure.entity.StructureProcessingFromDbHome</home>

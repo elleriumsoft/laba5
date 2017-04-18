@@ -18,4 +18,5 @@ public interface ObjectDept extends EJBObject
     Integer getIdDepartment() throws RemoteException;
     String getNameDepartment() throws RemoteException;
     void setNameDepartment(String nameDepartment) throws RemoteException;
+    int getMaxId() throws RemoteException;
 }

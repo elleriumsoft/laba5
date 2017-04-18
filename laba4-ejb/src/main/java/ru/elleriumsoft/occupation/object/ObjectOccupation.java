@@ -11,4 +11,5 @@ public interface ObjectOccupation extends EJBObject
     String getOccupationWithId(Integer idOcc) throws RemoteException;
     Integer getSize() throws RemoteException;
     String getHtmlCodeForSelectOption() throws RemoteException;
+    String getHtmlCodeForSelectOptionWithSelection(int selection) throws RemoteException;
 }

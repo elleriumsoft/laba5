@@ -40,6 +40,23 @@ public class ObjectOccupationBean implements SessionBean
         return html.toString();
     }
 
+    public String getHtmlCodeForSelectOptionWithSelection(int selection)
+    {
+        StringBuilder html = new StringBuilder();
+        for (int i = 0; i < occupations.size(); i++)
+        {
+            if (i == selection)
+            {
+                html.append("<option value=\"" + occupations.get(i).getId() + "\" selected>" + occupations.get(i).getName() + "</option>");
+            }
+            else
+            {
+                html.append("<option value=\"" + occupations.get(i).getId() + "\">" + occupations.get(i).getName() + "</option>");
+            }
+        }
+        return html.toString();
+    }
+
     public ObjectOccupationBean()
     {
     }

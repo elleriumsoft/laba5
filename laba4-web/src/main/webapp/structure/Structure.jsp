@@ -55,7 +55,7 @@
 %>
 
 <%
-    actionForStructure = (ActionForStructure) session.getAttribute("action");
+    actionForStructure = (ActionForStructure) session.getAttribute("actionForStucture");
     if (actionForStructure == null)
     {
         InitialContext ic = new InitialContext();
@@ -82,7 +82,7 @@
 
     <%= commandsForStructure.build(actionForStructure, request.getParameter("command"), request.getParameter("element"))%>
 
-    <% session.setAttribute("action", actionForStructure); %>
+    <% session.setAttribute("actionForStucture", actionForStructure); %>
 
     <br>
 

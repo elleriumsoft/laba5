@@ -88,6 +88,26 @@ public class ObjectDeptBean implements SessionBean
         return employeeOfDepartment.get(idEmployee).getEmploymentDate();
     }
 
+    public int getMaxId()
+    {
+        int maxId = 0;
+        EntityDeptHome entityHome = null;
+        try
+        {
+            InitialContext ic = new InitialContext();
+            Object remoteObject = ic.lookup(JNDI_ROOT + "EntityDeptEJB");//"laba4-ejb/ru.elleriumsoft.structureForPrint.StructureProcessingFromDbHome");
+            entityHome = (EntityDeptHome) PortableRemoteObject.narrow(remoteObject, EntityDeptHome.class);
+            EntityDept entityDept = entityHome.findByMaxId();
+            maxId = entityDept.getId();
+        } catch (Exception e)
+        {
+
+            logger.info(e.getStackTrace());
+        }
+        logger.info("MAX_ID=" + maxId);
+        return maxId;
+    }
+
     private Collection<EntityDept> readEmployeeFromDb(Integer idDepartment)
     {
         Collection<EntityDept> entityDept = Collections.emptyList();

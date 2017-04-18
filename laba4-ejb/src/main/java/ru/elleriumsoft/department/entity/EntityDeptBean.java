@@ -121,6 +121,66 @@ public class EntityDeptBean implements EntityBean
         }
     }
 
+    public Integer ejbCreate(Integer id, Integer id_dept, String name, String date, Integer occ_id) throws CreateException
+    {
+        try {
+            ejbFindByPrimaryKey(id);
+            throw new DuplicateKeyException("Такой ключ уже есть");
+        }
+        catch (FinderException e) {}
+        logger.info("create new entity dept");
+        logger.info("id=" + id);
+        logger.info("id_dept=" + id_dept);
+        logger.info("name=" + name);
+        logger.info("date=" + date);
+        logger.info("id_prof=" + occ_id);
+        this.id = id;
+        this.idDepartment = id_dept;
+        this.nameEmployee = name;
+        this.employmentDate = date;
+        this.idProfession = occ_id;
+        Connection connection = null;
+        PreparedStatement statement = null;
+        try {
+            connection = new ConnectToDb().getConnection();
+            statement = connection.prepareStatement("INSERT INTO employee"
+                    + "(id, id_dept, name, date, id_occ) VALUES(?, ?, ?, ?, ?)");
+            statement.setInt(1, id);
+            statement.setInt(2, idDepartment);
+            statement.setString(3, nameEmployee);
+            statement.setString(4, employmentDate);
+            statement.setInt(5, idProfession);
+            if (statement.executeUpdate() != 1) {
+                throw new CreateException("Ошибка вставки");
+            }
+            return this.id;
+        } catch (SQLException e) {
+            throw new EJBException("Ошибка INSERT");
+        } finally {
+            new ConnectToDb().closeConnection(connection);
+        }
+    }
+
+    public void ejbPostCreate(Integer id, Integer id_dept, String name, String date, Integer occ_id) throws CreateException {}
+
+    public Integer ejbFindByMaxId() throws FinderException, EJBException
+    {
+        int maxId = 0;
+        try(Connection connection = new ConnectToDb().getConnection();)
+        {
+            PreparedStatement statement = connection.prepareStatement("select id from employee where id = (select max(id) from employee)");
+            ResultSet resultSet = statement.executeQuery();
+            if (!resultSet.next()) {
+                throw new FinderException("Объект не найден");
+            }
+            maxId =  resultSet.getInt(1);
+        } catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+        return maxId;
+    }
+
     public void ejbStore() throws EJBException
     {
     }

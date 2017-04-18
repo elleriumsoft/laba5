@@ -20,7 +20,7 @@
 </head>
 <body>
 <%!
-    private static final Logger logger = Logger.getLogger("jsp");
+    private static final Logger logger = Logger.getLogger("Department.jsp");
     private ObjectDept objectDept = null;
     private ObjectOccupation objectOccupation = null;
 
@@ -51,7 +51,7 @@
         session.setAttribute("occupations", objectOccupation);
     }
 %>
-    <h1> <%= request.getParameter("name") %> </h1>
+    <h1> <%= objectDept.getNameDepartment() %> </h1>
 
     <a href="/app/structure/Structure.jsp"><img src="images/exit.png" width="33" height="33" align = "bottom" alt="Вернуться"></a>
     <a href="AddDept.jsp?id=new"><img src="images/create.png" width="33" height="33" align = "bottom" alt="Добавить элемент"></a>
