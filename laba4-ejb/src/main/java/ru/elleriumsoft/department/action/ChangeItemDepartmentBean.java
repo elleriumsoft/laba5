@@ -1,12 +1,10 @@
 package ru.elleriumsoft.department.action;
 
 import org.apache.log4j.Logger;
+import ru.elleriumsoft.department.entity.EntityDept;
 import ru.elleriumsoft.department.entity.EntityDeptHome;
 
-import javax.ejb.CreateException;
-import javax.ejb.EJBException;
-import javax.ejb.SessionBean;
-import javax.ejb.SessionContext;
+import javax.ejb.*;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.rmi.PortableRemoteObject;
@@ -68,12 +66,40 @@ public class ChangeItemDepartmentBean implements SessionBean
 
     private void editItem(int id, int id_dept, String name, String date, int id_occ)
     {
+        try
+        {
+            EntityDept entityDept = entityDeptHome.findByPrimaryKey(id);
+            entityDept.setIdDepartment(id_dept);
+            entityDept.setNameEmployee(name);
+            entityDept.setEmploymentDate(date);
+            entityDept.setIdProfession(id_occ);
+            entityDept.setNeedUpdate();
+        } catch (RemoteException e)
+        {
+            e.printStackTrace();
+        } catch (FinderException e)
+        {
+            e.printStackTrace();
+        }
 
     }
 
     private void deleteItem(int id)
     {
-
+        try
+        {
+            EntityDept entityDept = entityDeptHome.findByPrimaryKey(id);
+            entityDept.remove();
+        } catch (RemoteException e)
+        {
+            e.printStackTrace();
+        } catch (FinderException e)
+        {
+            e.printStackTrace();
+        } catch (RemoveException e)
+        {
+            e.printStackTrace();
+        }
     }
 
     public ChangeItemDepartmentBean()

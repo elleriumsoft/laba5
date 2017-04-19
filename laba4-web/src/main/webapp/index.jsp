@@ -11,7 +11,9 @@
         <title>Лабораторная работа №4</title>
     </head>
     <body>
-    <H1>Проект с J2EE для работы с иерархической базой данных</H1>
-    <H2><a href="<%=PATH_STRUCTURE%>structure/Structure.jsp">Структура мэрии</a></H2>
+    <H1>Структура мэрии</H1>
+    <H2><a href="<%=PATH_STRUCTURE%>structure/Structure.jsp">Пойдем посмотрим --></a></H2>
+    <br>
+    По сути своей реализация лабораторной работы J2EE для работы с иерархической базой данных
     </body>
 </html>

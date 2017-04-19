@@ -90,7 +90,8 @@
 <% } else
 {
     changeItemDepartment.changeItem((String) session.getAttribute("action"), (Integer) session.getAttribute("idForAction"), objectDept.getIdDepartment(), request.getParameter("name"), request.getParameter("date"), Integer.valueOf(request.getParameter("occ")));
-    response.sendRedirect("/app/department/Department.jsp?id=" + objectDept.getIdDepartment() + "&name=" + objectDept.getNameDepartment());
+    session.setAttribute("dept", objectDept);
+    response.sendRedirect("/app/department/Department.jsp?id=" + objectDept.getIdDepartment());
 } %>
 </body>
 </html>

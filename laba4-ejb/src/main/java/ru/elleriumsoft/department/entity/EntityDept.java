@@ -13,4 +13,8 @@ public interface EntityDept extends EJBObject
     String getEmploymentDate() throws RemoteException;
     String getNameProfession() throws RemoteException;
     void setIdDepartment(Integer idDepartment) throws RemoteException;
+    void setNameEmployee(String nameEmployee) throws RemoteException;
+    void setIdProfession(Integer idProfession) throws RemoteException;
+    void setEmploymentDate(String employmentDate) throws RemoteException;
+    void setNeedUpdate() throws RemoteException;
 }

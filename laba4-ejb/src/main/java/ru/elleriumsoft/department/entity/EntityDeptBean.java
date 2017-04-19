@@ -24,11 +24,18 @@ public class EntityDeptBean implements EntityBean
     private String nameProfession;
     private String employmentDate;
 
+    private boolean needUpdate;
+
     private EntityContext entityContext;
     private static final Logger logger = Logger.getLogger(EntityDeptBean.class.getName());
 
     public EntityDeptBean()
     {
+    }
+
+    public void setNeedUpdate()
+    {
+        needUpdate = true;
     }
 
     public Integer ejbFindByPrimaryKey(Integer key) throws FinderException
@@ -58,13 +65,10 @@ public class EntityDeptBean implements EntityBean
     public void setEntityContext(EntityContext entityContext) throws EJBException
     {
         this.entityContext = entityContext;
+        needUpdate = false;
     }
 
     public void unsetEntityContext() throws EJBException
-    {
-    }
-
-    public void ejbRemove() throws RemoveException, EJBException
     {
     }
 
@@ -83,7 +87,7 @@ public class EntityDeptBean implements EntityBean
         Connection connection = null;
         try {
             connection = new ConnectToDb().getConnection();
-            PreparedStatement statement = connection.prepareStatement("select employee.name, employee.id_occ, employee.date, occupations.occupation from employee, occupations where employee.id = ? and employee.id_occ=occupations.id");
+            PreparedStatement statement = connection.prepareStatement("select employee.name, employee.id_occ, employee.date, employee.id_dept, occupations.occupation from employee, occupations where employee.id = ? and employee.id_occ=occupations.id");
             statement.setInt(1, getId());
             ResultSet result = statement.executeQuery();
             if (!result.next()) {
@@ -92,7 +96,8 @@ public class EntityDeptBean implements EntityBean
             setNameEmployee(result.getString(1));
             setIdProfession(result.getInt(2));
             setEmploymentDate(result.getString(3));
-            setNameProfession(result.getString(4));
+            setIdDepartment(result.getInt(4));
+            setNameProfession(result.getString(5));
         } catch (SQLException ex) {
             throw new EJBException("Cannot load current record with id: " + getId());
         } finally {
@@ -163,6 +168,55 @@ public class EntityDeptBean implements EntityBean
 
     public void ejbPostCreate(Integer id, Integer id_dept, String name, String date, Integer occ_id) throws CreateException {}
 
+    public void ejbStore() throws EJBException
+    {
+        if (!needUpdate) {return;}
+        needUpdate = false;
+
+        logger.info("Store");
+        Connection connection = null;
+        PreparedStatement statement = null;
+        try {
+            connection = new ConnectToDb().getConnection();
+            statement = connection.prepareStatement(
+                    "UPDATE employee SET id_dept = ?, id_occ = ?, name = ?, date = ? WHERE id = ?");
+            statement.setInt(1, getIdDepartment());
+            statement.setInt(2, getIdProfession());
+            statement.setString(3, getNameEmployee());
+            statement.setString(4, getEmploymentDate());
+            statement.setInt(5, id);
+
+            if (statement.executeUpdate() < 1) {
+                throw new NoSuchEntityException("...");
+            }
+        } catch (SQLException e) {
+            throw new EJBException("Ошибка UPDATE");
+        } finally {
+            new ConnectToDb().closeConnection(connection);
+        }
+    }
+
+    public void ejbRemove() throws RemoveException, EJBException
+    {
+        Connection connection = null;
+        try
+        {
+            connection = new ConnectToDb().getConnection();
+            PreparedStatement statement = connection.prepareStatement
+                    ("DELETE FROM employee WHERE id = ?");
+            statement.setInt(1, id);
+            if (statement.executeUpdate() != 1)
+            {
+                throw new RemoveException("Could not remove: " + id);
+            }
+            statement.close();
+            connection.close();
+        } catch (SQLException e)
+        {
+            throw new EJBException("Could not remove", e);
+        }
+    }
+
     public Integer ejbFindByMaxId() throws FinderException, EJBException
     {
         int maxId = 0;
@@ -179,10 +233,6 @@ public class EntityDeptBean implements EntityBean
             e.printStackTrace();
         }
         return maxId;
-    }
-
-    public void ejbStore() throws EJBException
-    {
     }
 
     public Integer getId()

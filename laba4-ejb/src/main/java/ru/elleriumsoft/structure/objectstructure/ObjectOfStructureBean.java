@@ -1,12 +1,12 @@
 package ru.elleriumsoft.structure.objectstructure;
 
 import org.apache.log4j.Logger;
+import ru.elleriumsoft.structure.entity.StructureProcessingFromDb;
+import ru.elleriumsoft.structure.entity.StructureProcessingFromDbHome;
 import ru.elleriumsoft.structure.print.StateOfElements;
 import ru.elleriumsoft.structure.print.StructureElement;
 import ru.elleriumsoft.structure.print.VariantsOfState;
 import ru.elleriumsoft.structure.print.printonscreen.PrintStructureBean;
-import ru.elleriumsoft.structure.entity.StructureProcessingFromDb;
-import ru.elleriumsoft.structure.entity.StructureProcessingFromDbHome;
 
 import javax.ejb.CreateException;
 import javax.ejb.EJBException;
@@ -28,6 +28,8 @@ public class ObjectOfStructureBean implements SessionBean
     private ArrayList<StateOfElements> statesOfElements;
     private ArrayList<StructureElement> structureFromDb;
     private ArrayList<StructureElement> structureForPrint;
+
+    private int selectedId;
 
     public int getMaxId()
     {
@@ -208,5 +210,27 @@ public class ObjectOfStructureBean implements SessionBean
 
     public void ejbPassivate() throws EJBException
     {
+    }
+
+    public int getSelectedId()
+    {
+        return selectedId;
+    }
+
+    public void setSelectedId(int selectedId)
+    {
+        this.selectedId = selectedId;
+    }
+
+    public String getNameDeptForSelectedId()
+    {
+        for (StructureElement element : structureFromDb)
+        {
+            if (element.getId() == selectedId)
+            {
+                return element.getNameDepartment();
+            }
+        }
+        return "";
     }
 }
