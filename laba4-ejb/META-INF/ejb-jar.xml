@@ -14,14 +14,6 @@
           <transaction-type>Container</transaction-type>
       </session>
       <session>
-          <ejb-name>CommandsForStructureEJB</ejb-name>
-          <home>ru.elleriumsoft.structure.structurecommands.CommandsForStructureHome</home>
-          <remote>ru.elleriumsoft.structure.structurecommands.CommandsForStructure</remote>
-          <ejb-class>ru.elleriumsoft.structure.structurecommands.CommandsForStructureBean</ejb-class>
-          <session-type>Stateless</session-type>
-          <transaction-type>Container</transaction-type>
-      </session>
-      <session>
           <ejb-name>ActionForStructureEJB</ejb-name>
           <home>ru.elleriumsoft.structure.modifications.ActionForStructureHome</home>
           <remote>ru.elleriumsoft.structure.modifications.ActionForStructure</remote>

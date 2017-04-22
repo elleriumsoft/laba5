@@ -4,8 +4,6 @@
 <%@ page import="ru.elleriumsoft.structure.print.handlingofstates.HandlingOfStatesHome" %>
 <%@ page import="ru.elleriumsoft.structure.print.printonscreen.PrintStructure" %>
 <%@ page import="ru.elleriumsoft.structure.print.printonscreen.PrintStructureHome" %>
-<%@ page import="ru.elleriumsoft.structure.structurecommands.CommandsForStructure" %>
-<%@ page import="ru.elleriumsoft.structure.structurecommands.CommandsForStructureHome" %>
 <%@ page import="static ru.elleriumsoft.jdbc.ConnectToDb.PATH_STRUCTURE" %>
 <%@ page import="static ru.elleriumsoft.jdbc.ConnectToDb.JNDI_ROOT" %>
 <%@ page import="javax.naming.InitialContext" %>
@@ -13,7 +11,7 @@
 <%@ page import="ru.elleriumsoft.structure.objectstructure.ObjectOfStructure" %>
 <%@ page import="ru.elleriumsoft.structure.objectstructure.ObjectOfStructureHome" %>
 <%@ page import="org.apache.log4j.Logger" %>
-<%@ page import="ru.elleriumsoft.structure.structurecommands.commands.Commands" %>
+<%@ page import="ru.elleriumsoft.CreateButtons" %>
 <%--
   Created by IntelliJ IDEA.
   User: Dmitriy
@@ -25,15 +23,17 @@
 <html>
 <head>
     <title>Структура мэрии</title>
+    <link rel="import" href="/app/structure/buttons.html">
 </head>
 <body>
 <%!
     private static final Logger logger = Logger.getLogger("jsp");
     private PrintStructure printStructure = null;
-    private CommandsForStructure commandsForStructure = null;
     private ActionForStructure actionForStructure = null;
     private ObjectOfStructure objectOfStructure = null;
     private HandlingOfStates handlingOfStates = null;
+    String need2;
+
     public void jspInit()
     {
         logger.info("Start Structure.jsp");
@@ -42,10 +42,7 @@
             Object remoteObject = ic.lookup(JNDI_ROOT + "PrintSturctureEJB");
             PrintStructureHome printStructureHome = (PrintStructureHome) PortableRemoteObject.narrow(remoteObject, PrintStructureHome.class);
             printStructure = printStructureHome.create();
-            remoteObject = ic.lookup(JNDI_ROOT + "CommandsForStructureEJB");
-            CommandsForStructureHome commandsForStructureHome = (CommandsForStructureHome) PortableRemoteObject.narrow(remoteObject, CommandsForStructureHome.class);
-            commandsForStructure = commandsForStructureHome.create();
-            remoteObject = ic.lookup(JNDI_ROOT + "HandlingOfStatesEJB");//"laba4-ejb/ru.elleriumsoft.structure.entity.StructureProcessingFromDbHome");
+            remoteObject = ic.lookup(JNDI_ROOT + "HandlingOfStatesEJB");
             HandlingOfStatesHome handlingOfStatesHome = (HandlingOfStatesHome) PortableRemoteObject.narrow(remoteObject, HandlingOfStatesHome.class);
             handlingOfStates = handlingOfStatesHome.create();
         } catch (Exception e) {
@@ -74,14 +71,17 @@
         session.setAttribute("structure", objectOfStructure);
     }
 %>
-<h1 style="color:#191970"><b>Структура мэрии</b></h1>
+    <h1 style="color:#191970"><b>Структура мэрии</b></h1>
 
     <% objectOfStructure.initStructureFromDb(); %>
 
     <% if (request.getParameter("newname") != null) {actionForStructure.action(request.getParameter("newname"), objectOfStructure.getMaxId(), objectOfStructure);} %>
 
-    <%= commandsForStructure.build(actionForStructure, request.getParameter("command"), request.getParameter("element"))%>
-
+    <script>
+        var link = document.querySelector('link[rel=import]');
+        var content = link.import.querySelector(<%= new CreateButtons().selectButtons(actionForStructure, request.getParameter("command"), request.getParameter("element")) %>);
+        document.body.appendChild(content.cloneNode(true));
+    </script>
     <% session.setAttribute("actionForStucture", actionForStructure); %>
 
     <br>
