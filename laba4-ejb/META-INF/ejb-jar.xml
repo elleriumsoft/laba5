@@ -61,6 +61,14 @@
           <session-type>Stateless</session-type>
           <transaction-type>Container</transaction-type>
       </session>
+      <session>
+          <ejb-name>ObjectFinderEJB</ejb-name>
+          <home>ru.elleriumsoft.finder.object.ObjectFinderHome</home>
+          <remote>ru.elleriumsoft.finder.object.ObjectFinder</remote>
+          <ejb-class>ru.elleriumsoft.finder.object.ObjectFinderBean</ejb-class>
+          <session-type>Stateless</session-type>
+          <transaction-type>Container</transaction-type>
+      </session>
       <entity>
           <ejb-name>StructureProcessingFromDbEJB</ejb-name>
           <home>ru.elleriumsoft.structure.entity.StructureProcessingFromDbHome</home>
@@ -84,6 +92,15 @@
           <home>ru.elleriumsoft.occupation.entity.EntityOccupationHome</home>
           <remote>ru.elleriumsoft.occupation.entity.EntityOccupation</remote>
           <ejb-class>ru.elleriumsoft.occupation.entity.EntityOccupationBean</ejb-class>
+          <persistence-type>Bean</persistence-type>
+          <prim-key-class>java.lang.Integer</prim-key-class>
+          <reentrant>true</reentrant>
+      </entity>
+      <entity>
+          <ejb-name>EntityFinderEJB</ejb-name>
+          <home>ru.elleriumsoft.finder.entity.EntityFinderHome</home>
+          <remote>ru.elleriumsoft.finder.entity.EntityFinder</remote>
+          <ejb-class>ru.elleriumsoft.finder.entity.EntityFinderBean</ejb-class>
           <persistence-type>Bean</persistence-type>
           <prim-key-class>java.lang.Integer</prim-key-class>
           <reentrant>true</reentrant>

@@ -47,7 +47,6 @@
     }
 %>
 <%
-
     ObjectOccupation objectOccupation = (ObjectOccupation) session.getAttribute("occupations");
     ObjectDept objectDept = (ObjectDept) session.getAttribute("dept");
     logger.info("name dept=" + objectDept.getNameDepartment());

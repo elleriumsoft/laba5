@@ -16,7 +16,7 @@ public class CreateButtons
     {
         if (command == null)
         {
-            return "'#selectaction'";
+            return "'#finder'";
         }
 
         logger.info("command=" + command);

@@ -14,10 +14,9 @@ public interface PrintStructure extends EJBObject
     /**
      * Формирование HTML страницы структуры для вывода из уже проинциализированной структуры из БД
      *
-     * @param command Добавленная ссылка на команду действия с элементом
      * @return Сформированная HTML страница
      */
-    String printStructure(String command, ObjectOfStructure objectOfStructure) throws RemoteException;
+    String printStructure(ObjectOfStructure objectOfStructure) throws RemoteException;
 
 
 }

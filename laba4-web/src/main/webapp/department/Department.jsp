@@ -16,7 +16,6 @@
 <%!
     private static final Logger logger = Logger.getLogger("Department.jsp");
     private ObjectDept objectDept = null;
-    private ObjectOccupation objectOccupation = null;
 
     public void jspInit()
     {
@@ -39,19 +38,11 @@
         //objectDept.setNameDepartment(request.getParameter("name"));
         session.setAttribute("dept", objectDept);
 //    }
-    objectOccupation = (ObjectOccupation) session.getAttribute("occupations");
-    if (objectOccupation == null)
-    {
-        ic = new InitialContext();
-        remoteObject = ic.lookup(JNDI_ROOT + "ObjectOccupationEJB");
-        ObjectOccupationHome objectOccupationHome = (ObjectOccupationHome) PortableRemoteObject.narrow(remoteObject, ObjectOccupationHome.class);
-        objectOccupation = objectOccupationHome.create();
-        session.setAttribute("occupations", objectOccupation);
-    }
 %>
     <h1> <%= objectOfStructure.getNameDeptForSelectedId() %> </h1>
 
     <a href="/app/structure/Structure.jsp"><img src="images/exit.png" width="33" height="33" align = "bottom" alt="Вернуться"></a>
+    &nbsp&nbsp
     <a href="AddDept.jsp?id=new"><img src="images/create.png" width="33" height="33" align = "bottom" alt="Добавить элемент"></a>
     <br>
 
@@ -64,10 +55,11 @@
         <td>&nbsp <%= objectDept.getEmploymentDate(i) %>  &nbsp</td>
         <td>&nbsp <%= objectDept.getProfession(i) %>      &nbsp</td>
 
-        <td>&nbsp <a href="AddDept.jsp?id=<%= i %>"><img src="images/create.png" width="14" height="14" align = "bottom" alt="Редактировать элемент"></a> &nbsp</td>
-        <td>&nbsp <a href="DeleteDept.jsp?id=<%= i %>"><img src="images/delete.png" width="14" height="14" align = "bottom" alt="Удалить элемент"></a> &nbsp</td>
+        <td>&nbsp <a href="AddDept.jsp?id=<%= i %>"><img src="images/edit.png" width="16" height="16" align = "center" alt="Редактировать элемент"></a> &nbsp</td>
+        <td>&nbsp <a href="DeleteDept.jsp?id=<%= i %>"><img src="images/delete.png" width="16" height="16" align = "center" alt="Удалить элемент"></a> &nbsp</td>
         </tr>
     <% } %>
+    </table>
 
 </body>
 </html>

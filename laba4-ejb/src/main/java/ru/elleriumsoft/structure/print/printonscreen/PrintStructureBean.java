@@ -24,18 +24,13 @@ public class PrintStructureBean implements SessionBean
     /**
      * Формирование HTML страницы структуры для вывода из уже проинциализированной структуры из БД
      *
-     * @param command Добавленная ссылка на команду действия с элементом
      * @return Сформированная HTML страница
      */
-    public String printStructure(String command, ObjectOfStructure objectOfStructure)
+    public String printStructure(ObjectOfStructure objectOfStructure)
     {
         StringBuilder pw = new StringBuilder("");
         try
         {
-            if (command == null)
-            {
-                command = "";
-            }
             try
             {
                 for (int i = 0; i < objectOfStructure.getSizeStructure(); i++)
@@ -43,10 +38,9 @@ public class PrintStructureBean implements SessionBean
                     StructureElement el = objectOfStructure.getStructureElement(i);
                     pw.append(addSpaces(el.getLevel()));
                     pw.append(addImageForActionList(el.getId(), objectOfStructure));
-                    pw.append("&nbsp<span><a href=\"" + "/app/department/" + "Department.jsp?id=" + String.valueOf(el.getId()) + "&name=" + el.getNameDepartment() + "\">" + el.getNameDepartment() + "</a>&nbsp");//pw.append("&nbsp<span><a href=\"/laba3/Servlets.PrintElement?id=" + String.valueOf(el.getId()) + "\">" + el.getNameDepartment() + "</a>&nbsp");
-                    if (!command.equals("") && !(command.equals("delete") && el.getId() == 1))
+                    pw.append("&nbsp<span><a href=\"" + "/app/department/" + "Department.jsp?id=" + String.valueOf(el.getId()) + "&name=" + el.getNameDepartment() + "\">" + el.getNameDepartment() + "</a>&nbsp");
                     {
-                        pw.append("<a href=\"" + PATH_STRUCTURE + "Structure.jsp?command=" + command + "&element=" + el.getId() + "\"style=\"color:#FF0000\">[" + getStringCommand(command) + "]</a>");
+                        pw.append(addImagesForCommand(el.getId()));
                     }
                     pw.append("</span><br><br>");
                 }
@@ -60,6 +54,18 @@ public class PrintStructureBean implements SessionBean
             logger.info(e.getMessage());
         }
         return pw.toString();
+    }
+
+    private String addImagesForCommand(int id)
+    {
+        String htmlImages = "&nbsp&nbsp";
+        htmlImages = htmlImages + "<a href=\"Structure.jsp?command=add&element=" + id + "\"><img src=\"images/create.png\" width=\"17\" height=\"17\" align = \"center\" alt=\"Добавить элемент\"></a>" + "&nbsp";
+        htmlImages = htmlImages + "<a href=\"Structure.jsp?command=edit&element=" + id + "\"><img src=\"images/edit.png\" width=\"17\" height=\"17\" align = \"center\" alt=\"Редактировать элемент\"></a>" + "&nbsp";
+        if (id != 1)
+        {
+            htmlImages = htmlImages + "<a href=\"Structure.jsp?command=delete&element=" + id + "\"><img src=\"images/delete.png\" width=\"17\" height=\"17\" align = \"center\" alt=\"Удалить элемент\"></a>";
+        }
+        return htmlImages;
     }
 
     private String addImageForActionList(int idElement, ObjectOfStructure objectOfStructure)
@@ -100,26 +106,6 @@ public class PrintStructureBean implements SessionBean
             spaces = spaces + "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp";
         }
         return spaces;
-    }
-
-    private String getStringCommand(String command)
-    {
-        if (command.equals("add"))
-        {
-            return "Добавить";
-        }
-        else if (command.equals("edit"))
-        {
-            return "Редактировать";
-        }
-        else if (command.equals("delete"))
-        {
-            return "Удалить";
-        }
-        else
-        {
-            return "";
-        }
     }
 
     public PrintStructureBean()

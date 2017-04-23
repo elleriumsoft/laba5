@@ -1,17 +1,19 @@
+<%@ page import="org.apache.log4j.Logger" %>
+<%@ page import="ru.elleriumsoft.CreateButtons" %>
+<%@ page import="ru.elleriumsoft.occupation.object.ObjectOccupation" %>
+<%@ page import="ru.elleriumsoft.occupation.object.ObjectOccupationHome" %>
 <%@ page import="ru.elleriumsoft.structure.modifications.ActionForStructure" %>
 <%@ page import="ru.elleriumsoft.structure.modifications.ActionForStructureHome" %>
+<%@ page import="static ru.elleriumsoft.jdbc.ConnectToDb.PATH_STRUCTURE" %>
+<%@ page import="static ru.elleriumsoft.jdbc.ConnectToDb.JNDI_ROOT" %>
+<%@ page import="ru.elleriumsoft.structure.objectstructure.ObjectOfStructure" %>
+<%@ page import="ru.elleriumsoft.structure.objectstructure.ObjectOfStructureHome" %>
 <%@ page import="ru.elleriumsoft.structure.print.handlingofstates.HandlingOfStates" %>
 <%@ page import="ru.elleriumsoft.structure.print.handlingofstates.HandlingOfStatesHome" %>
 <%@ page import="ru.elleriumsoft.structure.print.printonscreen.PrintStructure" %>
 <%@ page import="ru.elleriumsoft.structure.print.printonscreen.PrintStructureHome" %>
-<%@ page import="static ru.elleriumsoft.jdbc.ConnectToDb.PATH_STRUCTURE" %>
-<%@ page import="static ru.elleriumsoft.jdbc.ConnectToDb.JNDI_ROOT" %>
 <%@ page import="javax.naming.InitialContext" %>
 <%@ page import="javax.rmi.PortableRemoteObject" %>
-<%@ page import="ru.elleriumsoft.structure.objectstructure.ObjectOfStructure" %>
-<%@ page import="ru.elleriumsoft.structure.objectstructure.ObjectOfStructureHome" %>
-<%@ page import="org.apache.log4j.Logger" %>
-<%@ page import="ru.elleriumsoft.CreateButtons" %>
 <%--
   Created by IntelliJ IDEA.
   User: Dmitriy
@@ -32,7 +34,7 @@
     private ActionForStructure actionForStructure = null;
     private ObjectOfStructure objectOfStructure = null;
     private HandlingOfStates handlingOfStates = null;
-    String need2;
+    private ObjectOccupation objectOccupation = null;
 
     public void jspInit()
     {
@@ -70,8 +72,20 @@
         objectOfStructure = objectOfStructureHome.create();
         session.setAttribute("structure", objectOfStructure);
     }
+    objectOccupation = (ObjectOccupation) session.getAttribute("occupations");
+    if (objectOccupation == null)
+    {
+        InitialContext ic = new InitialContext();
+        Object remoteObject = ic.lookup(JNDI_ROOT + "ObjectOccupationEJB");
+        ObjectOccupationHome objectOccupationHome = (ObjectOccupationHome) PortableRemoteObject.narrow(remoteObject, ObjectOccupationHome.class);
+        objectOccupation = objectOccupationHome.create();
+        session.setAttribute("occupations", objectOccupation);
+    }
 %>
-    <h1 style="color:#191970"><b>Структура мэрии</b></h1>
+    <h1 style="color:#191970">
+        <b>Структура мэрии</b>
+        <%--&nbsp&nbsp<a href="/app/finder/Finder.jsp"><img src="images/find.png" width="33" height="33" align = "center" alt="Поиск"></a>--%>
+    </h1>
 
     <% objectOfStructure.initStructureFromDb(); %>
 
@@ -88,7 +102,7 @@
 
     <% if (handlingOfStates.checkNeedChangeState(request.getParameter("open"), objectOfStructure)) { response.sendRedirect(PATH_STRUCTURE + "Structure.jsp"); } %>
 
-    <%= printStructure.printStructure(request.getParameter("printcommand"), objectOfStructure)%>
+    <%= printStructure.printStructure(objectOfStructure)%>
     <% session.setAttribute("structure", objectOfStructure); %>
 
 </body>
