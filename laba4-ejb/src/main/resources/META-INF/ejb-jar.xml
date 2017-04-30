@@ -6,6 +6,14 @@
          version="2.1">
   <enterprise-beans>
       <session>
+          <ejb-name>CreatingXmlEJB</ejb-name>
+          <home>ru.elleriumsoft.structure.xml.CreatingXmlHome</home>
+          <remote>ru.elleriumsoft.structure.xml.CreatingXml</remote>
+          <ejb-class>ru.elleriumsoft.structure.xml.CreatingXmlBean</ejb-class>
+          <session-type>Stateless</session-type>
+          <transaction-type>Container</transaction-type>
+      </session>
+      <session>
           <ejb-name>PrintSturctureEJB</ejb-name>
           <home>ru.elleriumsoft.structure.print.printonscreen.PrintStructureHome</home>
           <remote>ru.elleriumsoft.structure.print.printonscreen.PrintStructure</remote>

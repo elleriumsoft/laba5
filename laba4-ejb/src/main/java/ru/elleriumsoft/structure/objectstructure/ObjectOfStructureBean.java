@@ -23,12 +23,10 @@ import static ru.elleriumsoft.jdbc.ConnectToDb.JNDI_ROOT;
 /**
  * Created by Dmitriy on 02.04.2017.
  */
+
 public class ObjectOfStructureBean implements SessionBean
 {
-    private ArrayList<StateOfElements> statesOfElements;
-   // private ArrayList<StructureElement> structureFromDb;
-    private ArrayList<StructureElement> structureForPrint;
-
+    private Structure objectStructure;
     private int selectedId;
 
     public int getMaxId()
@@ -53,12 +51,12 @@ public class ObjectOfStructureBean implements SessionBean
 
     public int getSizeStructure()
     {
-        return structureForPrint.size();
+        return objectStructure.getStructureForPrint().size();
     }
 
     public StructureElement getStructureElement(int id)
     {
-        return structureForPrint.get(id);
+        return objectStructure.getStructureForPrint().get(id);
     }
 
     public void initStructureFromDb()
@@ -80,7 +78,7 @@ public class ObjectOfStructureBean implements SessionBean
                 e.printStackTrace();
             }
         }
-        structureForPrint = new ArrayList<>();
+        objectStructure.setStructureForPrint(new ArrayList<StructureElement>());
         int level = 0;
         int parentId = 0;
         initElement(structureFromDb, level, parentId);
@@ -102,7 +100,7 @@ public class ObjectOfStructureBean implements SessionBean
             {
                 StructureElement elementForAdd = new StructureElement(el.getId(), el.getNameDepartment(), el.getParent_id(), 0);
                 elementForAdd.setLevel(level);
-                structureForPrint.add(elementForAdd);
+                objectStructure.getStructureForPrint().add(elementForAdd);
                 initElement(structureFromDb, level+1, el.getId());
             }
         }
@@ -116,8 +114,8 @@ public class ObjectOfStructureBean implements SessionBean
             InitialContext ic = new InitialContext();
             Object remoteObject = ic.lookup(JNDI_ROOT + "StructureProcessingFromDbEJB");//"laba4-ejb/ru.elleriumsoft.structureForPrint.StructureProcessingFromDbHome");
             structureProcessingFromDbHome = (StructureProcessingFromDbHome) PortableRemoteObject.narrow(remoteObject, StructureProcessingFromDbHome.class);
-            logger.info("len=" + statesOfElements.size());
-            for (StateOfElements stateOfElements : statesOfElements)
+            logger.info("len=" + objectStructure.getStatesOfElements().size());
+            for (StateOfElements stateOfElements : objectStructure.getStatesOfElements())
             {
                 dataFromDb.add(structureProcessingFromDbHome.findByPrimaryKey(stateOfElements.getId()));
             }
@@ -134,7 +132,7 @@ public class ObjectOfStructureBean implements SessionBean
 
     public StateOfElements getStateOfElement(int id)
     {
-        for (StateOfElements stateOfElement : statesOfElements)
+        for (StateOfElements stateOfElement : objectStructure.getStatesOfElements())
         {
             if (stateOfElement.getId() == id)
             {
@@ -146,7 +144,7 @@ public class ObjectOfStructureBean implements SessionBean
 
     public void setStateOfElement(int id, int newState)
     {
-        for (StateOfElements stateOfElement : statesOfElements)
+        for (StateOfElements stateOfElement : objectStructure.getStatesOfElements())
         {
             if (stateOfElement.getId() == id)
             {
@@ -157,18 +155,19 @@ public class ObjectOfStructureBean implements SessionBean
 
     public void removeDeleted()
     {
-        for (int i =  statesOfElements.size()-1; i > 0; i--)
+
+        for (int i =  objectStructure.getStatesOfElements().size()-1; i > 0; i--)
         {
-            if (statesOfElements.get(i).getState() == VariantsOfState.DELETED)
+            if (objectStructure.getStatesOfElements().get(i).getState() == VariantsOfState.DELETED)
             {
-                statesOfElements.remove(i);
+                objectStructure.getStatesOfElements().remove(i);
             }
         }
     }
 
     public void addStateElement(int id, int state)
     {
-        statesOfElements.add(new StateOfElements(id, state));
+        objectStructure.getStatesOfElements().add(new StateOfElements(id, state));
     }
 
     private static final Logger logger = Logger.getLogger(PrintStructureBean.class.getName());
@@ -184,8 +183,9 @@ public class ObjectOfStructureBean implements SessionBean
 
     public void ejbCreate() throws CreateException
     {
-        statesOfElements = new ArrayList<>();
-        statesOfElements.add(new StateOfElements(1, VariantsOfState.CLOSE));
+        objectStructure = new Structure();
+        objectStructure.setStatesOfElements(new ArrayList<StateOfElements>());
+        objectStructure.getStatesOfElements().add(new StateOfElements(1, VariantsOfState.CLOSE));
     }
 
     public void ejbRemove() throws EJBException
@@ -212,7 +212,7 @@ public class ObjectOfStructureBean implements SessionBean
 
     public String getNameDeptForSelectedId()
     {
-        for (StructureElement element : structureForPrint)
+        for (StructureElement element : objectStructure.getStructureForPrint())
         {
             if (element.getId() == selectedId)
             {
@@ -220,5 +220,10 @@ public class ObjectOfStructureBean implements SessionBean
             }
         }
         return "";
+    }
+
+    public Structure getObjectStructure()
+    {
+        return objectStructure;
     }
 }

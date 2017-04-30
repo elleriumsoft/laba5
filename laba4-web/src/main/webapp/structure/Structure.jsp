@@ -12,6 +12,8 @@
 <%@ page import="ru.elleriumsoft.structure.print.handlingofstates.HandlingOfStatesHome" %>
 <%@ page import="ru.elleriumsoft.structure.print.printonscreen.PrintStructure" %>
 <%@ page import="ru.elleriumsoft.structure.print.printonscreen.PrintStructureHome" %>
+<%@ page import="ru.elleriumsoft.structure.xml.CreatingXml" %>
+<%@ page import="ru.elleriumsoft.structure.xml.CreatingXmlHome" %>
 <%@ page import="javax.naming.InitialContext" %>
 <%@ page import="javax.rmi.PortableRemoteObject" %>
 <%--
@@ -35,6 +37,7 @@
     private ObjectOfStructure objectOfStructure = null;
     private HandlingOfStates handlingOfStates = null;
     private ObjectOccupation objectOccupation = null;
+    private CreatingXml creatingXml = null;
 
     public void jspInit()
     {
@@ -44,9 +47,14 @@
             Object remoteObject = ic.lookup(JNDI_ROOT + "PrintSturctureEJB");
             PrintStructureHome printStructureHome = (PrintStructureHome) PortableRemoteObject.narrow(remoteObject, PrintStructureHome.class);
             printStructure = printStructureHome.create();
+
             remoteObject = ic.lookup(JNDI_ROOT + "HandlingOfStatesEJB");
             HandlingOfStatesHome handlingOfStatesHome = (HandlingOfStatesHome) PortableRemoteObject.narrow(remoteObject, HandlingOfStatesHome.class);
             handlingOfStates = handlingOfStatesHome.create();
+
+            remoteObject = ic.lookup(JNDI_ROOT + "CreatingXmlEJB");
+            CreatingXmlHome creatingXmlHome = (CreatingXmlHome) PortableRemoteObject.narrow(remoteObject, CreatingXmlHome.class);
+            creatingXml = creatingXmlHome.create();
         } catch (Exception e) {
             logger.info(e.getMessage());
         }
@@ -84,7 +92,7 @@
 %>
     <h1 style="color:#191970">
         <b>Структура мэрии</b>
-        <%--&nbsp&nbsp<a href="/app/finder/Finder.jsp"><img src="images/find.png" width="33" height="33" align = "center" alt="Поиск"></a>--%>
+        &nbsp&nbsp<a href="/app/finder/Finder.jsp"><img src="images/find.png" width="33" height="33" align = "center" alt="Поиск"></a>
     </h1>
 
     <% objectOfStructure.initStructureFromDb(); %>
@@ -105,5 +113,9 @@
     <%= printStructure.printStructure(objectOfStructure)%>
     <% session.setAttribute("structure", objectOfStructure); %>
 
+    <br><br>
+    <% creatingXml.generateXml(objectOfStructure.getObjectStructure());
+       out.print(creatingXml.transformXmlToHtml("structure"));
+    %>
 </body>
 </html>
