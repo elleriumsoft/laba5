@@ -30,7 +30,7 @@ public class ActionForStructureBean implements SessionBean
 
     private static final Logger logger = Logger.getLogger(ActionForStructureBean.class.getName());
 
-    public void action(String param, int maxId, ObjectOfStructure objectOfStructure)
+    public ObjectOfStructure action(String param, int maxId, ObjectOfStructure objectOfStructure)
     {
 
         //if (param == null){ return;}
@@ -40,19 +40,16 @@ public class ActionForStructureBean implements SessionBean
         {
             case "add":
             {
-                actionAddElement(param, maxId, objectOfStructure);
-                break;
+                return actionAddElement(param, maxId, objectOfStructure);
             }
             case "edit":
             {
-                actionEditElement(param, objectOfStructure);
-                break;
+                return actionEditElement(param, objectOfStructure);
             }
             case "delete":
             {
                 logger.info("delete");
-                actionDeleteElement(objectOfStructure);
-                break;
+                return actionDeleteElement(objectOfStructure);
             }
             default:
             {
@@ -65,20 +62,10 @@ public class ActionForStructureBean implements SessionBean
     {
         logger.info(e.getMessage());
     }
-//        if (action.equals("add"))
-//        {
-//            actionAddElement(param, maxId, objectOfStructure);
-//        }
-//        if (action.equals("edit"))
-//        {
-//            actionEditElement(param, objectOfStructure);
-//        }
-
-//        setIdForAction(0);
-//        setAction("");
+        return objectOfStructure;
     }
 
-    private void actionAddElement(String param, int id, ObjectOfStructure objectOfStructure) throws RemoteException
+    private ObjectOfStructure actionAddElement(String param, int id, ObjectOfStructure objectOfStructure) throws RemoteException
     {
         try
         {
@@ -89,9 +76,10 @@ public class ActionForStructureBean implements SessionBean
         {
             e.printStackTrace();
         }
+        return objectOfStructure;
     }
 
-    private void actionEditElement(String param, ObjectOfStructure objectOfStructure) throws RemoteException
+    private ObjectOfStructure actionEditElement(String param, ObjectOfStructure objectOfStructure) throws RemoteException
     {
         try
         {
@@ -109,35 +97,34 @@ public class ActionForStructureBean implements SessionBean
         {
             e.printStackTrace();
         }
+        return objectOfStructure;
     }
 
-    private void actionDeleteElement(ObjectOfStructure objectOfStructure) throws RemoteException
+    private ObjectOfStructure actionDeleteElement(ObjectOfStructure objectOfStructure) throws RemoteException
     {
-       //answer = "";
         structureFromDb = new ArrayList<>();
         for (StructureProcessingFromDb structureElement : getAllElements())
         {
             structureFromDb.add(new StructureElement(structureElement.getId(), structureElement.getNameDepartment(), structureElement.getParent_id(), 0));
         }
 
-        deleteElement(idForAction, objectOfStructure);
+        objectOfStructure = deleteElement(idForAction, objectOfStructure);
 
         objectOfStructure.removeDeleted();
         objectOfStructure.initStructureFromDb();
+        return objectOfStructure;
     }
 
-    private void deleteElement(Integer id, ObjectOfStructure objectOfStructure)
+    private ObjectOfStructure deleteElement(Integer id, ObjectOfStructure objectOfStructure)
     {
         try
         {
             StructureProcessingFromDb structureProcessingFromDb = getElement(id);
-            //answer = answer + "Элемент " + structureProcessingFromDb.getNameDepartment() + " удален из структуры!" + "<br>";
             structureProcessingFromDb.remove();
             objectOfStructure.setStateOfElement(id, VariantsOfState.DELETED);
         } catch (RemoteException e)
         {
             e.printStackTrace();
-            //answer = answer + "Не удалось удалить элемент!" + "<br>";
         } catch (RemoveException e)
         {
             e.printStackTrace();
@@ -149,6 +136,7 @@ public class ActionForStructureBean implements SessionBean
                 deleteElement(structureElement.getId(), objectOfStructure);
             }
         }
+        return objectOfStructure;
     }
 
 
