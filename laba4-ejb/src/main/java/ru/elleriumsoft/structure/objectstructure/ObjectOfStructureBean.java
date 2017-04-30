@@ -26,7 +26,7 @@ import static ru.elleriumsoft.jdbc.ConnectToDb.JNDI_ROOT;
 public class ObjectOfStructureBean implements SessionBean
 {
     private ArrayList<StateOfElements> statesOfElements;
-    private ArrayList<StructureElement> structureFromDb;
+   // private ArrayList<StructureElement> structureFromDb;
     private ArrayList<StructureElement> structureForPrint;
 
     private int selectedId;
@@ -38,7 +38,7 @@ public class ObjectOfStructureBean implements SessionBean
         try
         {
             InitialContext ic = new InitialContext();
-            Object remoteObject = ic.lookup(JNDI_ROOT + "StructureProcessingFromDbEJB");//"laba4-ejb/ru.elleriumsoft.structureForPrint.StructureProcessingFromDbHome");
+            Object remoteObject = ic.lookup(JNDI_ROOT + "StructureProcessingFromDbEJB");
             structureProcessingFromDbHome = (StructureProcessingFromDbHome) PortableRemoteObject.narrow(remoteObject, StructureProcessingFromDbHome.class);
             StructureProcessingFromDb structureProcessingFromDb = structureProcessingFromDbHome.findByMaxId();
             maxId = structureProcessingFromDb.getId();
@@ -68,7 +68,7 @@ public class ObjectOfStructureBean implements SessionBean
         {
             throw new NullPointerException("Нету инфы из базы");
         }
-        structureFromDb = new ArrayList<>();
+        ArrayList<StructureElement> structureFromDb = new ArrayList<>();
 
         for (StructureProcessingFromDb element : structureFromBean)
         {
@@ -83,7 +83,7 @@ public class ObjectOfStructureBean implements SessionBean
         structureForPrint = new ArrayList<>();
         int level = 0;
         int parentId = 0;
-        initElement(level, parentId);
+        initElement(structureFromDb, level, parentId);
     }
 
     /**
@@ -91,7 +91,7 @@ public class ObjectOfStructureBean implements SessionBean
      * @param level - уровень погружения
      * @param parentId - предок
      */
-    private void initElement(int level, int parentId)
+    private void initElement(ArrayList<StructureElement> structureFromDb, int level, int parentId)
     {
         StructureElement el;
         for (int i = 0; i < structureFromDb.size(); i++)
@@ -103,7 +103,7 @@ public class ObjectOfStructureBean implements SessionBean
                 StructureElement elementForAdd = new StructureElement(el.getId(), el.getNameDepartment(), el.getParent_id(), 0);
                 elementForAdd.setLevel(level);
                 structureForPrint.add(elementForAdd);
-                initElement(level+1, el.getId());
+                initElement(structureFromDb, level+1, el.getId());
             }
         }
     }
@@ -130,7 +130,6 @@ public class ObjectOfStructureBean implements SessionBean
         {
             return  dataFromDb;
         }
-//        return null;
     }
 
     public StateOfElements getStateOfElement(int id)
@@ -166,17 +165,6 @@ public class ObjectOfStructureBean implements SessionBean
             }
         }
     }
-
-//    public void removeStateElement(int id)
-//    {
-//        for (StateOfElements stateOfElement : statesOfElements)
-//        {
-//            if (stateOfElement.getId() == id)
-//            {
-//                statesOfElements.remove(stateOfElement);
-//            }
-//        }
-//    }
 
     public void addStateElement(int id, int state)
     {
@@ -224,7 +212,7 @@ public class ObjectOfStructureBean implements SessionBean
 
     public String getNameDeptForSelectedId()
     {
-        for (StructureElement element : structureFromDb)
+        for (StructureElement element : structureForPrint)
         {
             if (element.getId() == selectedId)
             {

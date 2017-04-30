@@ -12,8 +12,8 @@
     </head>
     <body>
     <H1>Структура мэрии</H1>
-    <H2><a href="<%=PATH_STRUCTURE%>structure/Structure.jsp">Пойдем посмотрим --></a></H2>
+    <H2><a href="<%=PATH_STRUCTURE%>structure/Structure.jsp">Здесь --></a></H2>
     <br>
-    По сути своей реализация лабораторной работы J2EE для работы с иерархической базой данных
+    Развитие проекта J2EE. Теперь с XSLT.
     </body>
 </html>
