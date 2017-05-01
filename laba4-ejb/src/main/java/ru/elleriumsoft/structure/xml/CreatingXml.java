@@ -8,6 +8,6 @@ import java.rmi.RemoteException;
  */
 public interface CreatingXml extends EJBObject
 {
-    void generateXml(Object data) throws RemoteException;
+    void generateXml(Object data, String nameXml) throws RemoteException;
     String transformXmlToHtml(String xmlData) throws RemoteException;
 }

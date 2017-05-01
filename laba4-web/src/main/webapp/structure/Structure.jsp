@@ -95,7 +95,10 @@
         &nbsp&nbsp<a href="/app/finder/Finder.jsp"><img src="images/find.png" width="33" height="33" align = "center" alt="Поиск"></a>
     </h1>
 
-    <% objectOfStructure.initStructureFromDb(); %>
+    <%
+        objectOfStructure.initStructureFromDb();
+        creatingXml.generateXml(objectOfStructure.getObjectStructure(), "structure");
+    %>
 
     <% if (request.getParameter("newname") != null) {actionForStructure.action(request.getParameter("newname"), objectOfStructure.getMaxId(), objectOfStructure);} %>
 
@@ -114,8 +117,7 @@
     <% session.setAttribute("structure", objectOfStructure); %>
 
     <br><br>
-    <% creatingXml.generateXml(objectOfStructure.getObjectStructure());
-       out.print(creatingXml.transformXmlToHtml("structure"));
-    %>
+
+    <%= creatingXml.transformXmlToHtml("structure") %>
 </body>
 </html>
