@@ -1,8 +1,8 @@
 package ru.elleriumsoft.structure.modifications;
 
 import org.apache.log4j.Logger;
-import ru.elleriumsoft.structure.print.StructureElement;
-import ru.elleriumsoft.structure.print.VariantsOfState;
+import ru.elleriumsoft.structure.StructureElement;
+import ru.elleriumsoft.structure.VariantsOfState;
 import ru.elleriumsoft.structure.objectstructure.ObjectOfStructure;
 import ru.elleriumsoft.structure.entity.StructureProcessingFromDb;
 import ru.elleriumsoft.structure.entity.StructureProcessingFromDbHome;
@@ -105,7 +105,7 @@ public class ActionForStructureBean implements SessionBean
         structureFromDb = new ArrayList<>();
         for (StructureProcessingFromDb structureElement : getAllElements())
         {
-            structureFromDb.add(new StructureElement(structureElement.getId(), structureElement.getNameDepartment(), structureElement.getParent_id(), 0));
+            structureFromDb.add(new StructureElement(structureElement.getId(), structureElement.getNameDepartment(), structureElement.getParent_id()));
         }
 
         objectOfStructure = deleteElement(idForAction, objectOfStructure);
@@ -201,10 +201,6 @@ public class ActionForStructureBean implements SessionBean
     {
         Vector<StructureProcessingFromDb> vector = new Vector<>();
         try {
-//            InitialContext ic = new InitialContext();
-//            Object remoteObject = ic.lookup(JNDI_ROOT + "StructureProcessingFromDbEJB");
-//            StructureProcessingFromDbHome structureProcessingFromDbHome = (StructureProcessingFromDbHome) PortableRemoteObject.narrow(remoteObject, StructureProcessingFromDbHome.class);
-//            vector = (Vector) structureProcessingFromDbHome.findAll();
             vector = (Vector) getHome().findAll();
         } catch (Exception e) {
             logger.info(e.getMessage());

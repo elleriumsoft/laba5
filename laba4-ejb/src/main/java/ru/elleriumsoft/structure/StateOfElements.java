@@ -1,4 +1,4 @@
-package ru.elleriumsoft.structure.print;
+package ru.elleriumsoft.structure;
 
 import java.io.Serializable;
 

@@ -1,4 +1,4 @@
-package ru.elleriumsoft.structure.print;
+package ru.elleriumsoft.structure;
 
 /**
  * Created by Dmitriy on 02.04.2017.

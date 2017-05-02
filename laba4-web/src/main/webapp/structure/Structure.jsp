@@ -1,5 +1,5 @@
 <%@ page import="org.apache.log4j.Logger" %>
-<%@ page import="ru.elleriumsoft.CreateButtons" %>
+<%@ page import="ru.elleriumsoft.structure.CreateButtons" %>
 <%@ page import="ru.elleriumsoft.occupation.object.ObjectOccupation" %>
 <%@ page import="ru.elleriumsoft.occupation.object.ObjectOccupationHome" %>
 <%@ page import="ru.elleriumsoft.structure.modifications.ActionForStructure" %>
@@ -8,8 +8,8 @@
 <%@ page import="static ru.elleriumsoft.jdbc.ConnectToDb.JNDI_ROOT" %>
 <%@ page import="ru.elleriumsoft.structure.objectstructure.ObjectOfStructure" %>
 <%@ page import="ru.elleriumsoft.structure.objectstructure.ObjectOfStructureHome" %>
-<%@ page import="ru.elleriumsoft.structure.print.handlingofstates.HandlingOfStates" %>
-<%@ page import="ru.elleriumsoft.structure.print.handlingofstates.HandlingOfStatesHome" %>
+<%@ page import="ru.elleriumsoft.structure.handlingofstates.HandlingOfStates" %>
+<%@ page import="ru.elleriumsoft.structure.handlingofstates.HandlingOfStatesHome" %>
 <%@ page import="ru.elleriumsoft.structure.print.printonscreen.PrintStructure" %>
 <%@ page import="ru.elleriumsoft.structure.print.printonscreen.PrintStructureHome" %>
 <%@ page import="ru.elleriumsoft.structure.xml.CreatingXml" %>

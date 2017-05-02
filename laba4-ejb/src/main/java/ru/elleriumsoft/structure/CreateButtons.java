@@ -1,4 +1,4 @@
-package ru.elleriumsoft;
+package ru.elleriumsoft.structure;
 
 import org.apache.log4j.Logger;
 import ru.elleriumsoft.structure.modifications.ActionForStructure;
@@ -14,9 +14,9 @@ public class CreateButtons
 
     public String selectButtons(ActionForStructure actionForStructure, String command, String element)
     {
-        if (command == null)
+        if (command == null || element == null)
         {
-            return "'#finder'";
+            return "";//"'#finder'";
         }
 
         logger.info("command=" + command);

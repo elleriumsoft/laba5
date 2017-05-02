@@ -1,4 +1,4 @@
-package ru.elleriumsoft.structure.print;
+package ru.elleriumsoft.structure;
 
 import java.io.Serializable;
 
@@ -11,13 +11,14 @@ public class StructureElement implements Serializable
     private String nameDepartment;
     private int parent_id;
     private int Level;
+    private int stateOfElement;
 
-    public StructureElement(int id, String nameDepartment, int parent_id, int level)
+    public StructureElement(int id, String nameDepartment, int parent_id)
     {
         this.id = id;
         this.nameDepartment = nameDepartment;
         this.parent_id = parent_id;
-        Level = level;
+//        Level = level;
     }
 
     public int getId()
@@ -58,5 +59,15 @@ public class StructureElement implements Serializable
     public void setLevel(int level)
     {
         Level = level;
+    }
+
+    public int getStateOfElement()
+    {
+        return stateOfElement;
+    }
+
+    public void setStateOfElement(int stateOfElement)
+    {
+        this.stateOfElement = stateOfElement;
     }
 }

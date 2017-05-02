@@ -1,4 +1,4 @@
-package ru.elleriumsoft.structure.print.handlingofstates;
+package ru.elleriumsoft.structure.handlingofstates;
 
 import ru.elleriumsoft.structure.objectstructure.ObjectOfStructure;
 

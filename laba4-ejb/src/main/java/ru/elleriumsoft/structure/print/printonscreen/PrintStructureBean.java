@@ -2,9 +2,9 @@ package ru.elleriumsoft.structure.print.printonscreen;
 
 import org.apache.log4j.Logger;
 import ru.elleriumsoft.structure.objectstructure.ObjectOfStructure;
-import ru.elleriumsoft.structure.print.StateOfElements;
-import ru.elleriumsoft.structure.print.StructureElement;
-import ru.elleriumsoft.structure.print.VariantsOfState;
+import ru.elleriumsoft.structure.StateOfElements;
+import ru.elleriumsoft.structure.StructureElement;
+import ru.elleriumsoft.structure.VariantsOfState;
 
 import javax.ejb.CreateException;
 import javax.ejb.EJBException;

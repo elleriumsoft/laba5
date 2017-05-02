@@ -31,9 +31,9 @@
       </session>
       <session>
           <ejb-name>HandlingOfStatesEJB</ejb-name>
-          <home>ru.elleriumsoft.structure.print.handlingofstates.HandlingOfStatesHome</home>
-          <remote>ru.elleriumsoft.structure.print.handlingofstates.HandlingOfStates</remote>
-          <ejb-class>ru.elleriumsoft.structure.print.handlingofstates.HandlingOfStatesBean</ejb-class>
+          <home>ru.elleriumsoft.structure.handlingofstates.HandlingOfStatesHome</home>
+          <remote>ru.elleriumsoft.structure.handlingofstates.HandlingOfStates</remote>
+          <ejb-class>ru.elleriumsoft.structure.handlingofstates.HandlingOfStatesBean</ejb-class>
           <session-type>Stateless</session-type>
           <transaction-type>Container</transaction-type>
       </session>

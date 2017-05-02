@@ -1,9 +1,9 @@
-package ru.elleriumsoft.structure.print.handlingofstates;
+package ru.elleriumsoft.structure.handlingofstates;
 
 import org.apache.log4j.Logger;
-import ru.elleriumsoft.structure.print.StateOfElements;
-import ru.elleriumsoft.structure.print.StructureElement;
-import ru.elleriumsoft.structure.print.VariantsOfState;
+import ru.elleriumsoft.structure.StateOfElements;
+import ru.elleriumsoft.structure.StructureElement;
+import ru.elleriumsoft.structure.VariantsOfState;
 import ru.elleriumsoft.structure.objectstructure.ObjectOfStructure;
 import ru.elleriumsoft.structure.entity.StructureProcessingFromDb;
 import ru.elleriumsoft.structure.entity.StructureProcessingFromDbHome;

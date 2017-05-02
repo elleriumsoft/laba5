@@ -1,7 +1,8 @@
 package ru.elleriumsoft.structure.objectstructure;
 
-import ru.elleriumsoft.structure.print.StateOfElements;
-import ru.elleriumsoft.structure.print.StructureElement;
+import ru.elleriumsoft.structure.StateOfElements;
+import ru.elleriumsoft.structure.Structure;
+import ru.elleriumsoft.structure.StructureElement;
 
 import javax.ejb.EJBObject;
 import java.rmi.RemoteException;

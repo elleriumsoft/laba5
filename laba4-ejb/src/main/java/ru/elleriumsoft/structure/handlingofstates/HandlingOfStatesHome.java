@@ -1,4 +1,4 @@
-package ru.elleriumsoft.structure.print.handlingofstates;
+package ru.elleriumsoft.structure.handlingofstates;
 
 import javax.ejb.CreateException;
 import javax.ejb.EJBHome;
@@ -9,5 +9,5 @@ import java.rmi.RemoteException;
  */
 public interface HandlingOfStatesHome extends EJBHome
 {
-    ru.elleriumsoft.structure.print.handlingofstates.HandlingOfStates create() throws RemoteException, CreateException;
+    ru.elleriumsoft.structure.handlingofstates.HandlingOfStates create() throws RemoteException, CreateException;
 }
