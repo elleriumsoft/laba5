@@ -12,7 +12,7 @@
     </head>
     <body>
     <H1>Структура мэрии</H1>
-    <H2><a href="<%=PATH_STRUCTURE%>structure/Structure.jsp">Здесь --></a></H2>
+    <H2><a href="StructureServlet">Здесь --></a></H2>
     <br>
     Развитие проекта J2EE. Теперь с XSLT.
     </body>

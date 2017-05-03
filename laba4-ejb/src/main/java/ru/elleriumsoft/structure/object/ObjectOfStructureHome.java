@@ -1,4 +1,4 @@
-package ru.elleriumsoft.structure.objectstructure;
+package ru.elleriumsoft.structure.object;
 
 import javax.ejb.CreateException;
 import javax.ejb.EJBHome;
@@ -9,5 +9,5 @@ import java.rmi.RemoteException;
  */
 public interface ObjectOfStructureHome extends EJBHome
 {
-    ru.elleriumsoft.structure.objectstructure.ObjectOfStructure create() throws RemoteException, CreateException;
+    ru.elleriumsoft.structure.object.ObjectOfStructure create() throws RemoteException, CreateException;
 }

@@ -1,4 +1,4 @@
-package ru.elleriumsoft.structure.objectstructure;
+package ru.elleriumsoft.structure.object;
 
 import ru.elleriumsoft.structure.StateOfElements;
 import ru.elleriumsoft.structure.Structure;
@@ -16,11 +16,12 @@ public interface ObjectOfStructure extends EJBObject
 
     Integer getMaxId() throws RemoteException;
 
+    boolean checkNeedUpdatePage() throws RemoteException;
+    void changeStateOfElementStructure(String id) throws RemoteException;
+
     StateOfElements getStateOfElement(int id) throws RemoteException;
 
     void setStateOfElement(int id, int newState) throws RemoteException;
-
-    //void removeStateElement(int id) throws RemoteException;
 
     void removeDeleted() throws RemoteException;
 
@@ -35,4 +36,9 @@ public interface ObjectOfStructure extends EJBObject
     String getNameDeptForSelectedId() throws RemoteException;
 
     Structure getObjectStructure() throws RemoteException;
+
+    void setCommandForChangeStructure(String command) throws RemoteException;
+    void setIdForChangeByCommand(Integer id) throws RemoteException;
+
+    void modificationStructure(String param) throws RemoteException;
 }

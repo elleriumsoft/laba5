@@ -7,41 +7,17 @@
   <enterprise-beans>
       <session>
           <ejb-name>CreatingXmlEJB</ejb-name>
-          <home>ru.elleriumsoft.structure.xml.CreatingXmlHome</home>
-          <remote>ru.elleriumsoft.structure.xml.CreatingXml</remote>
-          <ejb-class>ru.elleriumsoft.structure.xml.CreatingXmlBean</ejb-class>
-          <session-type>Stateless</session-type>
-          <transaction-type>Container</transaction-type>
-      </session>
-      <session>
-          <ejb-name>PrintSturctureEJB</ejb-name>
-          <home>ru.elleriumsoft.structure.print.printonscreen.PrintStructureHome</home>
-          <remote>ru.elleriumsoft.structure.print.printonscreen.PrintStructure</remote>
-          <ejb-class>ru.elleriumsoft.structure.print.printonscreen.PrintStructureBean</ejb-class>
-          <session-type>Stateless</session-type>
-          <transaction-type>Container</transaction-type>
-      </session>
-      <session>
-          <ejb-name>ActionForStructureEJB</ejb-name>
-          <home>ru.elleriumsoft.structure.modifications.ActionForStructureHome</home>
-          <remote>ru.elleriumsoft.structure.modifications.ActionForStructure</remote>
-          <ejb-class>ru.elleriumsoft.structure.modifications.ActionForStructureBean</ejb-class>
-          <session-type>Stateful</session-type>
-          <transaction-type>Container</transaction-type>
-      </session>
-      <session>
-          <ejb-name>HandlingOfStatesEJB</ejb-name>
-          <home>ru.elleriumsoft.structure.handlingofstates.HandlingOfStatesHome</home>
-          <remote>ru.elleriumsoft.structure.handlingofstates.HandlingOfStates</remote>
-          <ejb-class>ru.elleriumsoft.structure.handlingofstates.HandlingOfStatesBean</ejb-class>
+          <home>ru.elleriumsoft.xml.CreatingXmlHome</home>
+          <remote>ru.elleriumsoft.xml.CreatingXml</remote>
+          <ejb-class>ru.elleriumsoft.xml.CreatingXmlBean</ejb-class>
           <session-type>Stateless</session-type>
           <transaction-type>Container</transaction-type>
       </session>
       <session>
           <ejb-name>ObjectOfStructureEJB</ejb-name>
-          <home>ru.elleriumsoft.structure.objectstructure.ObjectOfStructureHome</home>
-          <remote>ru.elleriumsoft.structure.objectstructure.ObjectOfStructure</remote>
-          <ejb-class>ru.elleriumsoft.structure.objectstructure.ObjectOfStructureBean</ejb-class>
+          <home>ru.elleriumsoft.structure.object.ObjectOfStructureHome</home>
+          <remote>ru.elleriumsoft.structure.object.ObjectOfStructure</remote>
+          <ejb-class>ru.elleriumsoft.structure.object.ObjectOfStructureBean</ejb-class>
           <session-type>Stateful</session-type>
           <transaction-type>Container</transaction-type>
       </session>

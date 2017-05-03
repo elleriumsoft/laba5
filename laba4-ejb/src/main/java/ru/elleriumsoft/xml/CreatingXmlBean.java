@@ -1,4 +1,4 @@
-package ru.elleriumsoft.structure.xml;
+package ru.elleriumsoft.xml;
 
 import org.apache.log4j.Logger;
 

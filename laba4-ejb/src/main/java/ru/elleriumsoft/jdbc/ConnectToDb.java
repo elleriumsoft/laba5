@@ -1,7 +1,6 @@
 package ru.elleriumsoft.jdbc;
 
 import org.apache.log4j.Logger;
-import ru.elleriumsoft.structure.print.printonscreen.PrintStructureBean;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -15,7 +14,7 @@ public class ConnectToDb
     public final static String PATH_STRUCTURE = "./";
     public final static String JNDI_ROOT = "java:global/laba4-ear-1.0/laba4-ejb-1.0/";
 
-    private static final Logger logger = Logger.getLogger(PrintStructureBean.class.getName());
+    private static final Logger logger = Logger.getLogger(ConnectToDb.class.getName());
 
     public Connection getConnection()
     {

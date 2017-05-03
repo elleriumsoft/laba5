@@ -4,7 +4,7 @@
 <%@ page import="ru.elleriumsoft.department.object.ObjectDeptHome" %>
 <%@ page import="ru.elleriumsoft.occupation.object.ObjectOccupation" %>
 <%@ page import="ru.elleriumsoft.occupation.object.ObjectOccupationHome" %>
-<%@ page import="ru.elleriumsoft.structure.objectstructure.ObjectOfStructure" %>
+<%@ page import="ru.elleriumsoft.structure.object.ObjectOfStructure" %>
 <%@ page import="javax.naming.InitialContext" %>
 <%@ page import="javax.rmi.PortableRemoteObject" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -41,7 +41,7 @@
 %>
     <h1> <%= objectOfStructure.getNameDeptForSelectedId() %> </h1>
 
-    <a href="/app/structure/Structure.jsp"><img src="images/exit.png" width="33" height="33" align = "bottom" alt="Вернуться"></a>
+    <a href="/app/StructureServlet"><img src="images/exit.png" width="33" height="33" align = "bottom" alt="Вернуться"></a>
     &nbsp&nbsp
     <a href="AddDept.jsp?id=new"><img src="images/create.png" width="33" height="33" align = "bottom" alt="Добавить элемент"></a>
     <br>

@@ -8,21 +8,13 @@ import java.util.ArrayList;
 /**
  * Created by Dmitriy on 30.04.2017.
  */
-@XmlType(propOrder = { "structureForPrint" }, name = "structure")//@XmlType(propOrder = { "statesOfElements", "structureForPrint" }, name = "structure")
+@XmlType(propOrder = { "commandForChangeStructure", "elementIdForChange", "structureForPrint" }, name = "structure")//@XmlType(propOrder = { "statesOfElements", "structureForPrint" }, name = "structure")
 @XmlRootElement
 public class Structure implements Serializable
 {
+    private String commandForChangeStructure;
+    private Integer elementIdForChange;
     private ArrayList<StructureElement> structureForPrint;
-
-//    public ArrayList<StateOfElements> getStatesOfElements()
-//    {
-//        return statesOfElements;
-//    }
-//
-//    public void setStatesOfElements(ArrayList<StateOfElements> statesOfElements)
-//    {
-//        this.statesOfElements = statesOfElements;
-//    }
 
     public ArrayList<StructureElement> getStructureForPrint()
     {
@@ -32,5 +24,25 @@ public class Structure implements Serializable
     public void setStructureForPrint(ArrayList<StructureElement> structureForPrint)
     {
         this.structureForPrint = structureForPrint;
+    }
+
+    public String getCommandForChangeStructure()
+    {
+        return commandForChangeStructure;
+    }
+
+    public void setCommandForChangeStructure(String commandForChangeStructure)
+    {
+        this.commandForChangeStructure = commandForChangeStructure;
+    }
+
+    public Integer getElementIdForChange()
+    {
+        return elementIdForChange;
+    }
+
+    public void setElementIdForChange(Integer elementIdForChange)
+    {
+        this.elementIdForChange = elementIdForChange;
     }
 }

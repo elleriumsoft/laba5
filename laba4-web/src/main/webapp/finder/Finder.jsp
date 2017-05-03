@@ -3,6 +3,7 @@
 <%@ page import="ru.elleriumsoft.finder.object.ObjectFinderHome" %>
 <%@ page import="ru.elleriumsoft.occupation.object.ObjectOccupation" %>
 <%@ page import="static ru.elleriumsoft.jdbc.ConnectToDb.JNDI_ROOT" %>
+<%@ page import="ru.elleriumsoft.occupation.object.ObjectOccupationHome" %>
 <%@ page import="javax.naming.InitialContext" %>
 <%@ page import="javax.rmi.PortableRemoteObject" %><%--
   Created by IntelliJ IDEA.
@@ -31,17 +32,27 @@
             objectFinder = objectFinderHome.create();
         } catch (Exception e) {
             logger.info(e.getMessage());
+            e.printStackTrace();
         }
     }
 %>
 <%
     ObjectOccupation objectOccupation = (ObjectOccupation) session.getAttribute("occupations");
+    if (objectOccupation == null)
+    {
+        InitialContext ic = new InitialContext();
+        Object remoteObject = ic.lookup(JNDI_ROOT + "ObjectOccupationEJB");
+        ObjectOccupationHome objectOccupationHome = (ObjectOccupationHome) PortableRemoteObject.narrow(remoteObject, ObjectOccupationHome.class);
+        objectOccupation = objectOccupationHome.create();
+        session.setAttribute("occupations", objectOccupation);
+    }
+    //ObjectOccupation objectOccupation = (ObjectOccupation) session.getAttribute("occupations");
 %>
 
 <h1 style="color:#191970">
     <b>Поиск сотрудников в структуре мэрии</b>
 </h1>
-<a href="/app/structure/Structure.jsp"><img src="images/exit.png" width="33" height="33" align = "bottom" alt="Вернуться"></a>
+<a href="/app/StructureServlet"><img src="images/exit.png" width="33" height="33" align = "bottom" alt="Вернуться"></a>
 <br>
 
 <table border>

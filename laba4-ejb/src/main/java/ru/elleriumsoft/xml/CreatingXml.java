@@ -1,4 +1,4 @@
-package ru.elleriumsoft.structure.xml;
+package ru.elleriumsoft.xml;
 
 import javax.ejb.EJBObject;
 import java.rmi.RemoteException;
