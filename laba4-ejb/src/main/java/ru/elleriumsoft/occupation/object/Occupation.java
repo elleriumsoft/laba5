@@ -1,9 +1,11 @@
 package ru.elleriumsoft.occupation.object;
 
+import java.io.Serializable;
+
 /**
  * Created by Dmitriy on 17.04.2017.
  */
-public class Occupation
+public class Occupation implements Serializable
 {
     private Integer id;
     private String name;

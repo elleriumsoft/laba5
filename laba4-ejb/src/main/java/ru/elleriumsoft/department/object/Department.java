@@ -1,11 +1,14 @@
 package ru.elleriumsoft.department.object;
 
-public class Department
+import java.io.Serializable;
+
+public class Department implements Serializable
 {
     private Integer id;
     private String nameEmployee;
     private String profession;
     private String employmentDate;
+    private String dateForOutput;
 
     public Department(Integer id, String nameEmployee, String profession, String employmentDate)
     {
@@ -13,6 +16,16 @@ public class Department
         this.nameEmployee = nameEmployee;
         this.profession = profession;
         this.employmentDate = employmentDate;
+    }
+
+    public Integer getId()
+    {
+        return id;
+    }
+
+    public void setId(Integer id)
+    {
+        this.id = id;
     }
 
     public String getNameEmployee()
@@ -45,13 +58,13 @@ public class Department
         this.employmentDate = employmentDate;
     }
 
-    public Integer getId()
+    public String getDateForOutput()
     {
-        return id;
+        return dateForOutput;
     }
 
-    public void setId(Integer id)
+    public void setDateForOutput(String dateForOutput)
     {
-        this.id = id;
+        this.dateForOutput = dateForOutput;
     }
 }

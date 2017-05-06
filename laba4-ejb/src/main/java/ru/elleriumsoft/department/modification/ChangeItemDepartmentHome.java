@@ -1,4 +1,4 @@
-package ru.elleriumsoft.department.action;
+package ru.elleriumsoft.department.modification;
 
 import javax.ejb.CreateException;
 import javax.ejb.EJBHome;
@@ -9,5 +9,5 @@ import java.rmi.RemoteException;
  */
 public interface ChangeItemDepartmentHome extends EJBHome
 {
-    ru.elleriumsoft.department.action.ChangeItemDepartment create() throws RemoteException, CreateException;
+    ru.elleriumsoft.department.modification.ChangeItemDepartment create() throws RemoteException, CreateException;
 }

@@ -26,7 +26,7 @@ public class ObjectOfStructureBean implements SessionBean
 {
     private Structure objectStructure;
     private ArrayList<StateOfElements> statesOfElements;
-    private int selectedId;
+    //private int selectedId;
     private boolean needUpdatePageAfterChangeState;
 
     private static final Logger logger = Logger.getLogger(ObjectOfStructure.class.getName());
@@ -145,17 +145,17 @@ public class ObjectOfStructureBean implements SessionBean
         }
     }
 
-    public int getSelectedId()
-    {
-        return selectedId;
-    }
+//    public int getSelectedId()
+//    {
+//        return selectedId;
+//    }
+//
+//    public void setSelectedId(int selectedId)
+//    {
+//        this.selectedId = selectedId;
+//    }
 
-    public void setSelectedId(int selectedId)
-    {
-        this.selectedId = selectedId;
-    }
-
-    public String getNameDeptForSelectedId()
+    public String getNameDeptForSelectedId(int selectedId)
     {
         for (StructureElement element : objectStructure.getStructureForPrint())
         {

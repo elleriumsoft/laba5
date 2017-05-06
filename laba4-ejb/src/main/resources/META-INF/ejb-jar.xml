@@ -39,9 +39,9 @@
       </session>
       <session>
           <ejb-name>ChangeItemDepartmentEJB</ejb-name>
-          <home>ru.elleriumsoft.department.action.ChangeItemDepartmentHome</home>
-          <remote>ru.elleriumsoft.department.action.ChangeItemDepartment</remote>
-          <ejb-class>ru.elleriumsoft.department.action.ChangeItemDepartmentBean</ejb-class>
+          <home>ru.elleriumsoft.department.modification.ChangeItemDepartmentHome</home>
+          <remote>ru.elleriumsoft.department.modification.ChangeItemDepartment</remote>
+          <ejb-class>ru.elleriumsoft.department.modification.ChangeItemDepartmentBean</ejb-class>
           <session-type>Stateless</session-type>
           <transaction-type>Container</transaction-type>
       </session>

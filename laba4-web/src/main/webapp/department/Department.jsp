@@ -26,18 +26,13 @@
     ObjectOfStructure objectOfStructure = (ObjectOfStructure) session.getAttribute("structure");
     objectOfStructure.setSelectedId(Integer.valueOf(request.getParameter("id")));
 
-//    objectDept = (ObjectDept) session.getAttribute("dept");
-//    if (objectDept == null || objectDept.getIdDepartment() != objectOfStructure.getSelectedId())
-//    {
         logger.info("new objectDept create");
         InitialContext ic = new InitialContext();
         Object remoteObject = ic.lookup(JNDI_ROOT + "ObjectDeptEJB");
         ObjectDeptHome objectOfStructureHome = (ObjectDeptHome) PortableRemoteObject.narrow(remoteObject, ObjectDeptHome.class);
         objectDept = objectOfStructureHome.create();
         objectDept.readAllEmployeeFromDept(objectOfStructure.getSelectedId());
-        //objectDept.setNameDepartment(request.getParameter("name"));
         session.setAttribute("dept", objectDept);
-//    }
 %>
     <h1> <%= objectOfStructure.getNameDeptForSelectedId() %> </h1>
 

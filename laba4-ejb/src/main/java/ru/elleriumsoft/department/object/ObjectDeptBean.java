@@ -3,6 +3,9 @@ package ru.elleriumsoft.department.object;
 import org.apache.log4j.Logger;
 import ru.elleriumsoft.department.entity.EntityDept;
 import ru.elleriumsoft.department.entity.EntityDeptHome;
+import ru.elleriumsoft.occupation.entity.EntityOccupation;
+import ru.elleriumsoft.occupation.entity.EntityOccupationHome;
+import ru.elleriumsoft.occupation.object.Occupation;
 
 import javax.ejb.*;
 import javax.naming.InitialContext;
@@ -20,72 +23,74 @@ import static ru.elleriumsoft.jdbc.ConnectToDb.JNDI_ROOT;
  */
 public class ObjectDeptBean implements SessionBean
 {
-    private ArrayList<Department> employeeOfDepartment;
-    private Integer idDepartment;
-    private String nameDepartment;
-
+    private AllDepartments allDept;
     private static final Logger logger = Logger.getLogger(ObjectDeptBean.class.getName());
 
     public void readAllEmployeeFromDept(Integer idDepartment)
     {
-        this.idDepartment = idDepartment;
-        employeeOfDepartment = new ArrayList<>();
+        allDept.setIdDepartment(idDepartment);
+        allDept.setEmployeeOfDepartment(new ArrayList());
         for (EntityDept element : readEmployeeFromDb(idDepartment))
         {
             try
             {
-                employeeOfDepartment.add(new Department(element.getId(), convertingNameForOutput(element.getNameEmployee()), element.getNameProfession(), element.getEmploymentDate()));
+                allDept.getEmployeeOfDepartment().add(new Department(element.getId(), convertingNameForOutput(element.getNameEmployee()), element.getNameProfession(), element.getEmploymentDate()));
             } catch (RemoteException e)
             {
                 logger.info(e.getMessage());
                 e.printStackTrace();
             }
         }
+        addDatesForOutput();
+        if (allDept.getOccupations() == null)
+        {
+            readOccupations();
+        }
     }
 
     public String getNameDepartment()
     {
-        return nameDepartment;
+        return allDept.getNameDepartment();
     }
 
     public void setNameDepartment(String nameDepartment)
     {
-        this.nameDepartment = nameDepartment;
+        allDept.setNameDepartment(nameDepartment);
     }
 
     public Integer getIdDepartment()
     {
-        return idDepartment;
+        return allDept.getIdDepartment();
     }
 
     public Integer getId(Integer idEmployee)
     {
-        return employeeOfDepartment.get(idEmployee).getId();
+        return allDept.getEmployeeOfDepartment().get(idEmployee).getId();
     }
 
     public Integer getSizeObject()
     {
-        return employeeOfDepartment.size();
+        return allDept.getEmployeeOfDepartment().size();
     }
 
     public String getNameEmployee(Integer idEmployee)
     {
-        return employeeOfDepartment.get(idEmployee).getNameEmployee();
+        return allDept.getEmployeeOfDepartment().get(idEmployee).getNameEmployee();
     }
 
     public String getProfession(Integer idEmployee)
     {
-        return employeeOfDepartment.get(idEmployee).getProfession();
+        return allDept.getEmployeeOfDepartment().get(idEmployee).getProfession();
     }
 
     public String getEmploymentDate(Integer idEmployee)
     {
-        return convertingDateForOutput(employeeOfDepartment.get(idEmployee).getEmploymentDate());
+        return convertingDateForOutput(allDept.getEmployeeOfDepartment().get(idEmployee).getEmploymentDate());
     }
 
     public String getDateForEdit(Integer idEmployee)
     {
-        return employeeOfDepartment.get(idEmployee).getEmploymentDate();
+        return allDept.getEmployeeOfDepartment().get(idEmployee).getEmploymentDate();
     }
 
     public int getMaxId()
@@ -131,10 +136,46 @@ public class ObjectDeptBean implements SessionBean
         {
             logger.info(e.getMessage());
             e.printStackTrace();
-        }
-        finally
+        } finally
         {
             return entityDept;
+        }
+    }
+
+    private void readOccupations()
+    {
+        logger.info("readOccupations");
+        allDept.setOccupations(new ArrayList<Occupation>());
+        InitialContext ic = null;
+        try
+        {
+            ic = new InitialContext();
+            Object remoteObject = ic.lookup(JNDI_ROOT + "EntityOccupationEJB");
+            EntityOccupationHome entityOccupationHome = (EntityOccupationHome) PortableRemoteObject.narrow(remoteObject, EntityOccupationHome.class);
+            Collection<EntityOccupation> entityOccupations= entityOccupationHome.findAll();
+
+            for (EntityOccupation entityOccupation : entityOccupations)
+            {
+                logger.info("loadOcc=" + entityOccupation.getNameOccupation());
+                allDept.getOccupations().add(new Occupation(entityOccupation.getId(), entityOccupation.getNameOccupation()));
+            }
+        } catch (NamingException e)
+        {
+            e.printStackTrace();
+        } catch (FinderException e)
+        {
+            e.printStackTrace();
+        } catch (RemoteException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    private void addDatesForOutput()
+    {
+        for (Department dept : getAllDept().getEmployeeOfDepartment())
+        {
+            dept.setDateForOutput(convertingDateForOutput(dept.getEmploymentDate()));
         }
     }
 
@@ -173,25 +214,55 @@ public class ObjectDeptBean implements SessionBean
     {
         StringBuilder bName;
         bName = new StringBuilder();
-        bName.append(name.substring(0,1).toUpperCase());
+        bName.append(name.substring(0, 1).toUpperCase());
         int i = 1;
-        while (i<name.length())
+        while (i < name.length())
         {
-            if (name.charAt(i-1) == ' ')
+            if (name.charAt(i - 1) == ' ')
             {
-                bName.append(name.substring(i, i+1).toUpperCase());
-            }
-            else
+                bName.append(name.substring(i, i + 1).toUpperCase());
+            } else
             {
-                bName.append(name.substring(i, i+1));
+                bName.append(name.substring(i, i + 1));
             }
             i++;
         }
         return bName.toString();
     }
 
-    public ObjectDeptBean()
+    public void setCommandForModification(String command)
     {
+        allDept.setCommandForModification(command);
+    }
+
+    public String getCommandForModification()
+    {
+        return allDept.getCommandForModification();
+    }
+
+    public AllDepartments getAllDept()
+    {
+        return allDept;
+    }
+
+    public void setIdForModification(Integer id)
+    {
+        allDept.setIdForModification(id);
+    }
+
+    public Integer getIdForModification()
+    {
+        return allDept.getIdForModification();
+    }
+
+    public void setPositionForModification(Integer positionForModification)
+    {
+        allDept.setPositionForModification(positionForModification);
+    }
+
+    public Integer getPositionForModification()
+    {
+        return allDept.getPositionForModification();
     }
 
     public void setSessionContext(SessionContext sessionContext) throws EJBException
@@ -200,6 +271,7 @@ public class ObjectDeptBean implements SessionBean
 
     public void ejbCreate() throws CreateException
     {
+        allDept = new AllDepartments();
     }
 
     public void ejbRemove() throws EJBException

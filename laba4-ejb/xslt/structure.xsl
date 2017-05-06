@@ -58,7 +58,7 @@
         <xsl:for-each select="structure/structureForPrint">
             <div style="position:absolute;left: {level*35+25}px">
                 <!-- Имя элемента и ссылка на его раскрытие в плане сотрудников -->
-                <a href="/app/department/Department.jsp?id={id}&amp;name={nameDepartment}">
+                <a href="/app/DepartmentServlet?id={id}">
                     <xsl:value-of select="nameDepartment"/>
                 </a>
 

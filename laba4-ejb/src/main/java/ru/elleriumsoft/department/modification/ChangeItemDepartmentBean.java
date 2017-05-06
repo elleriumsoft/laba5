@@ -1,4 +1,4 @@
-package ru.elleriumsoft.department.action;
+package ru.elleriumsoft.department.modification;
 
 import org.apache.log4j.Logger;
 import ru.elleriumsoft.department.entity.EntityDept;
@@ -22,22 +22,23 @@ public class ChangeItemDepartmentBean implements SessionBean
 
     private static final Logger logger = Logger.getLogger(ChangeItemDepartmentBean.class.getName());
 
-    public void changeItem(String action, int id, int id_dept, String name, String date, int id_occ)
+    public void changeItem(String action, int id, int id_dept, String name, String date, String id_occ)
     {
         if (name == null || name.equals("")) { name = "неизвестный"; }
         if (date == null || date.equals("")) { date = "1970-01-01"; }
         date = date.toLowerCase();
+        if (id_occ == null || id_occ.equals("")) { id_occ = "1"; }
 
         switch (action)
         {
             case "add":
             {
-                addItem(id, id_dept, name, date, id_occ);
+                addItem(id, id_dept, name, date, Integer.valueOf(id_occ));
                 break;
             }
             case "edit":
             {
-                editItem(id, id_dept, name, date, id_occ);
+                editItem(id, id_dept, name, date, Integer.valueOf(id_occ));
                 break;
             }
             case "delete":

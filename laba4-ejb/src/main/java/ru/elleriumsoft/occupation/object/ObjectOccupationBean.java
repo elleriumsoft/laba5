@@ -89,7 +89,6 @@ public class ObjectOccupationBean implements SessionBean
         {
             e.printStackTrace();
         }
-
     }
 
     public void ejbRemove() throws EJBException

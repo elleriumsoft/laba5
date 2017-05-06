@@ -9,6 +9,7 @@ import java.rmi.RemoteException;
 public interface ObjectDept extends EJBObject
 {
     void readAllEmployeeFromDept(Integer idDepartment) throws RemoteException;
+
     Integer getSizeObject() throws RemoteException;
     Integer getId(Integer idEmployee) throws RemoteException;
     String getNameEmployee(Integer idEmployee) throws RemoteException;
@@ -19,4 +20,12 @@ public interface ObjectDept extends EJBObject
     String getNameDepartment() throws RemoteException;
     void setNameDepartment(String nameDepartment) throws RemoteException;
     int getMaxId() throws RemoteException;
+    AllDepartments getAllDept() throws RemoteException;
+
+    void setCommandForModification(String command) throws RemoteException;
+    String getCommandForModification() throws RemoteException;
+    void setIdForModification(Integer id) throws RemoteException;
+    Integer getIdForModification() throws RemoteException;
+    void setPositionForModification(Integer positionForModification) throws RemoteException;
+    Integer getPositionForModification() throws RemoteException;
 }

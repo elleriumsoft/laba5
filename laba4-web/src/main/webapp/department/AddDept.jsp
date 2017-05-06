@@ -1,6 +1,6 @@
 <%@ page import="org.apache.log4j.Logger" %>
-<%@ page import="ru.elleriumsoft.department.action.ChangeItemDepartment" %>
-<%@ page import="ru.elleriumsoft.department.action.ChangeItemDepartmentHome" %>
+<%@ page import="ru.elleriumsoft.department.modification.ChangeItemDepartment" %>
+<%@ page import="ru.elleriumsoft.department.modification.ChangeItemDepartmentHome" %>
 <%@ page import="ru.elleriumsoft.department.object.ObjectDept" %>
 <%@ page import="ru.elleriumsoft.occupation.object.ObjectOccupation" %>
 <%@ page import="static ru.elleriumsoft.jdbc.ConnectToDb.JNDI_ROOT" %>
