@@ -1,25 +1,29 @@
 package ru.elleriumsoft.structure;
 
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
 
 /**
  * Created by Dmitriy on 19.03.2017.
  */
+@XmlType(propOrder = { "id", "nameDepartment", "parent_id", "level", "stateOfElement" }, name = "structureElement")
+@XmlRootElement
 public class StructureElement implements Serializable
 {
     private int id;
     private String nameDepartment;
     private int parent_id;
-    private int Level;
+    private int level;
     private int stateOfElement;
 
-    public StructureElement(int id, String nameDepartment, int parent_id)
-    {
-        this.id = id;
-        this.nameDepartment = nameDepartment;
-        this.parent_id = parent_id;
-//        Level = level;
-    }
+//    public StructureElement(int id, String nameDepartment, int parent_id)
+//    {
+//        this.id = id;
+//        this.nameDepartment = nameDepartment;
+//        this.parent_id = parent_id;
+////        level = level;
+//    }
 
     public int getId()
     {
@@ -53,12 +57,12 @@ public class StructureElement implements Serializable
 
     public int getLevel()
     {
-        return Level;
+        return level;
     }
 
     public void setLevel(int level)
     {
-        Level = level;
+        this.level = level;
     }
 
     public int getStateOfElement()

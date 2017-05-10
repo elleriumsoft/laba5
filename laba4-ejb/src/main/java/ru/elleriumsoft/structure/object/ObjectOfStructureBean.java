@@ -73,7 +73,7 @@ public class ObjectOfStructureBean implements SessionBean
         {
             try
             {
-                structureFromDb.add(new StructureElement(element.getId(), element.getNameDepartment(), element.getParent_id()));
+                structureFromDb.add(newStructureElement(element.getId(), element.getNameDepartment(), element.getParent_id()));
             } catch (RemoteException e)
             {
                 e.printStackTrace();
@@ -100,7 +100,7 @@ public class ObjectOfStructureBean implements SessionBean
 
             if (el.getParent_id() == parentId)
             {
-                StructureElement elementForAdd = new StructureElement(el.getId(), el.getNameDepartment(), el.getParent_id());
+                StructureElement elementForAdd = newStructureElement(el.getId(), el.getNameDepartment(), el.getParent_id());
                 elementForAdd.setLevel(level);
                 elementForAdd.setStateOfElement(getStateById(el.getId()));
                 objectStructure.getStructureForPrint().add(elementForAdd);
@@ -401,13 +401,24 @@ public class ObjectOfStructureBean implements SessionBean
         ArrayList<StructureElement> structureFromDb = new ArrayList<>();
         for (StructureProcessingFromDb structureElement : getAllElements())
         {
-            structureFromDb.add(new StructureElement(structureElement.getId(), structureElement.getNameDepartment(), structureElement.getParent_id()));
+            structureFromDb.add(newStructureElement(structureElement.getId(), structureElement.getNameDepartment(), structureElement.getParent_id()));
         }
 
         deleteElement(objectStructure.getElementIdForChange(), structureFromDb);
 
         removeDeleted();
         initStructureFromDb();
+    }
+
+    private StructureElement newStructureElement(int id, String name, int parent_id)
+    {
+        StructureElement element = new StructureElement();
+        element.setId(id);
+        element.setNameDepartment(name);
+        element.setParent_id(parent_id);
+        element.setStateOfElement(VariantsOfState.DELETED);
+        element.setLevel(0);
+        return element;
     }
 
     private void deleteElement(Integer id, ArrayList<StructureElement> structureFromDb)

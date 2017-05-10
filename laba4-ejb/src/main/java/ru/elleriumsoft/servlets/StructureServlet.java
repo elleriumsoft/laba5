@@ -79,11 +79,20 @@ public class StructureServlet extends HttpServlet
 
         //Создаем из структуры xml и выводим его в виде html применив xslt
         creatingXml.generateXml(objectOfStructure.getObjectStructure(), "structure");
-        String htmlPage = creatingXml.transformXmlToHtml("structure");
-        resp.setContentType("text/html;charset=utf-8");
-        PrintWriter pw = resp.getWriter();
+
+        String htmlPage;
+        if (creatingXml.validateXml("structure"))
+        {
+             htmlPage = creatingXml.transformXmlToHtml("structure");
+        }
+        else
+        {
+            htmlPage = "Ошибка 638. Неверные данные. Обратитесь к администрации проекта.";
+        }
+            resp.setContentType("text/html;charset=utf-8");
+            PrintWriter pw = resp.getWriter();
             pw.print(htmlPage);
-        pw.close();
+            pw.close();
 
         //сохраняем модифицированную структуру
         req.getSession().setAttribute("structure", objectOfStructure);

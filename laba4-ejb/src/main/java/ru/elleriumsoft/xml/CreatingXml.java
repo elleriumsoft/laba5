@@ -10,4 +10,5 @@ public interface CreatingXml extends EJBObject
 {
     void generateXml(Object data, String nameXml) throws RemoteException;
     String transformXmlToHtml(String xmlData) throws RemoteException;
+    boolean validateXml(String nameXml) throws RemoteException;
 }
