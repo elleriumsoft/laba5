@@ -42,16 +42,6 @@ public class AllDepartments implements Serializable
         this.nameDepartment = nameDepartment;
     }
 
-    public ArrayList<Department> getEmployeeOfDepartment()
-    {
-        return employeeOfDepartment;
-    }
-
-    public void setEmployeeOfDepartment(ArrayList<Department> employeeOfDepartment)
-    {
-        this.employeeOfDepartment = employeeOfDepartment;
-    }
-
     public String getCommandForModification()
     {
         return commandForModification;
@@ -60,16 +50,6 @@ public class AllDepartments implements Serializable
     public void setCommandForModification(String commandForModification)
     {
         this.commandForModification = commandForModification;
-    }
-
-    public ArrayList<Occupation> getOccupations()
-    {
-        return occupations;
-    }
-
-    public void setOccupations(ArrayList<Occupation> occupations)
-    {
-        this.occupations = occupations;
     }
 
     public Integer getIdForModification()
@@ -90,5 +70,25 @@ public class AllDepartments implements Serializable
     public void setPositionForModification(Integer positionForModification)
     {
         this.positionForModification = positionForModification;
+    }
+
+    public ArrayList<Department> getEmployeeOfDepartment()
+    {
+        return employeeOfDepartment;
+    }
+
+    public void setEmployeeOfDepartment(ArrayList<Department> employeeOfDepartment)
+    {
+        this.employeeOfDepartment = employeeOfDepartment;
+    }
+
+    public ArrayList<Occupation> getOccupations()
+    {
+        return occupations;
+    }
+
+    public void setOccupations(ArrayList<Occupation> occupations)
+    {
+        this.occupations = occupations;
     }
 }

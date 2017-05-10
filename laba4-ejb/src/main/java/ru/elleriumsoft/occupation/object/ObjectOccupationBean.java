@@ -77,7 +77,7 @@ public class ObjectOccupationBean implements SessionBean
             Collection<EntityOccupation> entityOccupations= entityOccupationHome.findAll();
             for (EntityOccupation entityOccupation : entityOccupations)
             {
-                occupations.add(new Occupation(entityOccupation.getId(), entityOccupation.getNameOccupation()));
+                occupations.add(newOccupation(entityOccupation.getId(), entityOccupation.getNameOccupation()));
             }
         } catch (NamingException e)
         {
@@ -89,6 +89,14 @@ public class ObjectOccupationBean implements SessionBean
         {
             e.printStackTrace();
         }
+    }
+
+    private Occupation newOccupation(Integer id, String nameOccupation)
+    {
+        Occupation occupation = new Occupation();
+        occupation.setId(id);
+        occupation.setName(nameOccupation);
+        return occupation;
     }
 
     public void ejbRemove() throws EJBException

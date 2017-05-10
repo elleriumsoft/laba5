@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:element name="allDepartments" type="dept"/>
+
+  <xs:element name="department" type="employeeOfDepartment"/>
+
+  <xs:element name="occupation" type="occupations"/>
+
+  <xs:complexType name="dept">
+    <xs:sequence>
+
+      <xs:element name="idDepartment">
+        <xs:simpleType>
+          <xs:restriction base="xs:integer">
+            <xs:minInclusive value="1"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+
+      <xs:element name="nameDepartment">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="200"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+
+      <xs:element name="commandForModification" type="xs:string" minOccurs="0"/>
+
+      <xs:element name="idForModification" type="xs:int" minOccurs="0"/>
+
+      <xs:element name="positionForModification" type="xs:int" minOccurs="0"/>
+
+      <xs:element name="employeeOfDepartment" type="employeeOfDepartment" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+
+      <xs:element name="occupations" type="occupations" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="employeeOfDepartment">
+    <xs:sequence>
+
+      <xs:element name="id">
+        <xs:simpleType>
+          <xs:restriction base="xs:integer">
+            <xs:minInclusive value="1"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+
+      <xs:element name="nameEmployee">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="125"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+
+      <xs:element name="profession">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="100"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+
+      <xs:element name="employmentDate">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+            <xs:maxLength value="10"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+
+      <xs:element name="dateForOutput" type="xs:string" minOccurs="0"/>
+
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="occupations">
+    <xs:sequence>
+
+      <xs:element name="id">
+        <xs:simpleType>
+          <xs:restriction base="xs:integer">
+            <xs:minInclusive value="1"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+
+      <xs:element name="name">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="100"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
+

@@ -34,7 +34,7 @@ public class ObjectDeptBean implements SessionBean
         {
             try
             {
-                allDept.getEmployeeOfDepartment().add(new Department(element.getId(), convertingNameForOutput(element.getNameEmployee()), element.getNameProfession(), element.getEmploymentDate()));
+                allDept.getEmployeeOfDepartment().add(newDept(element.getId(), convertingNameForOutput(element.getNameEmployee()), element.getNameProfession(), element.getEmploymentDate()));
             } catch (RemoteException e)
             {
                 logger.info(e.getMessage());
@@ -46,6 +46,16 @@ public class ObjectDeptBean implements SessionBean
         {
             readOccupations();
         }
+    }
+
+    private Department newDept(Integer id, String name, String nameProfession, String employmentDate)
+    {
+        Department dept = new Department();
+        dept.setId(id);
+        dept.setNameEmployee(name);
+        dept.setProfession(nameProfession);
+        dept.setEmploymentDate(employmentDate);
+        return dept;
     }
 
     public String getNameDepartment()
@@ -157,7 +167,7 @@ public class ObjectDeptBean implements SessionBean
             for (EntityOccupation entityOccupation : entityOccupations)
             {
                 logger.info("loadOcc=" + entityOccupation.getNameOccupation());
-                allDept.getOccupations().add(new Occupation(entityOccupation.getId(), entityOccupation.getNameOccupation()));
+                allDept.getOccupations().add(newOccupation(entityOccupation.getId(), entityOccupation.getNameOccupation()));
             }
         } catch (NamingException e)
         {
@@ -169,6 +179,14 @@ public class ObjectDeptBean implements SessionBean
         {
             e.printStackTrace();
         }
+    }
+
+    private Occupation newOccupation(Integer id, String nameOccupation)
+    {
+        Occupation occupation = new Occupation();
+        occupation.setId(id);
+        occupation.setName(nameOccupation);
+        return occupation;
     }
 
     private void addDatesForOutput()

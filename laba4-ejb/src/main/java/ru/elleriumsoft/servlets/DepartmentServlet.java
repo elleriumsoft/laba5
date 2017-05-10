@@ -83,9 +83,19 @@ public class DepartmentServlet extends HttpServlet
 
             req.getSession().setAttribute("dept", objectDept);
 
-            //Создаем из структуры xml и выводим его в виде html применив xslt
+            //Создаем из структуры xml
             creatingXml.generateXml(objectDept.getAllDept(), "dept");
-            String htmlPage = creatingXml.transformXmlToHtml("dept");
+
+            //Проверяем его на правильность и выводим его в виде html применив xslt
+            String htmlPage;
+            if (creatingXml.validateXml("dept"))
+            {
+                htmlPage = creatingXml.transformXmlToHtml("dept");
+            }
+            else
+            {
+                htmlPage = "Ошибка 638. Неверные данные. Обратитесь к администрации проекта.";
+            }
             resp.setContentType("text/html;charset=utf-8");
             PrintWriter pw = resp.getWriter();
             pw.print(htmlPage);

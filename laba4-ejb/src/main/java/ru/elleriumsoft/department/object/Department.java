@@ -1,7 +1,11 @@
 package ru.elleriumsoft.department.object;
 
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
 
+@XmlType(propOrder = { "id", "nameEmployee", "profession", "employmentDate", "dateForOutput" }, name = "employeeOfDepartment")
+@XmlRootElement
 public class Department implements Serializable
 {
     private Integer id;
@@ -9,14 +13,6 @@ public class Department implements Serializable
     private String profession;
     private String employmentDate;
     private String dateForOutput;
-
-    public Department(Integer id, String nameEmployee, String profession, String employmentDate)
-    {
-        this.id = id;
-        this.nameEmployee = nameEmployee;
-        this.profession = profession;
-        this.employmentDate = employmentDate;
-    }
 
     public Integer getId()
     {

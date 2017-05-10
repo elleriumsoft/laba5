@@ -1,20 +1,18 @@
 package ru.elleriumsoft.occupation.object;
 
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
 
 /**
  * Created by Dmitriy on 17.04.2017.
  */
+@XmlType(propOrder = { "id", "name" }, name = "occupations")
+@XmlRootElement
 public class Occupation implements Serializable
 {
     private Integer id;
     private String name;
-
-    public Occupation(Integer id, String name)
-    {
-        this.id = id;
-        this.name = name;
-    }
 
     public Integer getId()
     {
