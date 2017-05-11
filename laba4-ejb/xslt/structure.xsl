@@ -45,9 +45,9 @@
             </xsl:when>
             <xsl:otherwise>
                 <!-- Кнопка поиска -->
-                <a href="/app/finder/Finder.jsp"><img src="structure/images/find.png" width="33" height="33" align = "center" alt="Поиск" text="fdfd"></img></a>
+                <a href="/app/finder/Finder.jsp"><img src="structure/images/find.png" width="33" height="33" align = "center" alt="Поиск" ></img></a>
                 <div style= "position:absolute;left:50px;top:70px;color:#134096; ">
-                    <a href="/app/finder/Finder.jsp"><b>Поиск</b></a>
+                    <a href="/app/FinderServlet"><b>Поиск</b></a>
                 </div>
                 <br/>
             </xsl:otherwise>

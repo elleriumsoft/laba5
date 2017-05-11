@@ -1,6 +1,6 @@
 package ru.elleriumsoft.department.object;
 
-import ru.elleriumsoft.occupation.object.Occupation;
+import ru.elleriumsoft.occupation.Occupation;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;

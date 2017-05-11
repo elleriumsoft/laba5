@@ -14,6 +14,6 @@
     <H1>Структура мэрии</H1>
     <H2><a href="StructureServlet">Здесь --></a></H2>
     <br>
-    Развитие проекта J2EE. Теперь с XSLT.
+    Развитие проекта J2EE. Теперь с XML, XSD и XSLT.
     </body>
 </html>

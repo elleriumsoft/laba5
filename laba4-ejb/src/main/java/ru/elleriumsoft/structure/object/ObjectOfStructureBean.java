@@ -126,9 +126,7 @@ public class ObjectOfStructureBean implements SessionBean
         Vector<StructureProcessingFromDb> dataFromDb = new Vector<>();
         try
         {
-//            InitialContext ic = new InitialContext();
-//            Object remoteObject = ic.lookup(JNDI_ROOT + "StructureProcessingFromDbEJB");
-            StructureProcessingFromDbHome structureProcessingFromDbHome = getHome();//(StructureProcessingFromDbHome) PortableRemoteObject.narrow(remoteObject, StructureProcessingFromDbHome.class);
+            StructureProcessingFromDbHome structureProcessingFromDbHome = getHome();
             logger.info("len=" + statesOfElements.size());
             for (StateOfElements state : statesOfElements)
             {
@@ -145,24 +143,22 @@ public class ObjectOfStructureBean implements SessionBean
         }
     }
 
-//    public int getSelectedId()
-//    {
-//        return selectedId;
-//    }
-//
-//    public void setSelectedId(int selectedId)
-//    {
-//        this.selectedId = selectedId;
-//    }
-
     public String getNameDeptForSelectedId(int selectedId)
     {
-        for (StructureElement element : objectStructure.getStructureForPrint())
+        String name;
+        try
         {
-            if (element.getId() == selectedId)
-            {
-                return element.getNameDepartment();
-            }
+            name = getHome().findByPrimaryKey(selectedId).getNameDepartment();
+            return name;
+        } catch (RemoteException e)
+        {
+            e.printStackTrace();
+        } catch (SQLException e)
+        {
+            e.printStackTrace();
+        } catch (FinderException e)
+        {
+            e.printStackTrace();
         }
         return "";
     }
@@ -302,13 +298,9 @@ public class ObjectOfStructureBean implements SessionBean
 
     private Vector getChildForElementFromDb(int id)
     {
-//        StructureProcessingFromDbHome structureProcessingFromDbHome = null;
         try
         {
-//            InitialContext ic = new InitialContext();
-//            Object remoteObject = ic.lookup(JNDI_ROOT + "StructureProcessingFromDbEJB");
-//            structureProcessingFromDbHome = (StructureProcessingFromDbHome) PortableRemoteObject.narrow(remoteObject, StructureProcessingFromDbHome.class);
-            return (Vector) getHome().findParentKeys(id);//structureProcessingFromDbHome.findParentKeys(id);
+            return (Vector) getHome().findParentKeys(id);
         } catch (Exception e)
         {
 
@@ -360,7 +352,6 @@ public class ObjectOfStructureBean implements SessionBean
         try
         {
             getHome().create(maxId + 1, param, objectStructure.getElementIdForChange());
-            //addStateElement(maxId + 1, VariantsOfState.CLOSE);
             try
             {
                 openList(objectStructure.getElementIdForChange());

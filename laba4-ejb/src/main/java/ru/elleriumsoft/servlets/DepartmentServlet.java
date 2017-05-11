@@ -37,7 +37,7 @@ public class DepartmentServlet extends HttpServlet
     @Override
     public void init() throws ServletException
     {
-        logger.info("Init Beans in StructureServlet");
+        logger.info("Init Beans in DepartmentServlet");
         try {
             InitialContext ic = new InitialContext();
             Object remoteObject = ic.lookup(JNDI_ROOT + "CreatingXmlEJB");

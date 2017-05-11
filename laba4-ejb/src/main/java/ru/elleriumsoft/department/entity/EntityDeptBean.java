@@ -182,7 +182,7 @@ public class EntityDeptBean implements EntityBean
                     "UPDATE employee SET id_dept = ?, id_occ = ?, name = ?, date = ? WHERE id = ?");
             statement.setInt(1, getIdDepartment());
             statement.setInt(2, getIdProfession());
-            statement.setString(3, getNameEmployee());
+            statement.setString(3, getNameEmployee().toLowerCase());
             statement.setString(4, getEmploymentDate());
             statement.setInt(5, id);
 

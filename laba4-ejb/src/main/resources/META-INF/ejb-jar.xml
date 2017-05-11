@@ -30,14 +30,6 @@
           <transaction-type>Container</transaction-type>
       </session>
       <session>
-          <ejb-name>ObjectOccupationEJB</ejb-name>
-          <home>ru.elleriumsoft.occupation.object.ObjectOccupationHome</home>
-          <remote>ru.elleriumsoft.occupation.object.ObjectOccupation</remote>
-          <ejb-class>ru.elleriumsoft.occupation.object.ObjectOccupationBean</ejb-class>
-          <session-type>Stateful</session-type>
-          <transaction-type>Container</transaction-type>
-      </session>
-      <session>
           <ejb-name>ChangeItemDepartmentEJB</ejb-name>
           <home>ru.elleriumsoft.department.modification.ChangeItemDepartmentHome</home>
           <remote>ru.elleriumsoft.department.modification.ChangeItemDepartment</remote>

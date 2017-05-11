@@ -1,5 +1,3 @@
-rem call laba4-ejb\xsd\compile_structure_xsd.bat
-
 call mvn clean package
 
 SET SERVERPATH=E:\apache-tomee-plus-7.0.2

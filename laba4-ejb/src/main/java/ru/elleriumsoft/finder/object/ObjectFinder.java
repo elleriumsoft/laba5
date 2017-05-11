@@ -8,7 +8,8 @@ import java.rmi.RemoteException;
  */
 public interface ObjectFinder extends EJBObject
 {
-    FinderData getDatas(int number) throws RemoteException;
+//    FinderData getDatas(int number) throws RemoteException;
     int size() throws RemoteException;
     void findByParameters(String name, String id_occ, String startDate, String endDate) throws RemoteException;
+    StorageFinderData getStorageFinderData() throws RemoteException;
 }

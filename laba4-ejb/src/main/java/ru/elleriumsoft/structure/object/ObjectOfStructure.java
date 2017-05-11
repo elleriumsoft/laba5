@@ -31,8 +31,6 @@ public interface ObjectOfStructure extends EJBObject
 
     StructureElement getStructureElement(int id) throws RemoteException;
 
-//    int getSelectedId() throws RemoteException;
-//    void setSelectedId(int selectedId) throws RemoteException;
     String getNameDeptForSelectedId(int selectedId) throws RemoteException;
 
     Structure getObjectStructure() throws RemoteException;

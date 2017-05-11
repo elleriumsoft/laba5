@@ -1,10 +1,14 @@
 package ru.elleriumsoft.finder.object;
 
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
 
 /**
  * Created by Dmitriy on 23.04.2017.
  */
+@XmlType(propOrder = { "id", "nameEmployee", "idDepartment", "nameDepartment", "idProfession", "nameProfession", "employmentDate" }, name = "finderdata")
+@XmlRootElement
 public class FinderData implements Serializable
 {
     private Integer id;

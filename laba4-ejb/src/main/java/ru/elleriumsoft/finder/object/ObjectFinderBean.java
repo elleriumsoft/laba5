@@ -1,8 +1,12 @@
 package ru.elleriumsoft.finder.object;
 
 import org.apache.log4j.Logger;
+import ru.elleriumsoft.department.object.ConvertingDataForOutput;
 import ru.elleriumsoft.finder.entity.EntityFinder;
 import ru.elleriumsoft.finder.entity.EntityFinderHome;
+import ru.elleriumsoft.occupation.entity.EntityOccupation;
+import ru.elleriumsoft.occupation.entity.EntityOccupationHome;
+import ru.elleriumsoft.occupation.Occupation;
 
 import javax.ejb.*;
 import javax.naming.InitialContext;
@@ -20,28 +24,25 @@ import static ru.elleriumsoft.jdbc.ConnectToDb.JNDI_ROOT;
  */
 public class ObjectFinderBean implements SessionBean
 {
-    private ArrayList<FinderData> finderDatas;
+    private StorageFinderData storageFinderData;
 
     private static final Logger logger = Logger.getLogger(ObjectFinderBean.class.getName());
 
     public int size()
     {
-        return finderDatas.size();
-    }
-
-    public FinderData getDatas(int number)
-    {
-        return finderDatas.get(number);
+        return storageFinderData.getFinderDatas().size();
     }
 
     public void findByParameters(String name, String id_occ, String startDate, String endDate)
     {
-        finderDatas = new ArrayList<>();
+        storageFinderData.setFinderDatas(new ArrayList<FinderData>());
+        storageFinderData.setSizeFinderData(0);
         if (name == null && id_occ == null && (startDate == null || endDate == null))
         {
             logger.info("нет параметров для поиска");
             return;
         }
+        ConvertingDataForOutput convertingData = new ConvertingDataForOutput();
         for (EntityFinder entityFinder : readEmployeeFromDb(name, id_occ, startDate, endDate))
         {
             FinderData fd = new FinderData();
@@ -50,10 +51,11 @@ public class ObjectFinderBean implements SessionBean
                 logger.info("name=" + entityFinder.getNameEmployee());
                 fd.setIdDepartment(entityFinder.getIdDepartment());
                 fd.setNameDepartment(entityFinder.getNameDepartment());
-                fd.setNameEmployee(entityFinder.getNameEmployee());
+                fd.setNameEmployee(convertingData.convertingNameForOutput(entityFinder.getNameEmployee()));
                 fd.setNameProfession(entityFinder.getNameProfession());
-                fd.setEmploymentDate(entityFinder.getEmploymentDate());
-                finderDatas.add(fd);
+                fd.setEmploymentDate(convertingData.convertingDateForOutput(entityFinder.getEmploymentDate()));
+                storageFinderData.getFinderDatas().add(fd);
+                storageFinderData.setSizeFinderData(size());
             } catch (RemoteException e)
             {
                 e.printStackTrace();
@@ -96,6 +98,50 @@ public class ObjectFinderBean implements SessionBean
 
     public void ejbCreate() throws CreateException
     {
+        storageFinderData = new StorageFinderData();
+        readOccupations();
+    }
+
+    private void readOccupations()
+    {
+        logger.info("readOccupations");
+        storageFinderData.setOccupations(new ArrayList<Occupation>());
+        InitialContext ic = null;
+        try
+        {
+            ic = new InitialContext();
+            Object remoteObject = ic.lookup(JNDI_ROOT + "EntityOccupationEJB");
+            EntityOccupationHome entityOccupationHome = (EntityOccupationHome) PortableRemoteObject.narrow(remoteObject, EntityOccupationHome.class);
+            Collection<EntityOccupation> entityOccupations= entityOccupationHome.findAll();
+
+            for (EntityOccupation entityOccupation : entityOccupations)
+            {
+                logger.info("loadOcc=" + entityOccupation.getNameOccupation());
+                storageFinderData.getOccupations().add(newOccupation(entityOccupation.getId(), entityOccupation.getNameOccupation()));
+            }
+        } catch (NamingException e)
+        {
+            e.printStackTrace();
+        } catch (FinderException e)
+        {
+            e.printStackTrace();
+        } catch (RemoteException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    private Occupation newOccupation(Integer id, String nameOccupation)
+    {
+        Occupation occupation = new Occupation();
+        occupation.setId(id);
+        occupation.setName(nameOccupation);
+        return occupation;
+    }
+
+    public StorageFinderData getStorageFinderData()
+    {
+        return storageFinderData;
     }
 
     public void setSessionContext(SessionContext sessionContext) throws EJBException

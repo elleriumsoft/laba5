@@ -1,4 +1,4 @@
-package ru.elleriumsoft.occupation.object;
+package ru.elleriumsoft.occupation;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;

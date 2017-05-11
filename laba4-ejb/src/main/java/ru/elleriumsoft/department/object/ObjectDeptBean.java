@@ -5,7 +5,7 @@ import ru.elleriumsoft.department.entity.EntityDept;
 import ru.elleriumsoft.department.entity.EntityDeptHome;
 import ru.elleriumsoft.occupation.entity.EntityOccupation;
 import ru.elleriumsoft.occupation.entity.EntityOccupationHome;
-import ru.elleriumsoft.occupation.object.Occupation;
+import ru.elleriumsoft.occupation.Occupation;
 
 import javax.ejb.*;
 import javax.naming.InitialContext;
@@ -25,6 +25,7 @@ public class ObjectDeptBean implements SessionBean
 {
     private AllDepartments allDept;
     private static final Logger logger = Logger.getLogger(ObjectDeptBean.class.getName());
+    private ConvertingDataForOutput convertingData = new ConvertingDataForOutput();
 
     public void readAllEmployeeFromDept(Integer idDepartment)
     {
@@ -34,7 +35,7 @@ public class ObjectDeptBean implements SessionBean
         {
             try
             {
-                allDept.getEmployeeOfDepartment().add(newDept(element.getId(), convertingNameForOutput(element.getNameEmployee()), element.getNameProfession(), element.getEmploymentDate()));
+                allDept.getEmployeeOfDepartment().add(newDept(element.getId(), convertingData.convertingNameForOutput(element.getNameEmployee()), element.getNameProfession(), element.getEmploymentDate()));
             } catch (RemoteException e)
             {
                 logger.info(e.getMessage());
@@ -95,7 +96,7 @@ public class ObjectDeptBean implements SessionBean
 
     public String getEmploymentDate(Integer idEmployee)
     {
-        return convertingDateForOutput(allDept.getEmployeeOfDepartment().get(idEmployee).getEmploymentDate());
+        return convertingData.convertingDateForOutput(allDept.getEmployeeOfDepartment().get(idEmployee).getEmploymentDate());
     }
 
     public String getDateForEdit(Integer idEmployee)
@@ -193,59 +194,8 @@ public class ObjectDeptBean implements SessionBean
     {
         for (Department dept : getAllDept().getEmployeeOfDepartment())
         {
-            dept.setDateForOutput(convertingDateForOutput(dept.getEmploymentDate()));
+            dept.setDateForOutput(convertingData.convertingDateForOutput(dept.getEmploymentDate()));
         }
-    }
-
-    private String convertingDateForOutput(String date)
-    {
-        if (date.length() < 10)
-        {
-            return date;
-        }
-        try
-        {
-            String bDate;
-            if (Integer.valueOf(date.substring(8, 10)) < 10)
-            {
-                bDate = date.substring(9, 10);
-            } else
-            {
-                bDate = date.substring(8, 10);
-            }
-            bDate = bDate + ' ' + getMonth(date.substring(5, 7)) + ' ';
-            bDate = bDate + date.substring(0, 4) + "г.";
-            return bDate;
-        } catch (Exception ex)
-        {
-            return date;
-        }
-    }
-
-    private String getMonth(String stMonth)
-    {
-        String[] months = {"ЯНВАРЯ", "ФЕВРАЛЯ", "МАРТА", "АПРЕЛЯ", "МАЯ", "ИЮНЯ", "ИЮЛЯ", "АВГУСТА", "СЕНТЯБРЯ", "ОКТЯБРЯ", "НОЯБРЯ", "ДЕКАБРЯ"};
-        return months[Integer.valueOf(stMonth) - 1].toLowerCase();
-    }
-
-    private String convertingNameForOutput(String name)
-    {
-        StringBuilder bName;
-        bName = new StringBuilder();
-        bName.append(name.substring(0, 1).toUpperCase());
-        int i = 1;
-        while (i < name.length())
-        {
-            if (name.charAt(i - 1) == ' ')
-            {
-                bName.append(name.substring(i, i + 1).toUpperCase());
-            } else
-            {
-                bName.append(name.substring(i, i + 1));
-            }
-            i++;
-        }
-        return bName.toString();
     }
 
     public void setCommandForModification(String command)
