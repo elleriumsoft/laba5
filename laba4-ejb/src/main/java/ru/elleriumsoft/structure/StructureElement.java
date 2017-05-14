@@ -17,14 +17,6 @@ public class StructureElement implements Serializable
     private int level;
     private int stateOfElement;
 
-//    public StructureElement(int id, String nameDepartment, int parent_id)
-//    {
-//        this.id = id;
-//        this.nameDepartment = nameDepartment;
-//        this.parent_id = parent_id;
-////        level = level;
-//    }
-
     public int getId()
     {
         return id;

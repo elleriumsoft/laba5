@@ -3,8 +3,8 @@ package ru.elleriumsoft.servlets;
 import org.apache.log4j.Logger;
 import ru.elleriumsoft.finder.object.ObjectFinder;
 import ru.elleriumsoft.finder.object.ObjectFinderHome;
-import ru.elleriumsoft.xml.CreatingXml;
-import ru.elleriumsoft.xml.CreatingXmlHome;
+import ru.elleriumsoft.xml.creatingxml.CreatingXml;
+import ru.elleriumsoft.xml.creatingxml.CreatingXmlHome;
 
 import javax.naming.InitialContext;
 import javax.rmi.PortableRemoteObject;

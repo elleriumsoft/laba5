@@ -6,8 +6,8 @@ import ru.elleriumsoft.department.modification.ChangeItemDepartmentHome;
 import ru.elleriumsoft.department.object.ObjectDept;
 import ru.elleriumsoft.department.object.ObjectDeptHome;
 import ru.elleriumsoft.structure.object.ObjectOfStructure;
-import ru.elleriumsoft.xml.CreatingXml;
-import ru.elleriumsoft.xml.CreatingXmlHome;
+import ru.elleriumsoft.xml.creatingxml.CreatingXml;
+import ru.elleriumsoft.xml.creatingxml.CreatingXmlHome;
 
 import javax.ejb.CreateException;
 import javax.naming.InitialContext;

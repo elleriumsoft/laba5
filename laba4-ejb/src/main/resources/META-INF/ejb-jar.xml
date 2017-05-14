@@ -7,9 +7,9 @@
   <enterprise-beans>
       <session>
           <ejb-name>CreatingXmlEJB</ejb-name>
-          <home>ru.elleriumsoft.xml.CreatingXmlHome</home>
-          <remote>ru.elleriumsoft.xml.CreatingXml</remote>
-          <ejb-class>ru.elleriumsoft.xml.CreatingXmlBean</ejb-class>
+          <home>ru.elleriumsoft.xml.creatingxml.CreatingXmlHome</home>
+          <remote>ru.elleriumsoft.xml.creatingxml.CreatingXml</remote>
+          <ejb-class>ru.elleriumsoft.xml.creatingxml.CreatingXmlBean</ejb-class>
           <session-type>Stateless</session-type>
           <transaction-type>Container</transaction-type>
       </session>
@@ -34,6 +34,14 @@
           <home>ru.elleriumsoft.department.modification.ChangeItemDepartmentHome</home>
           <remote>ru.elleriumsoft.department.modification.ChangeItemDepartment</remote>
           <ejb-class>ru.elleriumsoft.department.modification.ChangeItemDepartmentBean</ejb-class>
+          <session-type>Stateless</session-type>
+          <transaction-type>Container</transaction-type>
+      </session>
+      <session>
+          <ejb-name>ExportEJB</ejb-name>
+          <home>ru.elleriumsoft.xml.exchange.export.ExportHome</home>
+          <remote>ru.elleriumsoft.xml.exchange.export.Export</remote>
+          <ejb-class>ru.elleriumsoft.xml.exchange.export.ExportBean</ejb-class>
           <session-type>Stateless</session-type>
           <transaction-type>Container</transaction-type>
       </session>

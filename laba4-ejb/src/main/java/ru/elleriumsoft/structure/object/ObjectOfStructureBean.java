@@ -319,6 +319,11 @@ public class ObjectOfStructureBean implements SessionBean
         objectStructure.setElementIdForChange(id);
     }
 
+    public Integer getIdForChangeByCommand()
+    {
+        return objectStructure.getElementIdForChange();
+    }
+
     public void modificationStructure(String param)
     {
         try

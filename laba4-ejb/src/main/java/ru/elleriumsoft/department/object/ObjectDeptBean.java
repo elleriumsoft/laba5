@@ -3,8 +3,6 @@ package ru.elleriumsoft.department.object;
 import org.apache.log4j.Logger;
 import ru.elleriumsoft.department.entity.EntityDept;
 import ru.elleriumsoft.department.entity.EntityDeptHome;
-import ru.elleriumsoft.occupation.entity.EntityOccupation;
-import ru.elleriumsoft.occupation.entity.EntityOccupationHome;
 import ru.elleriumsoft.occupation.Occupation;
 
 import javax.ejb.*;
@@ -23,7 +21,7 @@ import static ru.elleriumsoft.jdbc.ConnectToDb.JNDI_ROOT;
  */
 public class ObjectDeptBean implements SessionBean
 {
-    private AllDepartments allDept;
+    private Dept allDept;
     private static final Logger logger = Logger.getLogger(ObjectDeptBean.class.getName());
     private ConvertingDataForOutput convertingData = new ConvertingDataForOutput();
 
@@ -45,13 +43,13 @@ public class ObjectDeptBean implements SessionBean
         addDatesForOutput();
         if (allDept.getOccupations() == null)
         {
-            readOccupations();
+            allDept.setOccupations(new Occupation().readOccupations());
         }
     }
 
-    private Department newDept(Integer id, String name, String nameProfession, String employmentDate)
+    private Employee newDept(Integer id, String name, String nameProfession, String employmentDate)
     {
-        Department dept = new Department();
+        Employee dept = new Employee();
         dept.setId(id);
         dept.setNameEmployee(name);
         dept.setProfession(nameProfession);
@@ -153,46 +151,46 @@ public class ObjectDeptBean implements SessionBean
         }
     }
 
-    private void readOccupations()
-    {
-        logger.info("readOccupations");
-        allDept.setOccupations(new ArrayList<Occupation>());
-        InitialContext ic = null;
-        try
-        {
-            ic = new InitialContext();
-            Object remoteObject = ic.lookup(JNDI_ROOT + "EntityOccupationEJB");
-            EntityOccupationHome entityOccupationHome = (EntityOccupationHome) PortableRemoteObject.narrow(remoteObject, EntityOccupationHome.class);
-            Collection<EntityOccupation> entityOccupations= entityOccupationHome.findAll();
+//    private void readOccupations()
+//    {
+//        logger.info("readOccupations");
+//        allDept.setOccupations(new ArrayList<Occupation>());
+//        InitialContext ic = null;
+//        try
+//        {
+//            ic = new InitialContext();
+//            Object remoteObject = ic.lookup(JNDI_ROOT + "EntityOccupationEJB");
+//            EntityOccupationHome entityOccupationHome = (EntityOccupationHome) PortableRemoteObject.narrow(remoteObject, EntityOccupationHome.class);
+//            Collection<EntityOccupation> entityOccupations= entityOccupationHome.findAll();
+//
+//            for (EntityOccupation entityOccupation : entityOccupations)
+//            {
+//                logger.info("loadOcc=" + entityOccupation.getNameOccupation());
+//                allDept.getOccupations().add(newOccupation(entityOccupation.getId(), entityOccupation.getNameOccupation()));
+//            }
+//        } catch (NamingException e)
+//        {
+//            e.printStackTrace();
+//        } catch (FinderException e)
+//        {
+//            e.printStackTrace();
+//        } catch (RemoteException e)
+//        {
+//            e.printStackTrace();
+//        }
+//    }
 
-            for (EntityOccupation entityOccupation : entityOccupations)
-            {
-                logger.info("loadOcc=" + entityOccupation.getNameOccupation());
-                allDept.getOccupations().add(newOccupation(entityOccupation.getId(), entityOccupation.getNameOccupation()));
-            }
-        } catch (NamingException e)
-        {
-            e.printStackTrace();
-        } catch (FinderException e)
-        {
-            e.printStackTrace();
-        } catch (RemoteException e)
-        {
-            e.printStackTrace();
-        }
-    }
-
-    private Occupation newOccupation(Integer id, String nameOccupation)
-    {
-        Occupation occupation = new Occupation();
-        occupation.setId(id);
-        occupation.setName(nameOccupation);
-        return occupation;
-    }
+//    private Occupation newOccupation(Integer id, String nameOccupation)
+//    {
+//        Occupation occupation = new Occupation();
+//        occupation.setId(id);
+//        occupation.setName(nameOccupation);
+//        return occupation;
+//    }
 
     private void addDatesForOutput()
     {
-        for (Department dept : getAllDept().getEmployeeOfDepartment())
+        for (Employee dept : getAllDept().getEmployeeOfDepartment())
         {
             dept.setDateForOutput(convertingData.convertingDateForOutput(dept.getEmploymentDate()));
         }
@@ -208,7 +206,7 @@ public class ObjectDeptBean implements SessionBean
         return allDept.getCommandForModification();
     }
 
-    public AllDepartments getAllDept()
+    public Dept getAllDept()
     {
         return allDept;
     }
@@ -239,7 +237,7 @@ public class ObjectDeptBean implements SessionBean
 
     public void ejbCreate() throws CreateException
     {
-        allDept = new AllDepartments();
+        allDept = new Dept();
     }
 
     public void ejbRemove() throws EJBException

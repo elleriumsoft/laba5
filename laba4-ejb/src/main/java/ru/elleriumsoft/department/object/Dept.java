@@ -12,14 +12,14 @@ import java.util.ArrayList;
  */
 @XmlType(propOrder = { "idDepartment", "nameDepartment", "commandForModification", "idForModification", "positionForModification", "employeeOfDepartment", "occupations" }, name = "dept")
 @XmlRootElement
-public class AllDepartments implements Serializable
+public class Dept implements Serializable
 {
     private Integer idDepartment;
     private String nameDepartment;
     private String commandForModification;
     private Integer idForModification;
     private Integer positionForModification;
-    private ArrayList<Department> employeeOfDepartment;
+    private ArrayList<Employee> employeeOfDepartment;
     private ArrayList<Occupation> occupations;
 
     public Integer getIdDepartment()
@@ -72,12 +72,12 @@ public class AllDepartments implements Serializable
         this.positionForModification = positionForModification;
     }
 
-    public ArrayList<Department> getEmployeeOfDepartment()
+    public ArrayList<Employee> getEmployeeOfDepartment()
     {
         return employeeOfDepartment;
     }
 
-    public void setEmployeeOfDepartment(ArrayList<Department> employeeOfDepartment)
+    public void setEmployeeOfDepartment(ArrayList<Employee> employeeOfDepartment)
     {
         this.employeeOfDepartment = employeeOfDepartment;
     }

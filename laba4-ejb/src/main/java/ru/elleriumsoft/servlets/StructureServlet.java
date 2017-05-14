@@ -3,8 +3,10 @@ package ru.elleriumsoft.servlets;
 import org.apache.log4j.Logger;
 import ru.elleriumsoft.structure.object.ObjectOfStructure;
 import ru.elleriumsoft.structure.object.ObjectOfStructureHome;
-import ru.elleriumsoft.xml.CreatingXml;
-import ru.elleriumsoft.xml.CreatingXmlHome;
+import ru.elleriumsoft.xml.creatingxml.CreatingXml;
+import ru.elleriumsoft.xml.creatingxml.CreatingXmlHome;
+import ru.elleriumsoft.xml.exchange.export.Export;
+import ru.elleriumsoft.xml.exchange.export.ExportHome;
 
 import javax.ejb.CreateException;
 import javax.naming.InitialContext;
@@ -51,6 +53,12 @@ public class StructureServlet extends HttpServlet
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
     {
+        if (req.getParameter("export") != null)
+        {
+            exportToXml(req);
+            req.getRequestDispatcher("DownloadXmlServlet").forward(req, resp);
+        }
+
         //Инициализируем структуру из бд
         objectOfStructure = getObjectOfStructure(req.getSession());
         objectOfStructure.initStructureFromDb();
@@ -96,6 +104,67 @@ public class StructureServlet extends HttpServlet
 
         //сохраняем модифицированную структуру
         req.getSession().setAttribute("structure", objectOfStructure);
+    }
+
+    private void exportToXml(HttpServletRequest req) throws RemoteException
+    {
+
+            Export export = getExportBean();
+            if (req.getParameter("withchildren") != null)
+            {
+                export.setWithChildrenDept(true);
+            }
+            else
+            {
+                export.setWithChildrenDept(false);
+            }
+            if (req.getParameter("withemployees") != null)
+            {
+                export.setWithEmployees(true);
+            }
+            else
+            {
+                export.setWithEmployees(false);
+            }
+            if (req.getParameter("withocc") != null)
+            {
+                export.setWithOccupations(true);
+            }
+            else
+            {
+                export.setWithOccupations(false);
+            }
+
+            export.exportToXml(objectOfStructure.getIdForChangeByCommand());
+            creatingXml.generateXml(export.getExchange(), "export");
+
+//            logger.info("size deps=" + export.getExchange().getDepartments().size());
+//            for (DeptInfo dept : export.getExchange().getDepartments())
+//            {
+//                logger.info("dept №" + dept.getIdDept() + ": " + dept.getNameDept());
+//            }
+
+    }
+
+    private Export getExportBean()
+    {
+        try
+        {
+            InitialContext ic = new InitialContext();
+            Object remoteObject = ic.lookup(JNDI_ROOT + "ExportEJB");
+            ExportHome exportHome = (ExportHome) PortableRemoteObject.narrow(remoteObject, ExportHome.class);
+            return exportHome.create();
+        } catch (NamingException e)
+        {
+            e.printStackTrace();
+        } catch (RemoteException e)
+        {
+            e.printStackTrace();
+        } catch (CreateException e)
+        {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     private ObjectOfStructure getObjectOfStructure(HttpSession session)

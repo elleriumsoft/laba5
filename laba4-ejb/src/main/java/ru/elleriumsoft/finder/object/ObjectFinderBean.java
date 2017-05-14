@@ -4,8 +4,6 @@ import org.apache.log4j.Logger;
 import ru.elleriumsoft.department.object.ConvertingDataForOutput;
 import ru.elleriumsoft.finder.entity.EntityFinder;
 import ru.elleriumsoft.finder.entity.EntityFinderHome;
-import ru.elleriumsoft.occupation.entity.EntityOccupation;
-import ru.elleriumsoft.occupation.entity.EntityOccupationHome;
 import ru.elleriumsoft.occupation.Occupation;
 
 import javax.ejb.*;
@@ -99,45 +97,45 @@ public class ObjectFinderBean implements SessionBean
     public void ejbCreate() throws CreateException
     {
         storageFinderData = new StorageFinderData();
-        readOccupations();
+        storageFinderData.setOccupations(new Occupation().readOccupations());
     }
 
-    private void readOccupations()
-    {
-        logger.info("readOccupations");
-        storageFinderData.setOccupations(new ArrayList<Occupation>());
-        InitialContext ic = null;
-        try
-        {
-            ic = new InitialContext();
-            Object remoteObject = ic.lookup(JNDI_ROOT + "EntityOccupationEJB");
-            EntityOccupationHome entityOccupationHome = (EntityOccupationHome) PortableRemoteObject.narrow(remoteObject, EntityOccupationHome.class);
-            Collection<EntityOccupation> entityOccupations= entityOccupationHome.findAll();
-
-            for (EntityOccupation entityOccupation : entityOccupations)
-            {
-                logger.info("loadOcc=" + entityOccupation.getNameOccupation());
-                storageFinderData.getOccupations().add(newOccupation(entityOccupation.getId(), entityOccupation.getNameOccupation()));
-            }
-        } catch (NamingException e)
-        {
-            e.printStackTrace();
-        } catch (FinderException e)
-        {
-            e.printStackTrace();
-        } catch (RemoteException e)
-        {
-            e.printStackTrace();
-        }
-    }
-
-    private Occupation newOccupation(Integer id, String nameOccupation)
-    {
-        Occupation occupation = new Occupation();
-        occupation.setId(id);
-        occupation.setName(nameOccupation);
-        return occupation;
-    }
+//    private void readOccupations()
+//    {
+//        logger.info("readOccupations");
+//        storageFinderData.setOccupations(new ArrayList<Occupation>());
+//        InitialContext ic = null;
+//        try
+//        {
+//            ic = new InitialContext();
+//            Object remoteObject = ic.lookup(JNDI_ROOT + "EntityOccupationEJB");
+//            EntityOccupationHome entityOccupationHome = (EntityOccupationHome) PortableRemoteObject.narrow(remoteObject, EntityOccupationHome.class);
+//            Collection<EntityOccupation> entityOccupations= entityOccupationHome.findAll();
+//
+//            for (EntityOccupation entityOccupation : entityOccupations)
+//            {
+//                logger.info("loadOcc=" + entityOccupation.getNameOccupation());
+//                storageFinderData.getOccupations().add(newOccupation(entityOccupation.getId(), entityOccupation.getNameOccupation()));
+//            }
+//        } catch (NamingException e)
+//        {
+//            e.printStackTrace();
+//        } catch (FinderException e)
+//        {
+//            e.printStackTrace();
+//        } catch (RemoteException e)
+//        {
+//            e.printStackTrace();
+//        }
+//    }
+//
+//    private Occupation newOccupation(Integer id, String nameOccupation)
+//    {
+//        Occupation occupation = new Occupation();
+//        occupation.setId(id);
+//        occupation.setName(nameOccupation);
+//        return occupation;
+//    }
 
     public StorageFinderData getStorageFinderData()
     {

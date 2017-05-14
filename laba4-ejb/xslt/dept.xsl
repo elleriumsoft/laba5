@@ -1,13 +1,13 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
     <xsl:output method="html"/>
 
-    <xsl:variable name="idDept" select="allDepartments/idDepartment"/>
-    <xsl:variable name="posForMod" select="allDepartments/positionForModification"/>
-    <xsl:variable name="command" select="allDepartments/commandForModification"/>
+    <xsl:variable name="idDept" select="dept/idDepartment"/>
+    <xsl:variable name="posForMod" select="dept/positionForModification"/>
+    <xsl:variable name="command" select="dept/commandForModification"/>
 
     <xsl:template match="/">
         <h1>
-            <xsl:value-of select="allDepartments/nameDepartment"/>
+            <xsl:value-of select="dept/nameDepartment"/>
         </h1>
 
         <!-- Кнопочки -->
@@ -32,7 +32,7 @@
                         <td>
                             <xsl:choose>
                                 <xsl:when test="$command='edit'">
-                                    <xsl:for-each select="allDepartments/employeeOfDepartment">
+                                    <xsl:for-each select="dept/employeeOfDepartment">
                                         <xsl:if test="position()=$posForMod">
                                             <input type="text" id="Editbox1" name="NewName" value="{nameEmployee}" maxlength="125"></input>
                                         </xsl:if>
@@ -46,7 +46,7 @@
                         <td>
                             <xsl:choose>
                                 <xsl:when test="$command='edit'">
-                                    <xsl:for-each select="allDepartments/employeeOfDepartment">
+                                    <xsl:for-each select="dept/employeeOfDepartment">
                                         <xsl:if test="position()=$posForMod">
                                             <input type="date" id="Editbox2" name="NewDate" value="{employmentDate}" maxlength="10"></input>
                                         </xsl:if>
@@ -60,7 +60,7 @@
                         <td>
                             <select size="2" name="NewOcc">
                                 <option disabled="disabled">Выберите должность</option>
-                                <xsl:for-each select="allDepartments/occupations">
+                                <xsl:for-each select="dept/occupations">
                                     <option value="{id}"> <xsl:value-of select="name"/> </option>
                                 </xsl:for-each>
                             </select>
@@ -72,7 +72,7 @@
                 </tr>
             </xsl:if>
 
-            <xsl:for-each select="allDepartments/employeeOfDepartment">
+            <xsl:for-each select="dept/employeeOfDepartment">
                 <tr>
                     <xsl:if test="$command != 'edit' or position() != $posForMod">
                             <td>&#160;

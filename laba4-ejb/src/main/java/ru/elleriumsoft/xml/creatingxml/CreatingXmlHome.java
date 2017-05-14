@@ -1,4 +1,4 @@
-package ru.elleriumsoft.xml;
+package ru.elleriumsoft.xml.creatingxml;
 
 import javax.ejb.CreateException;
 import javax.ejb.EJBHome;
@@ -9,5 +9,5 @@ import java.rmi.RemoteException;
  */
 public interface CreatingXmlHome extends EJBHome
 {
-    ru.elleriumsoft.xml.CreatingXml create() throws RemoteException, CreateException;
+    CreatingXml create() throws RemoteException, CreateException;
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
-  <xs:element name="allDepartments" type="dept"/>
+  <xs:element name="dept" type="dept"/>
 
   <xs:element name="department" type="employeeOfDepartment"/>
 

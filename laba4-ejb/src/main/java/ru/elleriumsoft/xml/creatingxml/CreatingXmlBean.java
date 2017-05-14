@@ -1,4 +1,4 @@
-package ru.elleriumsoft.xml;
+package ru.elleriumsoft.xml.creatingxml;
 
 import org.apache.log4j.Logger;
 import org.xml.sax.SAXException;
@@ -61,7 +61,7 @@ public class CreatingXmlBean implements SessionBean
     public String transformXmlToHtml(String xmlData)
     {
         String out = transformerToString("xml\\" + xmlData + ".xml",  "xslt\\" + xmlData + ".xsl");
-        logger.info("out: " + out);
+       // logger.info("out: " + out);
         return out;
     }
 

@@ -4,12 +4,13 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
 
-@XmlType(propOrder = { "id", "nameEmployee", "profession", "employmentDate", "dateForOutput" }, name = "employeeOfDepartment")
+@XmlType(propOrder = { "id", "nameEmployee", "idProfession", "profession", "employmentDate", "dateForOutput" }, name = "employeeOfDepartment")
 @XmlRootElement
-public class Department implements Serializable
+public class Employee implements Serializable
 {
     private Integer id;
     private String nameEmployee;
+    private Integer idProfession;
     private String profession;
     private String employmentDate;
     private String dateForOutput;
@@ -62,5 +63,15 @@ public class Department implements Serializable
     public void setDateForOutput(String dateForOutput)
     {
         this.dateForOutput = dateForOutput;
+    }
+
+    public Integer getIdProfession()
+    {
+        return idProfession;
+    }
+
+    public void setIdProfession(Integer idProfession)
+    {
+        this.idProfession = idProfession;
     }
 }

@@ -37,6 +37,7 @@ public interface ObjectOfStructure extends EJBObject
 
     void setCommandForChangeStructure(String command) throws RemoteException;
     void setIdForChangeByCommand(Integer id) throws RemoteException;
+    Integer getIdForChangeByCommand() throws RemoteException;
 
     void modificationStructure(String param) throws RemoteException;
 }

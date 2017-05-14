@@ -43,6 +43,19 @@
                     <input type= "submit" id= "Button10 " onclick= "window.location.href='StructureServlet';return false; " name= " " value= "НЕТ" style= "position:absolute;left:109px;top:83px;width:104px;height:25px;color:#FF0000; "></input>
                 </div>
             </xsl:when>
+            <xsl:when test="structure/commandForChangeStructure='export'">
+            <div id = "export">
+                <form name="export" method="get" action="StructureServlet">
+                    <input type= "submit" id= "Button11 " name= "export" value= "Экспорт в XML" ></input>
+                    <br/><br/>
+                    <input type="checkbox" name="withchildren" value="true" checked="checked">С подотделами</input>
+                    <br/>
+                    <input type="checkbox" name="withemployees" value="true" checked="checked">С сотрудниками</input>
+                    <br/>
+                    <input type="checkbox" name="withocc" value="true" >Выгрузить названия профессий</input>
+                </form>
+            </div>
+            </xsl:when>
             <xsl:otherwise>
                 <!-- Кнопка поиска -->
                 <a href="/app/finder/Finder.jsp"><img src="structure/images/find.png" width="33" height="33" align = "center" alt="Поиск" ></img></a>
@@ -71,6 +84,9 @@
                     &#160;
                     <a href="StructureServlet?command=delete&amp;element={id}"><img src="structure/images/delete.png" width="17" height="17" align = "center" alt="Удалить элемент"></img></a>
                 </xsl:if>
+                &#160;
+                <a href="StructureServlet?command=export&amp;element={id}"><img src="structure/images/export.png" width="17" height="17" align = "center" alt="Экспорт элемента"></img></a>
+
             </div>
 
             <!-- Кнопка + или - для раскрытия или сворачивания списка -->

@@ -20,7 +20,7 @@ public interface ObjectDept extends EJBObject
     String getNameDepartment() throws RemoteException;
     void setNameDepartment(String nameDepartment) throws RemoteException;
     int getMaxId() throws RemoteException;
-    AllDepartments getAllDept() throws RemoteException;
+    Dept getAllDept() throws RemoteException;
 
     void setCommandForModification(String command) throws RemoteException;
     String getCommandForModification() throws RemoteException;
