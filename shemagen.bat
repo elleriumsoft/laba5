@@ -1,0 +1,1 @@
+schemagen -d . -cp .  ru/elleriumsoft/xml/exchange/Exchange.java

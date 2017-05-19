@@ -13,7 +13,7 @@
             <b>Структура мэрии</b>
         </h1>
 
-        <!-- Элементы управления для модификации -->
+        <!-- Элементы управления для модификации, а также экспорта/импорта -->
         <xsl:choose>
             <xsl:when test="structure/commandForChangeStructure='add'">
                 <div id = "addaction">
@@ -44,25 +44,59 @@
                 </div>
             </xsl:when>
             <xsl:when test="structure/commandForChangeStructure='export'">
-            <div id = "export">
-                <form name="export" method="get" action="StructureServlet">
-                    <input type= "submit" id= "Button11 " name= "export" value= "Экспорт в XML" ></input>
-                    <br/><br/>
-                    <input type="checkbox" name="withchildren" value="true" checked="checked">С подотделами</input>
-                    <br/>
-                    <input type="checkbox" name="withemployees" value="true" checked="checked">С сотрудниками</input>
-                    <br/>
-                    <input type="checkbox" name="withocc" value="true" >Выгрузить названия профессий</input>
-                </form>
-            </div>
+                <div id = "export">
+                    <form name="export" method="get" action="StructureServlet">
+                        <input type= "submit" id= "Button11 " name= "export" value= "Экспорт в XML" ></input>
+                        <br/><br/>
+                        <input type="checkbox" name="withchildren" value="true" checked="checked">С подотделами</input>
+                        <br/>
+                        <input type="checkbox" name="withemployees" value="true" checked="checked">С сотрудниками</input>
+                        <br/>
+                        <input type="checkbox" name="withocc" value="true" >Выгрузить названия профессий</input>
+                    </form>
+                </div>
+                <p><a href="/app/StructureServlet">
+                    <img src="structure/images/exit.png" width="178" height="32" align="bottom"
+                         alt="Вернуться"></img>
+                </a></p>
+            </xsl:when>
+            <xsl:when test="structure/commandForChangeStructure='import'">
+                <div id = "import">
+                    <form name="import" enctype="multipart/form-data" method="post">
+                        <p><b>Импорт данных в БД</b></p>
+                        <input type="checkbox" name="withoverwrite" value="true" checked="checked">Перезаписывать данные</input>
+                        <br/>
+                        <p><input type="file" name="xmlfile" accept="*.xml"></input></p>
+                        <input type="submit" value="Отправить"></input>
+                    </form>
+                </div>
             </xsl:when>
             <xsl:otherwise>
                 <!-- Кнопка поиска -->
-                <a href="/app/finder/Finder.jsp"><img src="structure/images/find.png" width="33" height="33" align = "center" alt="Поиск" ></img></a>
-                <div style= "position:absolute;left:50px;top:70px;color:#134096; ">
-                    <a href="/app/FinderServlet"><b>Поиск</b></a>
+                <div style= "position:absolute;left:5px;top:57px; ">
+                    <a href="/app/FinderServlet"><img src="structure/images/find.png" width="33" height="33" align = "center" alt="Поиск" ></img></a>&#160;
+                    <a href="/app/FinderServlet" style="color:#134096"><b>Поиск</b></a>
+                </div>
+                <!-- Кнопка импорта -->
+                <div style= "position:absolute;left:110px;top:57px; ">
+                    <a href="/app/StructureServlet?command=import&amp;element=0"><img src="structure/images/import.png" width="33" height="33" align = "center" alt="Поиск" ></img></a>&#160;
+                    <a href="/app/StructureServlet?command=import&amp;element=0" style="color:#aa2f44;"><b>Импорт</b></a>
                 </div>
                 <br/>
+                <div style="position:absolute;left:250px;top:37px;color:#aa2f44;">
+                    <xsl:choose>
+                        <!-- Сообщение что импорт прошел успешно -->
+                        <xsl:when test="structure/errorOnImport = 'ok'">
+                            <h3>Файл успешно импортирован в БД!<br/>
+                                При импорте: <xsl:value-of select="structure/resultOfImport"/></h3>
+                        </xsl:when>
+                        <!-- Сообщение об ошибке импорта -->
+                        <xsl:when test="structure/errorOnImport != 'no'">
+                                <h3>Ошибка импорта файла:<br/>
+                                    <xsl:value-of select="structure/errorOnImport"/></h3>
+                        </xsl:when>
+                    </xsl:choose>
+                </div>
             </xsl:otherwise>
         </xsl:choose>
 

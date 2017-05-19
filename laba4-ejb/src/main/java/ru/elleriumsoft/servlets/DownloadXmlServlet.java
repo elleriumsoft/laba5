@@ -43,6 +43,10 @@ public class DownloadXmlServlet extends HttpServlet
             File file = new File("");
             logger.info("путь=" + file.getAbsolutePath());
         }
+//        finally
+//        {
+//            response.sendRedirect("/app/StructureServlet");
+//        }
     }
 
 }

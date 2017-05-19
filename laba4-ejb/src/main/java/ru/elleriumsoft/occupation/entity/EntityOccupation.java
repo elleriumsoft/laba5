@@ -10,4 +10,6 @@ public interface EntityOccupation extends EJBObject
 {
     Integer getId() throws RemoteException;
     String getNameOccupation() throws RemoteException;
+    void setNameOccupation(String nameOccupation) throws RemoteException;
+    void setNeedUpdate(boolean needUpdate) throws RemoteException;
 }

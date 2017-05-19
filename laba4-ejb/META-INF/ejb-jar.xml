@@ -39,9 +39,17 @@
       </session>
       <session>
           <ejb-name>ExportEJB</ejb-name>
-          <home>ru.elleriumsoft.xml.exchange.export.ExportHome</home>
-          <remote>ru.elleriumsoft.xml.exchange.export.Export</remote>
-          <ejb-class>ru.elleriumsoft.xml.exchange.export.ExportBean</ejb-class>
+          <home>ru.elleriumsoft.xml.exchange.exportxml.ExportHome</home>
+          <remote>ru.elleriumsoft.xml.exchange.exportxml.Export</remote>
+          <ejb-class>ru.elleriumsoft.xml.exchange.exportxml.ExportBean</ejb-class>
+          <session-type>Stateless</session-type>
+          <transaction-type>Container</transaction-type>
+      </session>
+      <session>
+          <ejb-name>ImportXmlEJB</ejb-name>
+          <home>ru.elleriumsoft.xml.exchange.importxml.ImportXmlHome</home>
+          <remote>ru.elleriumsoft.xml.exchange.importxml.ImportXml</remote>
+          <ejb-class>ru.elleriumsoft.xml.exchange.importxml.ImportXmlBean</ejb-class>
           <session-type>Stateless</session-type>
           <transaction-type>Container</transaction-type>
       </session>

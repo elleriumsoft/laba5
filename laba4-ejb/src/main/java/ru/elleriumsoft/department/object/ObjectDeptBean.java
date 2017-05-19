@@ -2,19 +2,13 @@ package ru.elleriumsoft.department.object;
 
 import org.apache.log4j.Logger;
 import ru.elleriumsoft.department.entity.EntityDept;
-import ru.elleriumsoft.department.entity.EntityDeptHome;
 import ru.elleriumsoft.occupation.Occupation;
 
 import javax.ejb.*;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-import javax.rmi.PortableRemoteObject;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-
-import static ru.elleriumsoft.jdbc.ConnectToDb.JNDI_ROOT;
 
 /**
  * Created by Dmitriy on 16.04.2017.
@@ -55,6 +49,49 @@ public class ObjectDeptBean implements SessionBean
         dept.setProfession(nameProfession);
         dept.setEmploymentDate(employmentDate);
         return dept;
+    }
+
+    public int getMaxId()
+    {
+        int maxId = 0;
+        try
+        {
+            EntityDept entityDept = new Employee().getDeptHome().findByMaxId();
+            maxId = entityDept.getId();
+        } catch (Exception e)
+        {
+            logger.info("Error: " + e.getStackTrace());
+        }
+        logger.info("MAX_ID=" + maxId);
+        return maxId;
+    }
+
+    private Collection<EntityDept> readEmployeeFromDb(Integer idDepartment)
+    {
+        Collection<EntityDept> entityDept = Collections.emptyList();
+        try
+        {
+            entityDept = new Employee().getDeptHome().findAll(idDepartment);
+        } catch (RemoteException e)
+        {
+            logger.info(e.getMessage());
+            e.printStackTrace();
+        } catch (FinderException e)
+        {
+            logger.info(e.getMessage());
+            e.printStackTrace();
+        } finally
+        {
+            return entityDept;
+        }
+    }
+
+    private void addDatesForOutput()
+    {
+        for (Employee dept : getAllDept().getEmployeeOfDepartment())
+        {
+            dept.setDateForOutput(convertingData.convertingDateForOutput(dept.getEmploymentDate()));
+        }
     }
 
     public String getNameDepartment()
@@ -100,100 +137,6 @@ public class ObjectDeptBean implements SessionBean
     public String getDateForEdit(Integer idEmployee)
     {
         return allDept.getEmployeeOfDepartment().get(idEmployee).getEmploymentDate();
-    }
-
-    public int getMaxId()
-    {
-        int maxId = 0;
-        EntityDeptHome entityHome = null;
-        try
-        {
-            InitialContext ic = new InitialContext();
-            Object remoteObject = ic.lookup(JNDI_ROOT + "EntityDeptEJB");//"laba4-ejb/ru.elleriumsoft.structureForPrint.StructureProcessingFromDbHome");
-            entityHome = (EntityDeptHome) PortableRemoteObject.narrow(remoteObject, EntityDeptHome.class);
-            EntityDept entityDept = entityHome.findByMaxId();
-            maxId = entityDept.getId();
-        } catch (Exception e)
-        {
-
-            logger.info(e.getStackTrace());
-        }
-        logger.info("MAX_ID=" + maxId);
-        return maxId;
-    }
-
-    private Collection<EntityDept> readEmployeeFromDb(Integer idDepartment)
-    {
-        Collection<EntityDept> entityDept = Collections.emptyList();
-        try
-        {
-            InitialContext ic = new InitialContext();
-            Object remoteObject = ic.lookup(JNDI_ROOT + "EntityDeptEJB");
-            EntityDeptHome entityDeptHome = (EntityDeptHome) PortableRemoteObject.narrow(remoteObject, EntityDeptHome.class);
-            entityDept = entityDeptHome.findAll(idDepartment);
-            logger.info("for id = " + idDepartment);
-            logger.info("size=" + entityDept.size());
-        } catch (NamingException e)
-        {
-            logger.info(e.getMessage());
-            e.printStackTrace();
-        } catch (RemoteException e)
-        {
-            logger.info(e.getMessage());
-            e.printStackTrace();
-        } catch (FinderException e)
-        {
-            logger.info(e.getMessage());
-            e.printStackTrace();
-        } finally
-        {
-            return entityDept;
-        }
-    }
-
-//    private void readOccupations()
-//    {
-//        logger.info("readOccupations");
-//        allDept.setOccupations(new ArrayList<Occupation>());
-//        InitialContext ic = null;
-//        try
-//        {
-//            ic = new InitialContext();
-//            Object remoteObject = ic.lookup(JNDI_ROOT + "EntityOccupationEJB");
-//            EntityOccupationHome entityOccupationHome = (EntityOccupationHome) PortableRemoteObject.narrow(remoteObject, EntityOccupationHome.class);
-//            Collection<EntityOccupation> entityOccupations= entityOccupationHome.findAll();
-//
-//            for (EntityOccupation entityOccupation : entityOccupations)
-//            {
-//                logger.info("loadOcc=" + entityOccupation.getNameOccupation());
-//                allDept.getOccupations().add(newOccupation(entityOccupation.getId(), entityOccupation.getNameOccupation()));
-//            }
-//        } catch (NamingException e)
-//        {
-//            e.printStackTrace();
-//        } catch (FinderException e)
-//        {
-//            e.printStackTrace();
-//        } catch (RemoteException e)
-//        {
-//            e.printStackTrace();
-//        }
-//    }
-
-//    private Occupation newOccupation(Integer id, String nameOccupation)
-//    {
-//        Occupation occupation = new Occupation();
-//        occupation.setId(id);
-//        occupation.setName(nameOccupation);
-//        return occupation;
-//    }
-
-    private void addDatesForOutput()
-    {
-        for (Employee dept : getAllDept().getEmployeeOfDepartment())
-        {
-            dept.setDateForOutput(convertingData.convertingDateForOutput(dept.getEmploymentDate()));
-        }
     }
 
     public void setCommandForModification(String command)

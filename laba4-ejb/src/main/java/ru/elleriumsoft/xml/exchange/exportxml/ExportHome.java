@@ -1,4 +1,4 @@
-package ru.elleriumsoft.xml.exchange.export;
+package ru.elleriumsoft.xml.exchange.exportxml;
 
 import javax.ejb.CreateException;
 import javax.ejb.EJBHome;
@@ -9,5 +9,5 @@ import java.rmi.RemoteException;
  */
 public interface ExportHome extends EJBHome
 {
-    ru.elleriumsoft.xml.exchange.export.Export create() throws RemoteException, CreateException;
+    ru.elleriumsoft.xml.exchange.exportxml.Export create() throws RemoteException, CreateException;
 }

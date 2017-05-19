@@ -5,29 +5,38 @@ import ru.elleriumsoft.structure.object.ObjectOfStructure;
 import ru.elleriumsoft.structure.object.ObjectOfStructureHome;
 import ru.elleriumsoft.xml.creatingxml.CreatingXml;
 import ru.elleriumsoft.xml.creatingxml.CreatingXmlHome;
-import ru.elleriumsoft.xml.exchange.export.Export;
-import ru.elleriumsoft.xml.exchange.export.ExportHome;
+import ru.elleriumsoft.xml.exchange.exportxml.Export;
+import ru.elleriumsoft.xml.exchange.exportxml.ExportHome;
+import ru.elleriumsoft.xml.exchange.importxml.ImportXml;
+import ru.elleriumsoft.xml.exchange.importxml.ImportXmlHome;
 
 import javax.ejb.CreateException;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.rmi.PortableRemoteObject;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.*;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.ByteBuffer;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
+import java.nio.channels.WritableByteChannel;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.rmi.RemoteException;
 
 import static ru.elleriumsoft.jdbc.ConnectToDb.JNDI_ROOT;
+import static ru.elleriumsoft.xml.exchange.importxml.ImportXmlBean.PATH_TO_FILE;
 
 /**
  * Created by Dmitriy on 03.05.2017.
  */
 @WebServlet("/StructureServlet")
+@MultipartConfig
 public class StructureServlet extends HttpServlet
 {
     private ObjectOfStructure objectOfStructure;
@@ -74,7 +83,7 @@ public class StructureServlet extends HttpServlet
         objectOfStructure.changeStateOfElementStructure(req.getParameter("open"));
         if (objectOfStructure.checkNeedUpdatePage()) { resp.sendRedirect("StructureServlet"); }
 
-        //Сохраняем команду модифицирующую струкутуру и id над которым она выполняется
+        //Сохраняем команду и id над которым она выполняется
         if (req.getParameter("command") != null && req.getParameter("element") != null)
         {
             objectOfStructure.setCommandForChangeStructure(req.getParameter("command"));
@@ -103,7 +112,87 @@ public class StructureServlet extends HttpServlet
             pw.close();
 
         //сохраняем модифицированную структуру
+        objectOfStructure.setErrorOnImport("no");
         req.getSession().setAttribute("structure", objectOfStructure);
+    }
+
+    //Импорт файла приходит сюда
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse resp) throws ServletException, IOException
+    {
+        logger.info("загрузка файла");
+
+        Part uploadFile = request.getPart("xmlfile");
+        logger.info("size for upload=" + uploadFile.getSize());
+
+        if (uploadFile != null && uploadFile.getSize() > 0 && uploadFile.getInputStream() != null)
+        {
+            Path outputFile = Paths.get(PATH_TO_FILE);
+
+            ReadableByteChannel input = Channels.newChannel(uploadFile.getInputStream());
+            WritableByteChannel output = Channels.newChannel(new FileOutputStream(outputFile.toFile()));
+            try
+            {
+                ByteBuffer buffer = ByteBuffer.allocate(1024);
+                while (input.read(buffer) >= 0 || buffer.position() > 0) {
+                    buffer.flip();
+                    output.write(buffer);
+                    buffer.compact();
+                }
+            }
+            catch (Exception e)
+            {
+                objectOfStructure.setErrorOnImport("Ошибка загрузки файла!");
+                resp.sendRedirect("/app/StructureServlet");
+                //resp.sendRedirect("/app/StructureServlet?errorimport=Error loading file");
+            }
+            finally
+            {
+                input.close();
+                output.close();
+            }
+            //resp.sendRedirect("/app/StructureServlet?errorimport=" + importXmlToDatabase((Boolean.valueOf(request.getParameter("withoverwrite")))));
+            String resultImportXml = importXmlToDatabase((Boolean.valueOf(request.getParameter("withoverwrite"))));
+            objectOfStructure.setErrorOnImport(resultImportXml);
+        }
+        else
+        {
+            objectOfStructure.setErrorOnImport("Ошибка загрузки файла!");
+            //resp.sendRedirect("/app/StructureServlet");//resp.sendRedirect("/app/StructureServlet?errorimport=Error loading file");
+        }
+        resp.sendRedirect("/app/StructureServlet");
+    }
+
+    private String importXmlToDatabase(boolean withOverwrite) throws RemoteException
+    {
+        if (creatingXml.validateXml("import"))
+        {
+            logger.info("xml validate OK");
+            ImportXml importXml = getImportBean();
+            importXml.importFromXmlToObject();
+            if (importXml.isErrorOnImport())
+            {
+                return importXml.getTypeErrorImport();
+            }
+            else
+            {
+                importXml.importFromObjectToDatabase(withOverwrite);
+                if (importXml.isErrorOnImport())
+                {
+                    return importXml.getTypeErrorImport();
+                }
+                else
+                {
+                    objectOfStructure.setResultOfImport(importXml.getResultOfImport());
+                    return "ok";//&result=" + importXml.getResultOfImport();
+                }
+            }
+        }
+        else
+        {
+            logger.info("error xml validate");
+            return "Файл не прошел проверку!";
+        }
     }
 
     private void exportToXml(HttpServletRequest req) throws RemoteException
@@ -137,13 +226,6 @@ public class StructureServlet extends HttpServlet
 
             export.exportToXml(objectOfStructure.getIdForChangeByCommand());
             creatingXml.generateXml(export.getExchange(), "export");
-
-//            logger.info("size deps=" + export.getExchange().getDepartments().size());
-//            for (DeptInfo dept : export.getExchange().getDepartments())
-//            {
-//                logger.info("dept №" + dept.getIdDept() + ": " + dept.getNameDept());
-//            }
-
     }
 
     private Export getExportBean()
@@ -154,6 +236,27 @@ public class StructureServlet extends HttpServlet
             Object remoteObject = ic.lookup(JNDI_ROOT + "ExportEJB");
             ExportHome exportHome = (ExportHome) PortableRemoteObject.narrow(remoteObject, ExportHome.class);
             return exportHome.create();
+        } catch (NamingException e)
+        {
+            e.printStackTrace();
+        } catch (RemoteException e)
+        {
+            e.printStackTrace();
+        } catch (CreateException e)
+        {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private ImportXml getImportBean()
+    {
+        try
+        {
+            InitialContext ic = new InitialContext();
+            Object remoteObject = ic.lookup(JNDI_ROOT + "ImportXmlEJB");
+            ImportXmlHome importXmlHome = (ImportXmlHome) PortableRemoteObject.narrow(remoteObject, ImportXmlHome.class);
+            return importXmlHome.create();
         } catch (NamingException e)
         {
             e.printStackTrace();

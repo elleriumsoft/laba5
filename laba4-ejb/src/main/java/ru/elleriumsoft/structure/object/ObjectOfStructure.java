@@ -40,4 +40,7 @@ public interface ObjectOfStructure extends EJBObject
     Integer getIdForChangeByCommand() throws RemoteException;
 
     void modificationStructure(String param) throws RemoteException;
+
+    void setErrorOnImport(String errorMessage) throws RemoteException;
+    void setResultOfImport(String resultMessage) throws RemoteException;
 }

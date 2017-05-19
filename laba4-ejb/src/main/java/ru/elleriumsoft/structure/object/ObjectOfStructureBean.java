@@ -9,14 +9,10 @@ import ru.elleriumsoft.structure.entity.StructureProcessingFromDb;
 import ru.elleriumsoft.structure.entity.StructureProcessingFromDbHome;
 
 import javax.ejb.*;
-import javax.naming.InitialContext;
-import javax.rmi.PortableRemoteObject;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Vector;
-
-import static ru.elleriumsoft.jdbc.ConnectToDb.JNDI_ROOT;
 
 /**
  * Created by Dmitriy on 02.04.2017.
@@ -34,14 +30,9 @@ public class ObjectOfStructureBean implements SessionBean
     public int getMaxId()
     {
         int maxId = 0;
-        //StructureProcessingFromDbHome structureProcessingFromDbHome = null;
         try
         {
-//            InitialContext ic = new InitialContext();
-//            Object remoteObject = ic.lookup(JNDI_ROOT + "StructureProcessingFromDbEJB");
-//            structureProcessingFromDbHome = (StructureProcessingFromDbHome) PortableRemoteObject.narrow(remoteObject, StructureProcessingFromDbHome.class);
-//            StructureProcessingFromDb structureProcessingFromDb = structureProcessingFromDbHome.findByMaxId();
-            maxId = getHome().findByMaxId().getId();//structureProcessingFromDb.getId();
+            maxId = objectStructure.getStructureHome().findByMaxId().getId();
         } catch (Exception e)
         {
             logger.info(e.getStackTrace());
@@ -126,7 +117,7 @@ public class ObjectOfStructureBean implements SessionBean
         Vector<StructureProcessingFromDb> dataFromDb = new Vector<>();
         try
         {
-            StructureProcessingFromDbHome structureProcessingFromDbHome = getHome();
+            StructureProcessingFromDbHome structureProcessingFromDbHome = objectStructure.getStructureHome();
             logger.info("len=" + statesOfElements.size());
             for (StateOfElements state : statesOfElements)
             {
@@ -148,7 +139,7 @@ public class ObjectOfStructureBean implements SessionBean
         String name;
         try
         {
-            name = getHome().findByPrimaryKey(selectedId).getNameDepartment();
+            name = objectStructure.getStructureHome().findByPrimaryKey(selectedId).getNameDepartment();
             return name;
         } catch (RemoteException e)
         {
@@ -300,7 +291,7 @@ public class ObjectOfStructureBean implements SessionBean
     {
         try
         {
-            return (Vector) getHome().findParentKeys(id);
+            return (Vector) objectStructure.getStructureHome().findParentKeys(id);
         } catch (Exception e)
         {
 
@@ -356,7 +347,7 @@ public class ObjectOfStructureBean implements SessionBean
     {
         try
         {
-            getHome().create(maxId + 1, param, objectStructure.getElementIdForChange());
+            objectStructure.getStructureHome().create(maxId + 1, param, objectStructure.getElementIdForChange());
             try
             {
                 openList(objectStructure.getElementIdForChange());
@@ -376,7 +367,7 @@ public class ObjectOfStructureBean implements SessionBean
     {
         try
         {
-            StructureProcessingFromDb structureProcessingFromDb = getHome().findByPrimaryKey(objectStructure.getElementIdForChange());
+            StructureProcessingFromDb structureProcessingFromDb = objectStructure.getStructureHome().findByPrimaryKey(objectStructure.getElementIdForChange());
             if (structureProcessingFromDb != null)
             {
                 structureProcessingFromDb.setNeedUpdate();
@@ -446,29 +437,30 @@ public class ObjectOfStructureBean implements SessionBean
         statesOfElements = new ArrayList<>();
         statesOfElements.add(new StateOfElements(1, VariantsOfState.CLOSE));
         needUpdatePageAfterChangeState = false;
+        setErrorOnImport("no");
     }
 
-    private StructureProcessingFromDbHome getHome()
-    {
-        StructureProcessingFromDbHome structureProcessingFromDbHome = null;
-        try
-        {
-            InitialContext ic = new InitialContext();
-            Object remoteObject = ic.lookup(JNDI_ROOT + "StructureProcessingFromDbEJB");
-            structureProcessingFromDbHome = (StructureProcessingFromDbHome) PortableRemoteObject.narrow(remoteObject, StructureProcessingFromDbHome.class);
-        } catch (Exception e)
-        {
-            logger.info(e.getMessage());
-        }
-        return structureProcessingFromDbHome;
-    }
+//    private StructureProcessingFromDbHome getHome()
+//    {
+//        StructureProcessingFromDbHome structureProcessingFromDbHome = null;
+//        try
+//        {
+//            InitialContext ic = new InitialContext();
+//            Object remoteObject = ic.lookup(JNDI_ROOT + "StructureProcessingFromDbEJB");
+//            structureProcessingFromDbHome = (StructureProcessingFromDbHome) PortableRemoteObject.narrow(remoteObject, StructureProcessingFromDbHome.class);
+//        } catch (Exception e)
+//        {
+//            logger.info(e.getMessage());
+//        }
+//        return structureProcessingFromDbHome;
+//    }
 
     private Vector<StructureProcessingFromDb> getAllElements()
     {
         Vector<StructureProcessingFromDb> vector = new Vector<>();
         try
         {
-            vector = (Vector) getHome().findAll();
+            vector = (Vector) objectStructure.getStructureHome().findAll();
         } catch (Exception e)
         {
             logger.info(e.getMessage());
@@ -481,13 +473,20 @@ public class ObjectOfStructureBean implements SessionBean
         StructureProcessingFromDb structureProcessingFromDb = null;
         try
         {
-            structureProcessingFromDb = getHome().findByPrimaryKey(id);
+            structureProcessingFromDb = objectStructure.getStructureHome().findByPrimaryKey(id);
         } catch (Exception e)
         {
             logger.info(e.getMessage());
         }
         return structureProcessingFromDb;
     }
+
+    public void setErrorOnImport(String errorMessage)
+    {
+        objectStructure.setErrorOnImport(errorMessage);
+    }
+
+    public void setResultOfImport(String resultMessage) { objectStructure.setResultOfImport(resultMessage); }
 
     public void setSessionContext(SessionContext sessionContext) throws EJBException
     {

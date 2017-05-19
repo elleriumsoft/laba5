@@ -1,4 +1,4 @@
-package ru.elleriumsoft.xml.exchange.export;
+package ru.elleriumsoft.xml.exchange.exportxml;
 
 import ru.elleriumsoft.xml.exchange.Exchange;
 

@@ -1,10 +1,11 @@
-package ru.elleriumsoft.xml.exchange.export;
+package ru.elleriumsoft.xml.exchange.exportxml;
 
 import org.apache.log4j.Logger;
 import ru.elleriumsoft.department.entity.EntityDept;
 import ru.elleriumsoft.department.entity.EntityDeptHome;
 import ru.elleriumsoft.department.object.Employee;
 import ru.elleriumsoft.occupation.Occupation;
+import ru.elleriumsoft.structure.Structure;
 import ru.elleriumsoft.structure.entity.StructureProcessingFromDb;
 import ru.elleriumsoft.structure.entity.StructureProcessingFromDbHome;
 import ru.elleriumsoft.xml.exchange.DeptInfo;
@@ -175,23 +176,8 @@ public class ExportBean implements SessionBean
     public void ejbCreate() throws CreateException
     {
         exchange = new Exchange();
-        entityStructureHome = getStructureHome();
+        entityStructureHome = new Structure().getStructureHome();
         entityDeptHome = getDeptHome();
-    }
-
-    private StructureProcessingFromDbHome getStructureHome()
-    {
-        StructureProcessingFromDbHome structureProcessingFromDbHome = null;
-        try
-        {
-            InitialContext ic = new InitialContext();
-            Object remoteObject = ic.lookup(JNDI_ROOT + "StructureProcessingFromDbEJB");
-            structureProcessingFromDbHome = (StructureProcessingFromDbHome) PortableRemoteObject.narrow(remoteObject, StructureProcessingFromDbHome.class);
-        } catch (Exception e)
-        {
-            logger.info(e.getMessage());
-        }
-        return structureProcessingFromDbHome;
     }
 
     private EntityDeptHome getDeptHome()

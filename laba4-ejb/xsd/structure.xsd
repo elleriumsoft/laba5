@@ -7,6 +7,8 @@
 
     <xs:complexType name="structure">
         <xs:sequence>
+            <xs:element name="errorOnImport" type="xs:string" minOccurs="0"/>
+            <xs:element name="resultOfImport" type="xs:string" minOccurs="0"/>
             <xs:element name="commandForChangeStructure" type="xs:string" minOccurs="0"/>
             <xs:element name="elementIdForChange" type="xs:int" minOccurs="0"/>
             <xs:element name="structureForPrint" type="structureElement" nillable="true" minOccurs="0"

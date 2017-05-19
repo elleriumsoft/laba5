@@ -53,30 +53,38 @@ public class Occupation implements Serializable
     {
         logger.info("readOccupations");
         ArrayList<Occupation> occupations = new ArrayList<>();
-        InitialContext ic = null;
         try
         {
-            ic = new InitialContext();
-            Object remoteObject = ic.lookup(JNDI_ROOT + "EntityOccupationEJB");
-            EntityOccupationHome entityOccupationHome = (EntityOccupationHome) PortableRemoteObject.narrow(remoteObject, EntityOccupationHome.class);
-            Collection<EntityOccupation> entityOccupations= entityOccupationHome.findAll();
+        Collection<EntityOccupation> entityOccupations= getEntityOccupationHome().findAll();
+        for (EntityOccupation entityOccupation : entityOccupations)
+        {
+            logger.info("loadOcc=" + entityOccupation.getNameOccupation());
+            occupations.add(newOccupation(entityOccupation.getId(), entityOccupation.getNameOccupation()));
 
-            for (EntityOccupation entityOccupation : entityOccupations)
-            {
-                logger.info("loadOcc=" + entityOccupation.getNameOccupation());
-                occupations.add(newOccupation(entityOccupation.getId(), entityOccupation.getNameOccupation()));
-            }
-        } catch (NamingException e)
-        {
-            logger.info("Naming error read occ = " + e.getMessage());
-        } catch (FinderException e)
-        {
-            logger.info("Finder error read occ = " + e.getMessage());
+        }
         } catch (RemoteException e)
         {
             logger.info("Remote error read occ = " + e.getMessage());
+        } catch (FinderException e)
+        {
+            logger.info("Finder error read occ = " + e.getMessage());
         }
         return occupations;
+    }
+
+
+    public EntityOccupationHome getEntityOccupationHome()
+    {
+        try
+        {
+            InitialContext ic = new InitialContext();
+            Object remoteObject = ic.lookup(JNDI_ROOT + "EntityOccupationEJB");
+            return (EntityOccupationHome) PortableRemoteObject.narrow(remoteObject, EntityOccupationHome.class);
+        } catch (NamingException e)
+        {
+            logger.info("Naming error read occ = " + e.getMessage());
+        }
+        return null;
     }
 
     private Occupation newOccupation(Integer id, String nameOccupation)
