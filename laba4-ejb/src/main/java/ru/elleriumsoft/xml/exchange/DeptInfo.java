@@ -7,9 +7,6 @@ import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-/**
- * Created by Dmitriy on 14.05.2017.
- */
 @XmlType(propOrder = { "idDept", "nameDept", "parentIdDept", "employees" }, name = "deptinfo")
 @XmlRootElement
 public class DeptInfo implements Serializable

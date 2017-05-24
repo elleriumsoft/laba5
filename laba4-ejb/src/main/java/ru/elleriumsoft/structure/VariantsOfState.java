@@ -1,8 +1,5 @@
 package ru.elleriumsoft.structure;
 
-/**
- * Created by Dmitriy on 02.04.2017.
- */
 public class VariantsOfState
 {
     public final static int CLOSE = 1;

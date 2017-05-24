@@ -7,9 +7,7 @@ import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-/**
- * Created by Dmitriy on 10.05.2017.
- */
+
 @XmlType(propOrder = { "sizeFinderData", "finderDatas", "occupations" }, name = "finder")
 @XmlRootElement
 public class StorageFinderData implements Serializable

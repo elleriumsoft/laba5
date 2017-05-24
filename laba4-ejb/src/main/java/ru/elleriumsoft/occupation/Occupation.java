@@ -17,9 +17,6 @@ import java.util.Collection;
 
 import static ru.elleriumsoft.jdbc.ConnectToDb.JNDI_ROOT;
 
-/**
- * Created by Dmitriy on 17.04.2017.
- */
 @XmlType(propOrder = { "id", "name" }, name = "occupations")
 @XmlRootElement
 public class Occupation implements Serializable
@@ -55,13 +52,11 @@ public class Occupation implements Serializable
         ArrayList<Occupation> occupations = new ArrayList<>();
         try
         {
-        Collection<EntityOccupation> entityOccupations= getEntityOccupationHome().findAll();
-        for (EntityOccupation entityOccupation : entityOccupations)
-        {
-            logger.info("loadOcc=" + entityOccupation.getNameOccupation());
-            occupations.add(newOccupation(entityOccupation.getId(), entityOccupation.getNameOccupation()));
-
-        }
+            Collection<EntityOccupation> entityOccupations = getEntityOccupationHome().findAll();
+            for (EntityOccupation entityOccupation : entityOccupations)
+            {
+                occupations.add(newOccupation(entityOccupation.getId(), entityOccupation.getNameOccupation()));
+            }
         } catch (RemoteException e)
         {
             logger.info("Remote error read occ = " + e.getMessage());

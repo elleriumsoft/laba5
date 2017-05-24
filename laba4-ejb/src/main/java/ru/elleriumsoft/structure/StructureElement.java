@@ -4,16 +4,13 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
 
-/**
- * Created by Dmitriy on 19.03.2017.
- */
-@XmlType(propOrder = { "id", "nameDepartment", "parent_id", "level", "stateOfElement" }, name = "structureElement")
+@XmlType(propOrder = { "id", "nameDepartment", "parentId", "level", "stateOfElement" }, name = "structureElement")
 @XmlRootElement
 public class StructureElement implements Serializable
 {
     private int id;
     private String nameDepartment;
-    private int parent_id;
+    private int parentId;
     private int level;
     private int stateOfElement;
 
@@ -37,14 +34,14 @@ public class StructureElement implements Serializable
         this.nameDepartment = nameDepartment;
     }
 
-    public int getParent_id()
+    public int getParentId()
     {
-        return parent_id;
+        return parentId;
     }
 
-    public void setParent_id(int parent_id)
+    public void setParentId(int parentId)
     {
-        this.parent_id = parent_id;
+        this.parentId = parentId;
     }
 
     public int getLevel()

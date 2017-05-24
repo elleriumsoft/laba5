@@ -13,6 +13,7 @@ import ru.elleriumsoft.xml.exchange.Exchange;
 
 import javax.ejb.*;
 import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.rmi.PortableRemoteObject;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
@@ -27,15 +28,17 @@ import static ru.elleriumsoft.jdbc.ConnectToDb.JNDI_ROOT;
 public class ExportBean implements SessionBean
 {
     private Exchange exchange;
-    private static final Logger logger = Logger.getLogger(ExportBean.class.getName());
     private StructureProcessingFromDbHome entityStructureHome;
     private EntityDeptHome entityDeptHome;
 
-    public void exportToXml(int idDept)
+    private static final Logger logger = Logger.getLogger(ExportBean.class.getName());
+
+    public Exchange createExchangeForExportToXml(int idDept)
     {
         readDepartments(idDept);
         readEmployees();
         readOccupations();
+        return exchange;
     }
 
     private void readDepartments(int idDept)
@@ -54,7 +57,7 @@ public class ExportBean implements SessionBean
         {
             Vector<StructureProcessingFromDb> children = (Vector) entityStructureHome.findParentKeys(parentId);
 
-            if (children.size() == 0) { return; }
+            if (children.isEmpty()) { return; }
 
             for (StructureProcessingFromDb child : children)
             {
@@ -188,16 +191,11 @@ public class ExportBean implements SessionBean
             InitialContext ic = new InitialContext();
             Object remoteObject = ic.lookup(JNDI_ROOT + "EntityDeptEJB");
             entityDeptHome = (EntityDeptHome) PortableRemoteObject.narrow(remoteObject, EntityDeptHome.class);
-        } catch (Exception e)
+        } catch (NamingException e)
         {
             logger.info(e.getMessage());
         }
         return entityDeptHome;
-    }
-
-    public Exchange getExchange()
-    {
-        return exchange;
     }
 
     public void setSessionContext(SessionContext sessionContext) throws EJBException

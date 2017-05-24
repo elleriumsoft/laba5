@@ -10,13 +10,24 @@ import java.rmi.RemoteException;
  */
 public interface Export extends EJBObject
 {
-    void exportToXml(int idDept) throws RemoteException;
+    /**
+     * Создает из данных отдела в базе данных объект Exchange, готовый для выгрузки в xml через JAXB
+     * @param idDept - номер отдела в БД
+     */
+    Exchange createExchangeForExportToXml(int idDept) throws RemoteException;
 
+    /**
+     * Устанавливает параметр выгрузки вложенных отделов
+     */
     void setWithChildrenDept(boolean withChildrenDept) throws RemoteException;
+
+    /**
+     * Устанавливает параметр выгрузки сотрудников отделов
+     */
     void setWithEmployees(boolean withEmployees) throws RemoteException;
+
+    /**
+     * Устанавливает параметр выгрузки профессий
+     */
     void setWithOccupations(boolean withOcc) throws RemoteException;
-
-
-    Exchange getExchange() throws RemoteException;
-
 }

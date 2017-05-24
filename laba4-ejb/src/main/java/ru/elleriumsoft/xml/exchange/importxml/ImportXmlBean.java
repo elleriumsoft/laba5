@@ -32,9 +32,76 @@ public class ImportXmlBean implements SessionBean
     private boolean errorOnImport;
     private String typeErrorImport;
     private String resultOfImport;
-    public final static String PATH_TO_FILE = "xml\\import.xml";
 
     private static final Logger logger = Logger.getLogger(ImportXmlBean.class.getName());
+
+    public void importFromXmlToDatabase(String pathToXml, boolean withOverwrite)
+    {
+        importFromXmlToObject(pathToXml);
+        if (!isErrorOnImport())
+        {
+            importFromObjectToDatabase(withOverwrite);
+        }
+    }
+
+    // восстанавливаем объект из XML файла
+    private void importFromXmlToObject(String pathToXml)
+    {
+        try
+        {
+            JAXBContext jaxbContext = JAXBContext.newInstance(Exchange.class);
+            Unmarshaller un = jaxbContext.createUnmarshaller();
+
+            exchange = (Exchange) un.unmarshal(new File(pathToXml));
+
+            if (verifyParentIds())
+            {
+                setErrorOnImport(false);
+                logger.info("size deps=" + exchange.getDepartments().size());
+            }
+            else
+            {
+                setErrorOnImport(true);
+                setTypeErrorImport("Найдены ссылки на несуществующие отделы");
+            }
+        } catch (JAXBException e)
+        {
+            setErrorOnImport(true);
+            setTypeErrorImport("Ошибка преобразования файла в объект");
+        }
+    }
+
+    private boolean verifyParentIds()
+    {
+        ArrayList<Integer> ids = new ArrayList<>();
+        ids.add(0);
+        for (DeptInfo deptInfo : exchange.getDepartments())
+        {
+            ids.add(deptInfo.getIdDept());
+        }
+
+        for (StructureProcessingFromDb structureElement : getAllDepts())
+        {
+            try
+            {
+                ids.add(structureElement.getId());
+            } catch (RemoteException e)
+            {
+                logger.info("remote error: " + e.getMessage());
+                return false;
+            }
+        }
+
+        for (DeptInfo deptInfo: exchange.getDepartments())
+        {
+            Integer parentId = deptInfo.getParentIdDept();
+            if (!ids.contains(parentId))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
 
     public void importFromObjectToDatabase(boolean withOverwrite)
     {
@@ -56,7 +123,7 @@ public class ImportXmlBean implements SessionBean
     private void importOccupations(boolean withOverwrite) throws RemoteException
     {
         int countEntry = 0;
-        if (exchange.isWithOccupations() && exchange.getOccupations() != null && exchange.getOccupations().size() > 0)
+        if (exchange.isWithOccupations() && exchange.getOccupations() != null && !exchange.getOccupations().isEmpty())
         {
 
             EntityOccupationHome entityOccupationHome = new Occupation().getEntityOccupationHome();
@@ -82,7 +149,7 @@ public class ImportXmlBean implements SessionBean
                             countEntry++;
                         } catch (FinderException e1)
                         {
-                           logger.info("id " + occ.getId() + " не удалось перезаписать");
+                            logger.info("id " + occ.getId() + " не удалось перезаписать");
                             setTypeErrorImport("id " + occ.getId() + " не удалось перезаписать!");
                             setErrorOnImport(true);
                            return;
@@ -131,7 +198,7 @@ public class ImportXmlBean implements SessionBean
                     }
                 }
             }
-            if (exchange.isWithEmployees() && depts.getEmployees() != null && depts.getEmployees().size() > 0)
+            if (exchange.isWithEmployees() && depts.getEmployees() != null && !depts.getEmployees().isEmpty())
             {
                 for (Employee emp : depts.getEmployees())
                 {
@@ -176,65 +243,6 @@ public class ImportXmlBean implements SessionBean
         setResultOfImport(txt + " отделов: " + String.valueOf(countDepts) + ", сотрудников: " + String.valueOf(countEmps) + getResultOfImport());
     }
 
-    // восстанавливаем объект из XML файла
-    public void importFromXmlToObject()
-    {
-        try
-        {
-            JAXBContext jaxbContext = JAXBContext.newInstance(Exchange.class);
-            Unmarshaller un = jaxbContext.createUnmarshaller();
-
-            exchange = (Exchange) un.unmarshal(new File(PATH_TO_FILE));
-
-            if (verifyParentIds())
-            {
-                setErrorOnImport(false);
-                logger.info("size deps=" + exchange.getDepartments().size());
-            }
-            else
-            {
-                setErrorOnImport(true);
-                setTypeErrorImport("Links to non-existing parent elements");
-            }
-        } catch (JAXBException e)
-        {
-            setErrorOnImport(true);
-            setTypeErrorImport("Error converting data to a database object");
-        }
-    }
-
-    private boolean verifyParentIds()
-    {
-        ArrayList<Integer> ids = new ArrayList<>();
-        ids.add(0);
-        for (DeptInfo deptInfo : exchange.getDepartments())
-        {
-            ids.add(deptInfo.getIdDept());
-        }
-
-        for (StructureProcessingFromDb structureElement : getAllDepts())
-        {
-            try
-            {
-                ids.add(structureElement.getId());
-            } catch (RemoteException e)
-            {
-                logger.info("remote error: " + e.getMessage());
-            }
-        }
-
-        for (DeptInfo deptInfo: exchange.getDepartments())
-        {
-            Integer parentId = deptInfo.getParentIdDept();
-//            logger.info("PARENT_ID=" + parentId);
-            if (!ids.contains(parentId))
-            {
-                return false;
-            }
-        }
-        return true;
-    }
-
     private Vector<StructureProcessingFromDb> getAllDepts()
     {
         StructureProcessingFromDbHome structureProcessingFromDb = new Structure().getStructureHome();
@@ -259,11 +267,6 @@ public class ImportXmlBean implements SessionBean
         exchange.setDepartments(new ArrayList<DeptInfo>());
         exchange.setOccupations(new ArrayList<Occupation>());
         setErrorOnImport(false);
-    }
-
-    public Exchange getExchange()
-    {
-        return exchange;
     }
 
     public boolean isErrorOnImport()

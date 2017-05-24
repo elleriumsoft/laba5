@@ -1,29 +1,32 @@
 package ru.elleriumsoft.department.object;
 
 /**
- * Created by Dmitriy on 11.05.2017.
+ * Вспомогательные методы для конвертации данных в удобочитаемый вид
  */
 public class ConvertingDataForOutput
 {
+    private final static int MAX_LEN_STRING_OF_DATE = 10;
+
+    /**
+     * Преобразование даты вида 2017-05-24 в 24 мая 2017г.
+     */
     public String convertingDateForOutput(String date)
     {
-        if (date.length() < 10)
+        if (date.length() < MAX_LEN_STRING_OF_DATE)
         {
             return date;
         }
         try
         {
             String bDate;
-            if (Integer.valueOf(date.substring(8, 10)) < 10)
+            if (Integer.valueOf(date.substring(MAX_LEN_STRING_OF_DATE-2, MAX_LEN_STRING_OF_DATE)) < MAX_LEN_STRING_OF_DATE)
             {
-                bDate = date.substring(9, 10);
+                bDate = date.substring(MAX_LEN_STRING_OF_DATE-1, MAX_LEN_STRING_OF_DATE);
             } else
             {
-                bDate = date.substring(8, 10);
+                bDate = date.substring(MAX_LEN_STRING_OF_DATE-2, MAX_LEN_STRING_OF_DATE);
             }
-            bDate = bDate + ' ' + getMonth(date.substring(5, 7)) + ' ';
-            bDate = bDate + date.substring(0, 4) + "г.";
-            return bDate;
+            return bDate + ' ' + getMonth(date.substring(5, 7)) + ' ' + date.substring(0, 4) + "г.";
         } catch (Exception ex)
         {
             return date;
@@ -36,6 +39,9 @@ public class ConvertingDataForOutput
         return months[Integer.valueOf(stMonth) - 1].toLowerCase();
     }
 
+    /**
+     * Преобразование имени вида иванов петр в Иванов Петр
+     */
     public String convertingNameForOutput(String name)
     {
         StringBuilder bName;

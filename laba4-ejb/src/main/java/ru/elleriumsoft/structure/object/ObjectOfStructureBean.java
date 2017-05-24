@@ -17,12 +17,10 @@ import java.util.Vector;
 /**
  * Created by Dmitriy on 02.04.2017.
  */
-
 public class ObjectOfStructureBean implements SessionBean
 {
     private Structure objectStructure;
     private ArrayList<StateOfElements> statesOfElements;
-    //private int selectedId;
     private boolean needUpdatePageAfterChangeState;
 
     private static final Logger logger = Logger.getLogger(ObjectOfStructure.class.getName());
@@ -41,25 +39,17 @@ public class ObjectOfStructureBean implements SessionBean
         return maxId;
     }
 
-    public int getSizeStructure()
-    {
-        return objectStructure.getStructureForPrint().size();
-    }
-
-    public StructureElement getStructureElement(int id)
-    {
-        return objectStructure.getStructureForPrint().get(id);
-    }
-
     public void initStructureFromDb()
     {
         Vector<StructureProcessingFromDb> structureFromBean = getDataFromDb();
+        objectStructure.setStructureForPrint(new ArrayList<StructureElement>());
+
         if (structureFromBean == null)
         {
-            throw new NullPointerException("Нету инфы из базы");
+            return;
         }
-        ArrayList<StructureElement> structureFromDb = new ArrayList<>();
 
+        ArrayList<StructureElement> structureFromDb = new ArrayList<>();
         for (StructureProcessingFromDb element : structureFromBean)
         {
             try
@@ -67,10 +57,10 @@ public class ObjectOfStructureBean implements SessionBean
                 structureFromDb.add(newStructureElement(element.getId(), element.getNameDepartment(), element.getParent_id()));
             } catch (RemoteException e)
             {
-                e.printStackTrace();
+                logger.info("remote error: " + e.getMessage());
             }
         }
-        objectStructure.setStructureForPrint(new ArrayList<StructureElement>());
+
         int level = 0;
         int parentId = 0;
         initElement(structureFromDb, level, parentId);
@@ -78,7 +68,6 @@ public class ObjectOfStructureBean implements SessionBean
 
     /**
      * Рекурсивное добавление элементов дерева в лист с указанием уровня
-     *
      * @param level    - уровень погружения
      * @param parentId - предок
      */
@@ -89,9 +78,9 @@ public class ObjectOfStructureBean implements SessionBean
         {
             el = structureFromDb.get(i);
 
-            if (el.getParent_id() == parentId)
+            if (el.getParentId() == parentId)
             {
-                StructureElement elementForAdd = newStructureElement(el.getId(), el.getNameDepartment(), el.getParent_id());
+                StructureElement elementForAdd = newStructureElement(el.getId(), el.getNameDepartment(), el.getParentId());
                 elementForAdd.setLevel(level);
                 elementForAdd.setStateOfElement(getStateById(el.getId()));
                 objectStructure.getStructureForPrint().add(elementForAdd);
@@ -126,30 +115,26 @@ public class ObjectOfStructureBean implements SessionBean
             }
         } catch (Exception e)
         {
-            logger.info("error");
-            logger.info(e.getMessage());
-        } finally
-        {
-            return dataFromDb;
+            logger.info("error: " + e.getMessage());
         }
+        return dataFromDb;
     }
 
     public String getNameDeptForSelectedId(int selectedId)
     {
-        String name;
         try
         {
-            name = objectStructure.getStructureHome().findByPrimaryKey(selectedId).getNameDepartment();
-            return name;
+            return objectStructure.getStructureHome().findByPrimaryKey(selectedId).getNameDepartment();
+
         } catch (RemoteException e)
         {
-            e.printStackTrace();
+            logger.info("remote error: " + e.getMessage());
         } catch (SQLException e)
         {
-            e.printStackTrace();
+            logger.info("sql error: " + e.getMessage());
         } catch (FinderException e)
         {
-            e.printStackTrace();
+            logger.info(selectedId + " не найден!");
         }
         return "";
     }
@@ -199,7 +184,7 @@ public class ObjectOfStructureBean implements SessionBean
                     openList(idElement);
                 } catch (RemoteException e)
                 {
-                    e.printStackTrace();
+                    logger.info("remote error: " + e.getMessage());
                 }
                 needUpdatePageAfterChangeState = true;
                 break;
@@ -212,7 +197,7 @@ public class ObjectOfStructureBean implements SessionBean
         for (int i = 0; i < getSizeStructure(); i++)
         {
             StructureElement element = getStructureElement(i);
-            if (element.getParent_id() == idElement)
+            if (element.getParentId() == idElement)
             {
                 closeList(element.getId(), firstElement);
             }
@@ -230,7 +215,7 @@ public class ObjectOfStructureBean implements SessionBean
     private void openList(int idElement) throws RemoteException
     {
         Vector<StructureProcessingFromDb> children = getChildForElementFromDb(idElement);
-        if (children != null && children.size() > 0)
+        if (children != null && !children.isEmpty())
         {
             logger.info("size=" + children.size());
             for (StructureProcessingFromDb structureProcessingFromDb : children)
@@ -242,7 +227,7 @@ public class ObjectOfStructureBean implements SessionBean
             setStateOfElement(idElement, VariantsOfState.OPEN);
         } else
         {
-            logger.info("not found");
+            logger.info(idElement + " not found in list");
             setStateOfElement(idElement, VariantsOfState.NO_CHILD);
         }
     }
@@ -272,7 +257,6 @@ public class ObjectOfStructureBean implements SessionBean
 
     public void removeDeleted()
     {
-
         for (int i = statesOfElements.size() - 1; i > 0; i--)
         {
             if (statesOfElements.get(i).getState() == VariantsOfState.DELETED)
@@ -294,7 +278,6 @@ public class ObjectOfStructureBean implements SessionBean
             return (Vector) objectStructure.getStructureHome().findParentKeys(id);
         } catch (Exception e)
         {
-
             logger.info(e.getStackTrace());
         }
         return null;
@@ -315,7 +298,7 @@ public class ObjectOfStructureBean implements SessionBean
         return objectStructure.getElementIdForChange();
     }
 
-    public void modificationStructure(String param)
+    public void modificationStructure(String newNameOfDepartment)
     {
         try
         {
@@ -323,22 +306,23 @@ public class ObjectOfStructureBean implements SessionBean
             {
                 case "add":
                 {
-                    actionAddElement(param, getMaxId());
+                    actionAddElement(newNameOfDepartment, getMaxId());
                     break;
                 }
                 case "edit":
                 {
-                    actionEditElement(param);
+                    actionEditElement(newNameOfDepartment);
                     break;
                 }
                 case "delete":
                 {
                     actionDeleteElement();
+                    break;
                 }
             }
         } catch (RemoteException e)
         {
-            logger.info(e.getMessage());
+            logger.info("remote error: " + e.getMessage());
         }
         objectStructure.setCommandForChangeStructure("no");
     }
@@ -348,18 +332,15 @@ public class ObjectOfStructureBean implements SessionBean
         try
         {
             objectStructure.getStructureHome().create(maxId + 1, param, objectStructure.getElementIdForChange());
-            try
-            {
-                openList(objectStructure.getElementIdForChange());
-            } catch (RemoteException e)
-            {
-                e.printStackTrace();
-            }
+            openList(objectStructure.getElementIdForChange());
             needUpdatePageAfterChangeState = true;
             initStructureFromDb();
         } catch (CreateException e)
         {
-            e.printStackTrace();
+            logger.info("create error: " + e.getMessage());
+        } catch (RemoteException e)
+        {
+            logger.info("remote error: " + e.getMessage());
         }
     }
 
@@ -376,10 +357,10 @@ public class ObjectOfStructureBean implements SessionBean
             initStructureFromDb();
         } catch (SQLException e)
         {
-            e.printStackTrace();
+            logger.info("sql error: " + e.getMessage());
         } catch (FinderException e)
         {
-            e.printStackTrace();
+            logger.info("Элемент для редактирования " + objectStructure.getElementIdForChange() + " не найден");
         }
     }
 
@@ -402,7 +383,7 @@ public class ObjectOfStructureBean implements SessionBean
         StructureElement element = new StructureElement();
         element.setId(id);
         element.setNameDepartment(name);
-        element.setParent_id(parent_id);
+        element.setParentId(parent_id);
         element.setStateOfElement(VariantsOfState.DELETED);
         element.setLevel(0);
         return element;
@@ -415,19 +396,20 @@ public class ObjectOfStructureBean implements SessionBean
             StructureProcessingFromDb structureProcessingFromDb = getElement(id);
             structureProcessingFromDb.remove();
             setStateOfElement(id, VariantsOfState.DELETED);
+
+            for (StructureElement structureElement : structureFromDb)
+            {
+                if (structureElement.getParentId() == id)
+                {
+                    deleteElement(structureElement.getId(), structureFromDb);
+                }
+            }
         } catch (RemoteException e)
         {
-            e.printStackTrace();
+            logger.info("remote error: " + e.getMessage());
         } catch (RemoveException e)
         {
-            e.printStackTrace();
-        }
-        for (StructureElement structureElement : structureFromDb)
-        {
-            if (structureElement.getParent_id() == id)
-            {
-                deleteElement(structureElement.getId(), structureFromDb);
-            }
+            logger.info("remove error: " + e.getMessage());
         }
     }
 
@@ -439,21 +421,6 @@ public class ObjectOfStructureBean implements SessionBean
         needUpdatePageAfterChangeState = false;
         setErrorOnImport("no");
     }
-
-//    private StructureProcessingFromDbHome getHome()
-//    {
-//        StructureProcessingFromDbHome structureProcessingFromDbHome = null;
-//        try
-//        {
-//            InitialContext ic = new InitialContext();
-//            Object remoteObject = ic.lookup(JNDI_ROOT + "StructureProcessingFromDbEJB");
-//            structureProcessingFromDbHome = (StructureProcessingFromDbHome) PortableRemoteObject.narrow(remoteObject, StructureProcessingFromDbHome.class);
-//        } catch (Exception e)
-//        {
-//            logger.info(e.getMessage());
-//        }
-//        return structureProcessingFromDbHome;
-//    }
 
     private Vector<StructureProcessingFromDb> getAllElements()
     {
@@ -481,12 +448,26 @@ public class ObjectOfStructureBean implements SessionBean
         return structureProcessingFromDb;
     }
 
+    public int getSizeStructure()
+    {
+        return objectStructure.getStructureForPrint().size();
+    }
+
+    public StructureElement getStructureElement(int id)
+    {
+        return objectStructure.getStructureForPrint().get(id);
+    }
+
+
     public void setErrorOnImport(String errorMessage)
     {
         objectStructure.setErrorOnImport(errorMessage);
     }
 
-    public void setResultOfImport(String resultMessage) { objectStructure.setResultOfImport(resultMessage); }
+    public void setResultOfImport(String resultMessage)
+    {
+        objectStructure.setResultOfImport(resultMessage);
+    }
 
     public void setSessionContext(SessionContext sessionContext) throws EJBException
     {

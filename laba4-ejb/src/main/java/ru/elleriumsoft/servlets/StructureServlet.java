@@ -30,7 +30,6 @@ import java.nio.file.Paths;
 import java.rmi.RemoteException;
 
 import static ru.elleriumsoft.jdbc.ConnectToDb.JNDI_ROOT;
-import static ru.elleriumsoft.xml.exchange.importxml.ImportXmlBean.PATH_TO_FILE;
 
 /**
  * Created by Dmitriy on 03.05.2017.
@@ -39,6 +38,9 @@ import static ru.elleriumsoft.xml.exchange.importxml.ImportXmlBean.PATH_TO_FILE;
 @MultipartConfig
 public class StructureServlet extends HttpServlet
 {
+    private final static String NAME_FOR_PROCESSING = "structure";
+    private final static String FILE_NAME_FOR_IMPORT = "import";
+
     private ObjectOfStructure objectOfStructure;
     private CreatingXml creatingXml;
 
@@ -95,12 +97,12 @@ public class StructureServlet extends HttpServlet
         }
 
         //Создаем из структуры xml и выводим его в виде html применив xslt
-        creatingXml.generateXml(objectOfStructure.getObjectStructure(), "structure");
+        creatingXml.generateXml(objectOfStructure.getObjectStructure(), NAME_FOR_PROCESSING);
 
         String htmlPage;
-        if (creatingXml.validateXml("structure"))
+        if (creatingXml.validateXml(NAME_FOR_PROCESSING))
         {
-             htmlPage = creatingXml.transformXmlToHtml("structure");
+             htmlPage = creatingXml.transformXmlToHtml(NAME_FOR_PROCESSING);
         }
         else
         {
@@ -113,7 +115,7 @@ public class StructureServlet extends HttpServlet
 
         //сохраняем модифицированную структуру
         objectOfStructure.setErrorOnImport("no");
-        req.getSession().setAttribute("structure", objectOfStructure);
+        req.getSession().setAttribute(NAME_FOR_PROCESSING, objectOfStructure);
     }
 
     //Импорт файла приходит сюда
@@ -127,7 +129,7 @@ public class StructureServlet extends HttpServlet
 
         if (uploadFile != null && uploadFile.getSize() > 0 && uploadFile.getInputStream() != null)
         {
-            Path outputFile = Paths.get(PATH_TO_FILE);
+            Path outputFile = Paths.get("xml\\" + FILE_NAME_FOR_IMPORT + ".xml");
 
             ReadableByteChannel input = Channels.newChannel(uploadFile.getInputStream());
             WritableByteChannel output = Channels.newChannel(new FileOutputStream(outputFile.toFile()));
@@ -144,51 +146,40 @@ public class StructureServlet extends HttpServlet
             {
                 objectOfStructure.setErrorOnImport("Ошибка загрузки файла!");
                 resp.sendRedirect("/app/StructureServlet");
-                //resp.sendRedirect("/app/StructureServlet?errorimport=Error loading file");
             }
             finally
             {
                 input.close();
                 output.close();
             }
-            //resp.sendRedirect("/app/StructureServlet?errorimport=" + importXmlToDatabase((Boolean.valueOf(request.getParameter("withoverwrite")))));
-            String resultImportXml = importXmlToDatabase((Boolean.valueOf(request.getParameter("withoverwrite"))));
+            String resultImportXml = importXmlToDatabase(Boolean.valueOf(request.getParameter("withoverwrite")));
             objectOfStructure.setErrorOnImport(resultImportXml);
         }
         else
         {
             objectOfStructure.setErrorOnImport("Ошибка загрузки файла!");
-            //resp.sendRedirect("/app/StructureServlet");//resp.sendRedirect("/app/StructureServlet?errorimport=Error loading file");
         }
         resp.sendRedirect("/app/StructureServlet");
     }
 
     private String importXmlToDatabase(boolean withOverwrite) throws RemoteException
     {
-        if (creatingXml.validateXml("import"))
+        if (creatingXml.validateXml(FILE_NAME_FOR_IMPORT))
         {
             logger.info("xml validate OK");
             ImportXml importXml = getImportBean();
-            importXml.importFromXmlToObject();
+            importXml.importFromXmlToDatabase("xml\\" + FILE_NAME_FOR_IMPORT + ".xml", withOverwrite);
+
             if (importXml.isErrorOnImport())
             {
                 return importXml.getTypeErrorImport();
-            }
-            else
+            } else
             {
-                importXml.importFromObjectToDatabase(withOverwrite);
-                if (importXml.isErrorOnImport())
-                {
-                    return importXml.getTypeErrorImport();
-                }
-                else
-                {
-                    objectOfStructure.setResultOfImport(importXml.getResultOfImport());
-                    return "ok";//&result=" + importXml.getResultOfImport();
-                }
+                objectOfStructure.setResultOfImport(importXml.getResultOfImport());
+                return "ok";
             }
-        }
-        else
+
+        } else
         {
             logger.info("error xml validate");
             return "Файл не прошел проверку!";
@@ -224,8 +215,7 @@ public class StructureServlet extends HttpServlet
                 export.setWithOccupations(false);
             }
 
-            export.exportToXml(objectOfStructure.getIdForChangeByCommand());
-            creatingXml.generateXml(export.getExchange(), "export");
+            creatingXml.generateXml(export.createExchangeForExportToXml(objectOfStructure.getIdForChangeByCommand()), "export");
     }
 
     private Export getExportBean()
@@ -238,13 +228,13 @@ public class StructureServlet extends HttpServlet
             return exportHome.create();
         } catch (NamingException e)
         {
-            e.printStackTrace();
+            logger.info("naming error: " + e.getMessage());
         } catch (RemoteException e)
         {
-            e.printStackTrace();
+            logger.info("remote error: " + e.getMessage());
         } catch (CreateException e)
         {
-            e.printStackTrace();
+            logger.info("create error: " + e.getMessage());
         }
         return null;
     }
@@ -259,20 +249,20 @@ public class StructureServlet extends HttpServlet
             return importXmlHome.create();
         } catch (NamingException e)
         {
-            e.printStackTrace();
+            logger.info("naming error: " + e.getMessage());
         } catch (RemoteException e)
         {
-            e.printStackTrace();
+            logger.info("remote error: " + e.getMessage());
         } catch (CreateException e)
         {
-            e.printStackTrace();
+            logger.info("create error: " + e.getMessage());
         }
         return null;
     }
 
     private ObjectOfStructure getObjectOfStructure(HttpSession session)
     {
-        ObjectOfStructure objectOfStructure = (ObjectOfStructure) session.getAttribute("structure");
+        ObjectOfStructure objectOfStructure = (ObjectOfStructure) session.getAttribute(NAME_FOR_PROCESSING);
         if (objectOfStructure == null)
         {
             InitialContext ic = null;
@@ -282,16 +272,16 @@ public class StructureServlet extends HttpServlet
                 Object remoteObject = ic.lookup(JNDI_ROOT + "ObjectOfStructureEJB");
                 ObjectOfStructureHome objectOfStructureHome = (ObjectOfStructureHome) PortableRemoteObject.narrow(remoteObject, ObjectOfStructureHome.class);
                 objectOfStructure = objectOfStructureHome.create();
-                session.setAttribute("structure", objectOfStructure);
+                session.setAttribute(NAME_FOR_PROCESSING, objectOfStructure);
             } catch (NamingException e)
             {
-                e.printStackTrace();
+                logger.info("naming error: " + e.getMessage());
             } catch (RemoteException e)
             {
-                e.printStackTrace();
+                logger.info("remote error: " + e.getMessage());
             } catch (CreateException e)
             {
-                e.printStackTrace();
+                logger.info("create error: " + e.getMessage());
             }
         }
         return objectOfStructure;

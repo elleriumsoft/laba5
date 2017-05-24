@@ -11,7 +11,6 @@ import java.sql.SQLException;
  */
 public class ConnectToDb
 {
-    public final static String PATH_STRUCTURE = "./";
     public final static String JNDI_ROOT = "java:global/laba4-ear-1.0/laba4-ejb-1.0/";
 
     private static final Logger logger = Logger.getLogger(ConnectToDb.class.getName());
@@ -25,7 +24,7 @@ public class ConnectToDb
                 Class.forName("org.sqlite.JDBC");
             } catch (ClassNotFoundException e)
             {
-                e.printStackTrace();
+                logger.info("Error: no found sqlite JDBC");
             }
 
             return DriverManager.getConnection("jdbc:sqlite:lababase.s3db");
@@ -40,11 +39,14 @@ public class ConnectToDb
     {
         try
         {
-            connection.close();
+            if (connection != null)
+            {
+                connection.close();
+            }
         }
         catch (SQLException e)
         {
-            e.printStackTrace();
+            logger.info("SQL error during closing connection");
         }
     }
 }

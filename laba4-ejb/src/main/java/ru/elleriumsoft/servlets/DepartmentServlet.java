@@ -30,6 +30,8 @@ import static ru.elleriumsoft.jdbc.ConnectToDb.JNDI_ROOT;
 @WebServlet("/DepartmentServlet")
 public class DepartmentServlet extends HttpServlet
 {
+    private final static String NAME_FOR_PROCESSING = "dept";
+
     private CreatingXml creatingXml;
     private ObjectDept objectDept;
     private static final Logger logger = Logger.getLogger(DepartmentServlet.class.getName());
@@ -56,10 +58,10 @@ public class DepartmentServlet extends HttpServlet
         if (req.getParameter("id") == null)
         //Модификации
         {
-            objectDept = (ObjectDept) req.getSession().getAttribute("dept");
+            objectDept = (ObjectDept) req.getSession().getAttribute(NAME_FOR_PROCESSING);
             if (objectDept != null)
             {
-                modificationElement(req, resp);
+                modificationElement(req);
                 resp.sendRedirect("/app/DepartmentServlet?id=" + objectDept.getIdDepartment());
             }
         } else
@@ -81,16 +83,16 @@ public class DepartmentServlet extends HttpServlet
                 objectDept.setPositionForModification(0);
             }
 
-            req.getSession().setAttribute("dept", objectDept);
+            req.getSession().setAttribute(NAME_FOR_PROCESSING, objectDept);
 
             //Создаем из структуры xml
-            creatingXml.generateXml(objectDept.getAllDept(), "dept");
+            creatingXml.generateXml(objectDept.getAllDept(), NAME_FOR_PROCESSING);
 
             //Проверяем его на правильность и выводим его в виде html применив xslt
             String htmlPage;
-            if (creatingXml.validateXml("dept"))
+            if (creatingXml.validateXml(NAME_FOR_PROCESSING))
             {
-                htmlPage = creatingXml.transformXmlToHtml("dept");
+                htmlPage = creatingXml.transformXmlToHtml(NAME_FOR_PROCESSING);
             }
             else
             {
@@ -103,7 +105,7 @@ public class DepartmentServlet extends HttpServlet
         }
     }
 
-    private void modificationElement(HttpServletRequest req, HttpServletResponse resp)
+    private void modificationElement(HttpServletRequest req)
     {
             try
             {
@@ -128,13 +130,13 @@ public class DepartmentServlet extends HttpServlet
                 }
             } catch (NamingException e)
             {
-                e.printStackTrace();
+                logger.info("naming error: " + e.getMessage());
             } catch (RemoteException e)
             {
-                e.printStackTrace();
+                logger.info("remote error: " + e.getMessage());
             } catch (CreateException e)
             {
-                e.printStackTrace();
+                logger.info("create error: " + e.getMessage());
             }
     }
 
@@ -154,13 +156,13 @@ public class DepartmentServlet extends HttpServlet
             return objectDept;
         } catch (RemoteException e)
         {
-            e.printStackTrace();
+            logger.info("remote error: " + e.getMessage());
         } catch (CreateException e)
         {
-            e.printStackTrace();
+            logger.info("create error: " + e.getMessage());
         } catch (NamingException e)
         {
-            e.printStackTrace();
+            logger.info("naming error: " + e.getMessage());
         }
         return null;
     }

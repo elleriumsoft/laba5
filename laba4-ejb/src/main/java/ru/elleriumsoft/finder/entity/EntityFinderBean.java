@@ -33,18 +33,12 @@ public class EntityFinderBean implements EntityBean
     private EntityContext entityContext;
     private static final Logger logger = Logger.getLogger(EntityFinderBean.class.getName());
 
-    public EntityFinderBean()
-    {
-    }
-
     public Integer ejbFindByPrimaryKey(Integer key) throws FinderException
     {
-        logger.info("Loading id=" + key);
         Connection connection = new ConnectToDb().getConnection();
-        PreparedStatement preparedStatement = null;
         try
         {
-            preparedStatement = connection.prepareStatement("select id from employee WHERE id=?");
+            PreparedStatement preparedStatement = connection.prepareStatement("select id from employee WHERE id=?");
             preparedStatement.setInt(1, key);
             ResultSet resultSet  = preparedStatement.executeQuery();
             if (!resultSet.next()) {
@@ -52,7 +46,7 @@ public class EntityFinderBean implements EntityBean
             }
         } catch (SQLException e)
         {
-            e.printStackTrace();
+            logger.info("sql error: " + e.getMessage());
         }
         finally
         {
@@ -63,21 +57,27 @@ public class EntityFinderBean implements EntityBean
 
     public Collection ejbFinder(String nameForFind, String occForFind, String startDateForFind, String endDateForFind) throws FinderException, EJBException
     {
-        //if (nameForFind.equals("")) { nameForFind = null; }
-        if (nameForFind == null) { nameForFind = ""; }
-//        if () { startDateForFind = null; }
-//        if () { endDateForFind = null; }
+        if (nameForFind == null)
+        {
+            nameForFind = "";
+        }
+
         setNameForFind(nameForFind);
         if (occForFind == null)
         {
             setOccForFind(0);
-        }
-        else
+        } else
         {
             setOccForFind(Integer.valueOf(occForFind));
         }
-        if (startDateForFind == null || startDateForFind.equals("") ) { startDateForFind = "1900-01-01"; }
-        if (endDateForFind == null ||endDateForFind.equals("")) { endDateForFind = "2100-01-01"; }
+        if (startDateForFind == null || startDateForFind.equals(""))
+        {
+            startDateForFind = "1900-01-01";
+        }
+        if (endDateForFind == null || endDateForFind.equals(""))
+        {
+            endDateForFind = "2100-01-01";
+        }
         setStartDateForFind(startDateForFind);
         setEndDateForFind(endDateForFind);
         logger.info("name=" + getNameForFind());
@@ -85,56 +85,35 @@ public class EntityFinderBean implements EntityBean
         logger.info("dates = " + getStartDateForFind() + "-" + getEndDateForFind());
 
         Connection connection = null;
-        try {
+        try
+        {
             connection = new ConnectToDb().getConnection();
             PreparedStatement statement = getStatementDependingOnParameters(connection);
             ResultSet result = statement.executeQuery();
             List<Integer> array = new ArrayList<>();
-            while (result.next()) {
+            while (result.next())
+            {
                 Integer id = result.getInt(1);
                 array.add(id);
             }
             return array;
-        } catch (SQLException ex) {
+        } catch (SQLException ex)
+        {
             throw new EJBException("Cannot find all record");
-        } finally {
+        } finally
+        {
             new ConnectToDb().closeConnection(connection);
         }
     }
 
-    public PreparedStatement getStatementDependingOnParameters(Connection connection) throws SQLException
+    private PreparedStatement getStatementDependingOnParameters(Connection connection) throws SQLException
     {
         PreparedStatement statement = null;
-//        if (getNameForFind() != null && getOccForFind() == 0 && getStartDateForFind() == null)
-//        {
-//            logger.info("поиск по имени");
-//            statement = connection.prepareStatement("select id from employee WHERE name LIKE ?");
-//            statement.setString(1, "%" + getNameForFind() + "%");
-//        }
-//        if (getNameForFind() == null && getOccForFind() != 0 && getStartDateForFind() == null)
-//        {
-//            logger.info("поиск по профе");
-//            statement = connection.prepareStatement("select id from employee WHERE id_occ = ?");
-//            statement.setInt(1, getOccForFind());
-//        }
-//        if (getNameForFind() == null && getOccForFind() == 0 && getStartDateForFind() != null)
-//        {
-//            logger.info("поиск по дате");
-//            statement = connection.prepareStatement("select id from employee WHERE date BETWEEN ? and ?");
-//            statement.setString(1, getStartDateForFind());
-//            statement.setString(2, getEndDateForFind());
-//        }
-//        if (getNameForFind() != null && getOccForFind() != 0 && getStartDateForFind() == null)
-//        {
-//            logger.info("поиск по имени и профе");
-//            statement = connection.prepareStatement("select id from employee WHERE name LIKE ? and id_occ = ?");
-//            statement.setString(1, "%" + getNameForFind() + "%");
-//            statement.setInt(2, getOccForFind());
-//        }
         if (getOccForFind() == 0)
         {
             logger.info("поиск без должности");
-            statement = connection.prepareStatement("select id from employee WHERE name LIKE ? and date BETWEEN ? and ? ORDER BY id_dept");
+            statement = connection.prepareStatement(
+                    "select id from employee WHERE name LIKE ? and date BETWEEN ? and ? ORDER BY id_dept");
             statement.setString(1, "%" + getNameForFind() + "%");
             statement.setString(2, getStartDateForFind());
             statement.setString(3, getEndDateForFind());
@@ -142,22 +121,46 @@ public class EntityFinderBean implements EntityBean
         else
         {
             logger.info("поиск по всем параметрам");
-            statement = connection.prepareStatement("select id from employee WHERE name LIKE ? and id_occ = ? and date BETWEEN ? and ? ORDER BY id_dept");
+            statement = connection.prepareStatement(
+                    "select id from employee WHERE name LIKE ? and id_occ = ? and date BETWEEN ? and ? ORDER BY id_dept");
             statement.setString(1, "%" + getNameForFind() + "%");
             statement.setInt(2, getOccForFind());
             statement.setString(3, getStartDateForFind());
             statement.setString(4, getEndDateForFind());
 
         }
-//        if (getNameForFind() == null && getOccForFind() != 0 && getStartDateForFind() != null)
-//        {
-//            logger.info("поиск по профе и дате");
-//            statement = connection.prepareStatement("select id from employee WHERE id_occ = ? and date BETWEEN ? and ?");
-//            statement.setInt(1, getOccForFind());
-//            statement.setString(2, getStartDateForFind());
-//            statement.setString(3, getEndDateForFind());
-//        }
         return statement;
+    }
+
+    public void ejbLoad() throws EJBException
+    {
+        setId((Integer) entityContext.getPrimaryKey());
+        Connection connection = null;
+        try
+        {
+            connection = new ConnectToDb().getConnection();
+            PreparedStatement statement = connection.prepareStatement(
+                    "select employee.name, employee.id_occ, employee.date, employee.id_dept, occupations.occupation, structure.id, structure.dept from employee, occupations, structure where employee.id = ? and employee.id_dept = structure.id and employee.id_occ=occupations.id");
+            statement.setInt(1, getId());
+            ResultSet result = statement.executeQuery();
+            if (!result.next())
+            {
+                throw new NoSuchEntityException("Load wasn't execute");
+            }
+            setNameEmployee(result.getString(1));
+            setIdProfession(result.getInt(2));
+            setEmploymentDate(result.getString(3));
+            setIdDepartment(result.getInt(4));
+            setNameProfession(result.getString(5));
+            setIdDepartment(result.getInt(6));
+            setNameDepartment(result.getString(7));
+        } catch (SQLException ex)
+        {
+            throw new EJBException("Cannot load current record with id: " + getId());
+        } finally
+        {
+            new ConnectToDb().closeConnection(connection);
+        }
     }
 
     public void setEntityContext(EntityContext entityContext) throws EJBException
@@ -179,32 +182,6 @@ public class EntityFinderBean implements EntityBean
 
     public void ejbPassivate() throws EJBException
     {
-    }
-
-    public void ejbLoad() throws EJBException
-    {
-        setId((Integer)entityContext.getPrimaryKey());
-        Connection connection = null;
-        try {
-            connection = new ConnectToDb().getConnection();
-            PreparedStatement statement = connection.prepareStatement("select employee.name, employee.id_occ, employee.date, employee.id_dept, occupations.occupation, structure.id, structure.dept from employee, occupations, structure where employee.id = ? and employee.id_dept = structure.id and employee.id_occ=occupations.id");
-            statement.setInt(1, getId());
-            ResultSet result = statement.executeQuery();
-            if (!result.next()) {
-                throw new NoSuchEntityException("Load wasn't execute");
-            }
-            setNameEmployee(result.getString(1));
-            setIdProfession(result.getInt(2));
-            setEmploymentDate(result.getString(3));
-            setIdDepartment(result.getInt(4));
-            setNameProfession(result.getString(5));
-            setIdDepartment(result.getInt(6));
-            setNameDepartment(result.getString(7));
-        } catch (SQLException ex) {
-            throw new EJBException("Cannot load current record with id: " + getId());
-        } finally {
-            new ConnectToDb().closeConnection(connection);
-        }
     }
 
     public void ejbStore() throws EJBException

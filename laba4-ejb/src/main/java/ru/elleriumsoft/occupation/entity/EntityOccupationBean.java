@@ -38,7 +38,7 @@ public class EntityOccupationBean implements EntityBean
             }
         } catch (SQLException e)
         {
-            e.printStackTrace();
+            logger.info("sql error: " + e.getMessage());
         }
         finally
         {
@@ -54,9 +54,6 @@ public class EntityOccupationBean implements EntityBean
             throw new DuplicateKeyException("Такой ключ уже есть");
         }
         catch (FinderException e) {}
-        logger.info("create new entity dept");
-        logger.info("id=" + id);
-        logger.info("occ=" + nameOccupation);
         this.id = id;
         this.nameOccupation = nameOccupation;
         Connection connection = null;

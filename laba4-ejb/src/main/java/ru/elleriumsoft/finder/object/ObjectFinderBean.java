@@ -26,11 +26,6 @@ public class ObjectFinderBean implements SessionBean
 
     private static final Logger logger = Logger.getLogger(ObjectFinderBean.class.getName());
 
-    public int size()
-    {
-        return storageFinderData.getFinderDatas().size();
-    }
-
     public void findByParameters(String name, String id_occ, String startDate, String endDate)
     {
         storageFinderData.setFinderDatas(new ArrayList<FinderData>());
@@ -43,22 +38,21 @@ public class ObjectFinderBean implements SessionBean
         ConvertingDataForOutput convertingData = new ConvertingDataForOutput();
         for (EntityFinder entityFinder : readEmployeeFromDb(name, id_occ, startDate, endDate))
         {
-            FinderData fd = new FinderData();
             try
             {
-                logger.info("name=" + entityFinder.getNameEmployee());
+                FinderData fd = new FinderData();
                 fd.setIdDepartment(entityFinder.getIdDepartment());
                 fd.setNameDepartment(entityFinder.getNameDepartment());
                 fd.setNameEmployee(convertingData.convertingNameForOutput(entityFinder.getNameEmployee()));
                 fd.setNameProfession(entityFinder.getNameProfession());
                 fd.setEmploymentDate(convertingData.convertingDateForOutput(entityFinder.getEmploymentDate()));
                 storageFinderData.getFinderDatas().add(fd);
-                storageFinderData.setSizeFinderData(size());
             } catch (RemoteException e)
             {
-                e.printStackTrace();
+                logger.info("remote error: " + e.getMessage());
             }
         }
+        storageFinderData.setSizeFinderData(storageFinderData.getFinderDatas().size());
     }
 
     private Collection<EntityFinder> readEmployeeFromDb(String name, String id_occ, String startDate, String endDate)
@@ -73,25 +67,15 @@ public class ObjectFinderBean implements SessionBean
             logger.info("size=" + entityFinders.size());
         } catch (NamingException e)
         {
-            logger.info(e.getMessage());
-            e.printStackTrace();
+            logger.info("naming error: " + e.getMessage());
         } catch (RemoteException e)
         {
-            logger.info(e.getMessage());
-            e.printStackTrace();
+            logger.info("remote error: " + e.getMessage());
         } catch (FinderException e)
         {
-            logger.info(e.getMessage());
-            e.printStackTrace();
+            logger.info("Not found:" + e.getMessage());
         }
-        finally
-        {
-            return entityFinders;
-        }
-    }
-
-    public ObjectFinderBean()
-    {
+        return entityFinders;
     }
 
     public void ejbCreate() throws CreateException
@@ -99,43 +83,6 @@ public class ObjectFinderBean implements SessionBean
         storageFinderData = new StorageFinderData();
         storageFinderData.setOccupations(new Occupation().readOccupations());
     }
-
-//    private void readOccupations()
-//    {
-//        logger.info("readOccupations");
-//        storageFinderData.setOccupations(new ArrayList<Occupation>());
-//        InitialContext ic = null;
-//        try
-//        {
-//            ic = new InitialContext();
-//            Object remoteObject = ic.lookup(JNDI_ROOT + "EntityOccupationEJB");
-//            EntityOccupationHome entityOccupationHome = (EntityOccupationHome) PortableRemoteObject.narrow(remoteObject, EntityOccupationHome.class);
-//            Collection<EntityOccupation> entityOccupations= entityOccupationHome.findAll();
-//
-//            for (EntityOccupation entityOccupation : entityOccupations)
-//            {
-//                logger.info("loadOcc=" + entityOccupation.getNameOccupation());
-//                storageFinderData.getOccupations().add(newOccupation(entityOccupation.getId(), entityOccupation.getNameOccupation()));
-//            }
-//        } catch (NamingException e)
-//        {
-//            e.printStackTrace();
-//        } catch (FinderException e)
-//        {
-//            e.printStackTrace();
-//        } catch (RemoteException e)
-//        {
-//            e.printStackTrace();
-//        }
-//    }
-//
-//    private Occupation newOccupation(Integer id, String nameOccupation)
-//    {
-//        Occupation occupation = new Occupation();
-//        occupation.setId(id);
-//        occupation.setName(nameOccupation);
-//        return occupation;
-//    }
 
     public StorageFinderData getStorageFinderData()
     {

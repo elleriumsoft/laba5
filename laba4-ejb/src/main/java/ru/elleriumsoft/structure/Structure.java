@@ -12,9 +12,6 @@ import java.util.ArrayList;
 
 import static ru.elleriumsoft.jdbc.ConnectToDb.JNDI_ROOT;
 
-/**
- * Created by Dmitriy on 30.04.2017.
- */
 @XmlType(propOrder = { "errorOnImport", "resultOfImport", "commandForChangeStructure", "elementIdForChange", "structureForPrint" }, name = "structure")//@XmlType(propOrder = { "statesOfElements", "structureForPrint" }, name = "structure")
 @XmlRootElement
 public class Structure implements Serializable

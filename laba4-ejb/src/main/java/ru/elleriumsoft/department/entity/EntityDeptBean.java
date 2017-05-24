@@ -29,23 +29,13 @@ public class EntityDeptBean implements EntityBean
     private EntityContext entityContext;
     private static final Logger logger = Logger.getLogger(EntityDeptBean.class.getName());
 
-    public EntityDeptBean()
-    {
-    }
-
-    public void setNeedUpdate()
-    {
-        needUpdate = true;
-    }
-
     public Integer ejbFindByPrimaryKey(Integer key) throws FinderException
     {
-        logger.info("Loading id=" + key);
         Connection connection = new ConnectToDb().getConnection();
-        PreparedStatement preparedStatement = null;
         try
         {
-            preparedStatement = connection.prepareStatement("select id from employee WHERE id=?");
+            PreparedStatement preparedStatement = connection.prepareStatement(
+                    "select id from employee WHERE id=?");
             preparedStatement.setInt(1, key);
             ResultSet resultSet  = preparedStatement.executeQuery();
             if (!resultSet.next()) {
@@ -53,31 +43,13 @@ public class EntityDeptBean implements EntityBean
             }
         } catch (SQLException e)
         {
-            e.printStackTrace();
+            logger.info("SQL error during find primary key in table EMPLOYEE");
         }
         finally
         {
             new ConnectToDb().closeConnection(connection);
         }
         return key;
-    }
-
-    public void setEntityContext(EntityContext entityContext) throws EJBException
-    {
-        this.entityContext = entityContext;
-        needUpdate = false;
-    }
-
-    public void unsetEntityContext() throws EJBException
-    {
-    }
-
-    public void ejbActivate() throws EJBException
-    {
-    }
-
-    public void ejbPassivate() throws EJBException
-    {
     }
 
     @Override
@@ -87,7 +59,8 @@ public class EntityDeptBean implements EntityBean
         Connection connection = null;
         try {
             connection = new ConnectToDb().getConnection();
-            PreparedStatement statement = connection.prepareStatement("select employee.name, employee.id_occ, employee.date, employee.id_dept, occupations.occupation from employee, occupations where employee.id = ? and employee.id_occ=occupations.id");
+            PreparedStatement statement = connection.prepareStatement(
+                    "select employee.name, employee.id_occ, employee.date, employee.id_dept, occupations.occupation from employee, occupations where employee.id = ? and employee.id_occ=occupations.id");
             statement.setInt(1, getId());
             ResultSet result = statement.executeQuery();
             if (!result.next()) {
@@ -110,7 +83,8 @@ public class EntityDeptBean implements EntityBean
         Connection connection = null;
         try {
             connection = new ConnectToDb().getConnection();
-            PreparedStatement statement = connection.prepareStatement("select id from employee WHERE id_dept = ?");
+            PreparedStatement statement = connection.prepareStatement(
+                    "select id from employee WHERE id_dept = ?");
             statement.setInt(1, idDeptartment);
             ResultSet result = statement.executeQuery();
             List<Integer> array = new ArrayList<>();
@@ -133,12 +107,6 @@ public class EntityDeptBean implements EntityBean
             throw new DuplicateKeyException("Такой ключ уже есть");
         }
         catch (FinderException e) {}
-        logger.info("create new entity dept");
-        logger.info("id=" + id);
-        logger.info("id_dept=" + id_dept);
-        logger.info("name=" + name);
-        logger.info("date=" + date);
-        logger.info("id_prof=" + occ_id);
         this.id = id;
         this.idDepartment = id_dept;
         this.nameEmployee = name;
@@ -148,8 +116,8 @@ public class EntityDeptBean implements EntityBean
         PreparedStatement statement = null;
         try {
             connection = new ConnectToDb().getConnection();
-            statement = connection.prepareStatement("INSERT INTO employee"
-                    + "(id, id_dept, name, date, id_occ) VALUES(?, ?, ?, ?, ?)");
+            statement = connection.prepareStatement(
+                    "INSERT INTO employee (id, id_dept, name, date, id_occ) VALUES(?, ?, ?, ?, ?)");
             statement.setInt(1, id);
             statement.setInt(2, idDepartment);
             statement.setString(3, nameEmployee);
@@ -173,7 +141,6 @@ public class EntityDeptBean implements EntityBean
         if (!needUpdate) {return;}
         needUpdate = false;
 
-        logger.info("Store");
         Connection connection = null;
         PreparedStatement statement = null;
         try {
@@ -222,7 +189,8 @@ public class EntityDeptBean implements EntityBean
         int maxId = 0;
         try(Connection connection = new ConnectToDb().getConnection();)
         {
-            PreparedStatement statement = connection.prepareStatement("select id from employee where id = (select max(id) from employee)");
+            PreparedStatement statement = connection.prepareStatement(
+                    "select id from employee where id = (select max(id) from employee)");
             ResultSet resultSet = statement.executeQuery();
             if (!resultSet.next()) {
                 throw new FinderException("Объект не найден");
@@ -230,9 +198,32 @@ public class EntityDeptBean implements EntityBean
             maxId =  resultSet.getInt(1);
         } catch (SQLException e)
         {
-            e.printStackTrace();
+            logger.info("Sql error during find max id in table EMPLOYEE");
         }
         return maxId;
+    }
+
+    public void setNeedUpdate()
+    {
+        needUpdate = true;
+    }
+
+    public void setEntityContext(EntityContext entityContext) throws EJBException
+    {
+        this.entityContext = entityContext;
+        needUpdate = false;
+    }
+
+    public void unsetEntityContext() throws EJBException
+    {
+    }
+
+    public void ejbActivate() throws EJBException
+    {
+    }
+
+    public void ejbPassivate() throws EJBException
+    {
     }
 
     public Integer getId()

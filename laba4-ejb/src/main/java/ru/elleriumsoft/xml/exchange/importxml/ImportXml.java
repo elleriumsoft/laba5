@@ -1,7 +1,5 @@
 package ru.elleriumsoft.xml.exchange.importxml;
 
-import ru.elleriumsoft.xml.exchange.Exchange;
-
 import javax.ejb.EJBObject;
 import java.rmi.RemoteException;
 
@@ -10,10 +8,7 @@ import java.rmi.RemoteException;
  */
 public interface ImportXml extends EJBObject
 {
-    void importFromObjectToDatabase(boolean withOverwrite) throws RemoteException;
-    void importFromXmlToObject() throws RemoteException;
-
-    Exchange getExchange() throws RemoteException;
+    void importFromXmlToDatabase(String pathToXml, boolean withOverwrite) throws RemoteException;
 
     boolean isErrorOnImport() throws RemoteException;
     String getTypeErrorImport() throws RemoteException;

@@ -18,16 +18,25 @@ import static ru.elleriumsoft.jdbc.ConnectToDb.JNDI_ROOT;
  */
 public class ChangeItemDepartmentBean implements SessionBean
 {
-    EntityDeptHome entityDeptHome;
+    private EntityDeptHome entityDeptHome;
 
     private static final Logger logger = Logger.getLogger(ChangeItemDepartmentBean.class.getName());
 
     public void changeItem(String action, int id, int id_dept, String name, String date, String id_occ)
     {
-        if (name == null || name.equals("")) { name = "неизвестный"; }
-        if (date == null || date.equals("")) { date = "1970-01-01"; }
+        if (name == null || name.equals(""))
+        {
+            name = "неизвестный";
+        }
+        if (date == null || date.equals(""))
+        {
+            date = "1970-01-01";
+        }
         date = date.toLowerCase();
-        if (id_occ == null || id_occ.equals("")) { id_occ = "1"; }
+        if (id_occ == null || id_occ.equals(""))
+        {
+            id_occ = "1";
+        }
 
         switch (action)
         {
@@ -57,11 +66,9 @@ public class ChangeItemDepartmentBean implements SessionBean
         } catch (RemoteException e)
         {
             logger.info("remote error in add: " + e.getMessage());
-            e.printStackTrace();
         } catch (CreateException e)
         {
             logger.info("create error in add: " + e.getMessage());
-            e.printStackTrace();
         }
     }
 
@@ -77,12 +84,11 @@ public class ChangeItemDepartmentBean implements SessionBean
             entityDept.setNeedUpdate();
         } catch (RemoteException e)
         {
-            e.printStackTrace();
+            logger.info("remote error: " + e.getMessage());
         } catch (FinderException e)
         {
-            e.printStackTrace();
+            logger.info("при попытке отредактировать id " + id + " не найден в таблице employee");
         }
-
     }
 
     private void deleteItem(int id)
@@ -93,18 +99,14 @@ public class ChangeItemDepartmentBean implements SessionBean
             entityDept.remove();
         } catch (RemoteException e)
         {
-            e.printStackTrace();
+            logger.info("remote error: " + e.getMessage());
         } catch (FinderException e)
         {
-            e.printStackTrace();
+            logger.info("при попытке удалить id " + id + " не найден в таблице employee");
         } catch (RemoveException e)
         {
-            e.printStackTrace();
+            logger.info("ошибка при попытке удалить id " + id);
         }
-    }
-
-    public ChangeItemDepartmentBean()
-    {
     }
 
     public void ejbCreate() throws CreateException
@@ -118,7 +120,6 @@ public class ChangeItemDepartmentBean implements SessionBean
         } catch (NamingException e)
         {
             logger.info("error in create bean due entity bean");
-            e.printStackTrace();
         }
     }
 

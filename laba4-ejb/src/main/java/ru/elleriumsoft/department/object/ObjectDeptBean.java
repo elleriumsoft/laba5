@@ -30,8 +30,7 @@ public class ObjectDeptBean implements SessionBean
                 allDept.getEmployeeOfDepartment().add(newDept(element.getId(), convertingData.convertingNameForOutput(element.getNameEmployee()), element.getNameProfession(), element.getEmploymentDate()));
             } catch (RemoteException e)
             {
-                logger.info(e.getMessage());
-                e.printStackTrace();
+                logger.info("remote error: " + e.getMessage());
             }
         }
         addDatesForOutput();
@@ -60,7 +59,7 @@ public class ObjectDeptBean implements SessionBean
             maxId = entityDept.getId();
         } catch (Exception e)
         {
-            logger.info("Error: " + e.getStackTrace());
+            logger.info("Error: " + e.getMessage());
         }
         logger.info("MAX_ID=" + maxId);
         return maxId;
@@ -74,16 +73,12 @@ public class ObjectDeptBean implements SessionBean
             entityDept = new Employee().getDeptHome().findAll(idDepartment);
         } catch (RemoteException e)
         {
-            logger.info(e.getMessage());
-            e.printStackTrace();
+            logger.info("remote error: " + e.getMessage());
         } catch (FinderException e)
         {
-            logger.info(e.getMessage());
-            e.printStackTrace();
-        } finally
-        {
-            return entityDept;
+            logger.info(idDepartment + " не найден");
         }
+        return entityDept;
     }
 
     private void addDatesForOutput()
