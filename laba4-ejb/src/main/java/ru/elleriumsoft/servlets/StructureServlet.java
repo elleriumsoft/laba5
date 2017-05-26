@@ -1,6 +1,8 @@
 package ru.elleriumsoft.servlets;
 
 import org.apache.log4j.Logger;
+import ru.elleriumsoft.structure.StateOfElements;
+import ru.elleriumsoft.structure.VariantsOfState;
 import ru.elleriumsoft.structure.object.ObjectOfStructure;
 import ru.elleriumsoft.structure.object.ObjectOfStructureHome;
 import ru.elleriumsoft.xml.creatingxml.CreatingXml;
@@ -176,6 +178,7 @@ public class StructureServlet extends HttpServlet
             } else
             {
                 objectOfStructure.setResultOfImport(importXml.getResultOfImport());
+                openImportedElement(importXml);
                 return "ok";
             }
 
@@ -183,6 +186,18 @@ public class StructureServlet extends HttpServlet
         {
             logger.info("error xml validate");
             return "Файл не прошел проверку!";
+        }
+    }
+
+    private void openImportedElement(ImportXml importXml) throws RemoteException
+    {
+        if (importXml.getFirstDept() != null)
+        {
+            StateOfElements stateForParentFirstDept = objectOfStructure.getStateOfElement(importXml.getFirstDept().getParentIdDept());
+            if (stateForParentFirstDept != null && stateForParentFirstDept.getState() == VariantsOfState.OPEN)
+            {
+                objectOfStructure.addStateElement(importXml.getFirstDept().getIdDept(), VariantsOfState.CLOSE);
+            }
         }
     }
 

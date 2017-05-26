@@ -27,7 +27,7 @@ public class FinderServlet extends HttpServlet
     private CreatingXml creatingXml;
     private ObjectFinder objectFinder;
 
-    private static final Logger logger = Logger.getLogger(StructureServlet.class.getName());
+    private static final Logger logger = Logger.getLogger(FinderServlet.class.getName());
 
     @Override
     public void init() throws ServletException

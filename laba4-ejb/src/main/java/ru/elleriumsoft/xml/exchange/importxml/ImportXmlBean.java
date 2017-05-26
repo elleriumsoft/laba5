@@ -33,6 +33,8 @@ public class ImportXmlBean implements SessionBean
     private String typeErrorImport;
     private String resultOfImport;
 
+    private DeptInfo firstDept;
+
     private static final Logger logger = Logger.getLogger(ImportXmlBean.class.getName());
 
     public void importFromXmlToDatabase(String pathToXml, boolean withOverwrite)
@@ -103,7 +105,8 @@ public class ImportXmlBean implements SessionBean
         return true;
     }
 
-    public void importFromObjectToDatabase(boolean withOverwrite)
+    //Загружаем данные из объекта в БД
+    private void importFromObjectToDatabase(boolean withOverwrite)
     {
         setResultOfImport("");
         setErrorOnImport(false);
@@ -165,7 +168,9 @@ public class ImportXmlBean implements SessionBean
     private void importStructureAndEmployee(boolean withOverwrite) throws RemoteException
     {
         int countDepts = 0;
+        int countDeptsOverwrite = 0;
         int countEmps = 0;
+        int countEmpsOverwrite = 0;
         StructureProcessingFromDbHome structureHome = new Structure().getStructureHome();
         EntityDeptHome deptHome = new Employee().getDeptHome();
 
@@ -174,6 +179,8 @@ public class ImportXmlBean implements SessionBean
             try
             {
                 structureHome.create(depts.getIdDept(), depts.getNameDept(), depts.getParentIdDept());
+                if (countDepts == 0) { firstDept = depts; }
+                countDepts++;
             } catch (CreateException e)
             {
                 logger.info("dept with id " + depts.getIdDept() + " уже существует");
@@ -188,7 +195,7 @@ public class ImportXmlBean implements SessionBean
                             entity.setParent_id(depts.getParentIdDept());
                             entity.setNeedUpdate();
                         }
-                        countDepts++;
+                        countDeptsOverwrite++;
                     } catch (FinderException |  SQLException e1)
                     {
                         logger.info("dept with id " + depts.getIdDept() + " не удалось перезаписать");
@@ -205,6 +212,7 @@ public class ImportXmlBean implements SessionBean
                     try
                     {
                         deptHome.create(emp.getId(), depts.getIdDept(), emp.getNameEmployee(), emp.getEmploymentDate(), emp.getIdProfession());
+                        countEmps++;
                     } catch (CreateException e)
                     {
                         logger.info("emp with id " + emp.getId() + " уже существует");
@@ -218,7 +226,7 @@ public class ImportXmlBean implements SessionBean
                                 entity.setIdProfession(emp.getIdProfession());
                                 entity.setIdDepartment(depts.getIdDept());
                                 entity.setNeedUpdate();
-                                countEmps++;
+                                countEmpsOverwrite++;
                             } catch (FinderException e1)
                             {
                                 logger.info("emp with id " + depts.getIdDept() + " не удалось перезаписать");
@@ -231,16 +239,12 @@ public class ImportXmlBean implements SessionBean
                 }
             }
         }
-        String txt;
+        String txt = "добавлено отделов: " + String.valueOf(countDepts) + ", сотрудников: " + String.valueOf(countEmps);
         if (withOverwrite)
         {
-            txt = "обновлено";
+            txt = txt + "; обновлено отделов: " + String.valueOf(countDeptsOverwrite) + ", сотрудников: " + String.valueOf(countEmpsOverwrite);
         }
-        else
-        {
-            txt = "добавлено";
-        }
-        setResultOfImport(txt + " отделов: " + String.valueOf(countDepts) + ", сотрудников: " + String.valueOf(countEmps) + getResultOfImport());
+        setResultOfImport(txt + getResultOfImport());
     }
 
     private Vector<StructureProcessingFromDb> getAllDepts()
@@ -267,6 +271,11 @@ public class ImportXmlBean implements SessionBean
         exchange.setDepartments(new ArrayList<DeptInfo>());
         exchange.setOccupations(new ArrayList<Occupation>());
         setErrorOnImport(false);
+    }
+
+    public DeptInfo getFirstDept()
+    {
+        return firstDept;
     }
 
     public boolean isErrorOnImport()

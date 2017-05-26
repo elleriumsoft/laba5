@@ -61,7 +61,7 @@ public class DepartmentServlet extends HttpServlet
             objectDept = (ObjectDept) req.getSession().getAttribute(NAME_FOR_PROCESSING);
             if (objectDept != null)
             {
-                modificationElement(req);
+                modificationOfElement(req);
                 resp.sendRedirect("/app/DepartmentServlet?id=" + objectDept.getIdDepartment());
             }
         } else
@@ -105,7 +105,7 @@ public class DepartmentServlet extends HttpServlet
         }
     }
 
-    private void modificationElement(HttpServletRequest req)
+    private void modificationOfElement(HttpServletRequest req)
     {
             try
             {

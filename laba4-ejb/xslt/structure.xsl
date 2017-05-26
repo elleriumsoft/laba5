@@ -67,7 +67,7 @@
                         <input type="checkbox" name="withoverwrite" value="true" checked="checked">Перезаписывать данные</input>
                         <br/>
                         <p><input type="file" name="xmlfile" accept="*.xml"></input></p>
-                        <input type="submit" value="Отправить"></input>
+                        <input type="submit" value="Загрузить файл"></input>
                     </form>
                 </div>
             </xsl:when>

@@ -1,5 +1,7 @@
 package ru.elleriumsoft.xml.exchange.importxml;
 
+import ru.elleriumsoft.xml.exchange.DeptInfo;
+
 import javax.ejb.EJBObject;
 import java.rmi.RemoteException;
 
@@ -13,4 +15,5 @@ public interface ImportXml extends EJBObject
     boolean isErrorOnImport() throws RemoteException;
     String getTypeErrorImport() throws RemoteException;
     String getResultOfImport() throws RemoteException;
+    DeptInfo getFirstDept() throws RemoteException;
 }

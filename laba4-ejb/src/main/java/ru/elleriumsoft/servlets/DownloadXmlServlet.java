@@ -9,9 +9,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 
-
 /**
- * Created by Dmitriy on 15.05.2017.
+ * Выгрузка файла экспорта клиенту
  */
 @WebServlet("/DownloadXmlServlet")
 public class DownloadXmlServlet extends HttpServlet
@@ -43,10 +42,5 @@ public class DownloadXmlServlet extends HttpServlet
             File file = new File("");
             logger.info("путь=" + file.getAbsolutePath());
         }
-//        finally
-//        {
-//            response.sendRedirect("/app/StructureServlet");
-//        }
     }
-
 }
